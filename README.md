@@ -60,3 +60,28 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
   </tr>
 </table>
 
+---
+
+<h2>Terzo Anno - A. A. 2025/2026</h2>
+
+<table>
+  <tr>
+    <td>
+
+**primo semestre**
+
+- [Ingegneria del Software](#)
+- [Automi Calcolabilità e Complessità](#)
+- [Programmazione Web](#)
+- [Interazione Uomo Macchina](#)
+
+    </td>
+    <td>
+
+**secondo semestre**
+
+- [Sicurezza](#)
+
+    </td>
+  </tr>
+</table>
