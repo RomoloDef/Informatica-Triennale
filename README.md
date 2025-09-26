@@ -41,7 +41,7 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
 
 **primo semestre**
 
-- [Algebra](#)(2°%20Anno/Algebra)
+- [Algebra](2°%20Anno/Algebra)
 - [Calcolo delle Probabilità](#)
 - [Basi di Dati I](#)
 - [Sistemi Operativi I](#)
