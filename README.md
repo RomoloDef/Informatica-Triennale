@@ -12,7 +12,7 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
 
 **primo semestre**
 
-- [Calcolo Differenziale](1-Anno/Calcolo-Differenziale)
+- [Calcolo Differenziale](1°%20Anno/Calcolo%20Differenziale)
 - [Progettazione di Sistemi Digitali](#)
 - [Metodi Matematici per l'Informatica](#)
 - [Fondamenti di Programmazione](#)
