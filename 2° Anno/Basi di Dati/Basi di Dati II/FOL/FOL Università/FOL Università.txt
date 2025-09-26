@@ -1,0 +1,25 @@
+Modellare, mediante formule in logica del primo ordine, le seguenti affermazioni,
+dopo aver progettato opportuni insiemi di simboli di predicato e/o funzione.
+
+1. Ogni corso di laurea ha almeno un professore responsabile.
+
+F = {Corso/1, Professore/1, avere/2}
+
+FOR ALL c (Corso(c)) --> EXIST p (Professore(p) AND avere(c, p))
+
+2. Gli studenti possono essere iscritti a più di un corso di laurea.
+
+F = {Studente/1, Corso/1, iscrizione/2}
+
+FOR ALL s (Studente(s)) --> EXIST c1, c2 (Corso(c1) AND Corso(c) AND iscrizione(s, c1) AND iscrizione(s, c2) AND c1 != c2)
+
+3. Un professore può insegnare in più di un corso.
+
+stessa cosa
+
+4. Nessun corso ha più di un esame finale.
+
+F = {Corso/1, Esame/1, avere/2}
+
+NOT EXIST c (Corso(c)) --> EXIST e1, e2 (Esame(e1) AND Esame(e2) AND avere(c, e1) AND avere(c, e2) AND e1 != e2)
+
