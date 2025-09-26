@@ -1,0 +1,378 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+################################################################################
+################################################################################
+################################################################################
+
+""" Operazioni da svolgere PRIMA DI TUTTO:
+ 1) Salvare il file come program.py
+ 2) Assegnare le variabili sottostanti con il proprio
+    NOME, COGNOME, NUMERO DI MATRICOLA
+ 3) Rinominare la directory examPY inserendo il proprio numero di matricola
+
+Per superare l'esame e' necessario soddisfare tutti i seguenti vincoli:
+    - risolvere almeno 3 esercizi di tipo func; AND
+    - risolvere almeno 1 esercizio di tipo ex; AND
+    - ottenere un punteggio maggiore o uguale a 18
+
+Il voto finale e' la somma dei punteggi dei problemi risolti.
+Attenzione! DEBUG=True nel grade.py per migliorare il debugging.
+Per testare correttamente la ricorsione è, però, necessario DEBUG=False.
+
+"""
+nome       = "Romolo"
+cognome    = "Deffereria"
+matricola  = "2114887"
+
+
+#########################################
+
+################################################################################
+# ---------------------------- SUGGERIMENTI PER IL DEBUG --------------------- #
+# Per eseguire solo alcuni dei test, si possono commentare le voci
+# corrispondenti ai test che non si vogliono eseguire all'interno della lista
+# `test` alla FINE di `grade.py`.
+#
+# Per eseguire il debug di funzioni ricorsive potete disattivare il test di
+# ricorsione, assegnando `DEBUG=True` all'interno file `grade.py`.
+#
+# L'impostazione DEBUG=True attiva anche lo la stampa a terminale dello STACK
+# TRACE degli errori, che permette di conoscere il numero della linea di
+# program.py che ha generato un errore.
+################################################################################
+
+
+# %% -------------------------------- FUNC.1 -------------------------------- #
+''' func1: 2 punti
+Si definisca la funzione func1(string_list1, string_list2) che riceve in
+ingresso due liste di stringhe e restituisce una nuova lista di stringhe
+contenente le stringhe presenti soltanto in una delle due liste in ingresso
+(ossia, che non compaiono in entrambe le liste). La lista in output
+dev'essere ordinata in ordine lessicografico inverso.
+'''
+def func1(string_list1, string_list2):
+    string_list3 = []
+    for stringa in string_list1:
+        if stringa not in string_list2:
+            string_list3.append(stringa)
+    for stringa in string_list2:
+        if stringa not in string_list1:
+            string_list3.append(stringa)
+    return sorted(string_list3, reverse = True)
+    pass
+
+
+# string_list1 = ['a','b','c']
+# string_list2 = ['a','d']
+# "expected = ['d', 'c', 'b']"
+# print(func1(string_list1, string_list2))
+
+# %% -------------------------------- FUNC.2 -------------------------------- #
+''' func2: 2 punti
+Si definisca una funzione funct2(path_to_file) che riceve in ingresso
+una stringa che rappresenta il percorso ad un file testuale. La funzione
+deve restituire il dizionario che associ ad ogni carattere nel testo il
+conteggio delle sue occorrenze.
+
+Esempio:
+  Il contenuto di func2_test_1.txt è:
+    cat rat fat
+    art
+  L'output atteso dall'invocazione di func2('func2/func2_test_1.txt') è:
+  {'c':1, 'a':4, 't':4, 'r':2, 'f':1, ' ':2, '\n':1}
+
+Nota:
+  Aprire il file con encoding 'utf-8'.
+'''
+def func2(path_to_file):
+    dizionario = {}
+    with open(path_to_file, 'r', encoding = 'utf-8') as file:
+        testo = file.read()
+        for carattere in testo:
+            if carattere in dizionario:
+                dizionario[carattere] += 1
+            else:
+                dizionario[carattere] = 1
+    return dizionario
+
+    pass
+
+# pathname = 'func2/func2_test_1.txt'
+# print(func2(pathname))
+
+# %% -------------------------------- FUNC.3 -------------------------------- #
+'''  func3: 2 punti
+Si definisca una funzione func3(a_list) che riceve in ingresso una lista
+di numeri ed opera su di essa (ossia, provocando side-effect) rimuovendo tutti
+gli elementi uguali al massimo e al minimo.
+La funzione deve restituisce la differenza fra la lunghezza iniziale e la
+lunghezza finale della lista.
+
+Esempio:
+    se a_list = [3, 12, -3, 4, 6, 12]
+    dopo la chiamata a func3(a_list) si ha che
+    a_list = [3, 4, 6]
+    e la funzione restituisce 3.
+
+IMPORTANTE: la lista `a_list` deve risultare cambiata alla fine
+dell'esecuzione della funzione.
+'''
+
+def func3(a_list):
+    massimo = max(a_list)
+    minimo = min(a_list)
+    lunghezza_iniziale = len(a_list)
+    while massimo in a_list:
+        a_list.remove(massimo)
+    while minimo in a_list:
+        a_list.remove(minimo)
+    lunghezza_ora = len(a_list)
+    return lunghezza_iniziale - lunghezza_ora
+
+# a_list = [3, 12, -3, 4, 6, 12]
+# print(func3(a_list))
+
+# %% -------------------------------- FUNC.4 -------------------------------- #
+""" func4: 6 punti
+Si definisca una funzione func4(input_filepath, output_filename) che
+riceve in ingresso due percorsi a file:
+  - Il file `input_filepath` contiene una sequenza di parole, ossia stringhe
+    separate da spazi, tabulazioni o invii a capo.
+  - Il file `output_filename` indica dove salvare un nuovo file di testo,
+    i cui contenuti sono specificati di seguito.
+Il file in output deve contenere tutte le parole presenti in
+`input_filename`, ripetute una sola volta e organizzate in righe nel modo
+seguente.
+
+Le righe nel file di output sono in ordine alfabetico.
+All'interno di ogni riga, le parole
+  - hanno la stessa lettera iniziale, senza distinzione fra maiuscole e
+    minuscole;
+  - sono separate da uno spazio;
+  - sono ordinate in base alla loro lunghezza e, in caso di pari
+    lunghezza, in base all'ordine alfabetico, senza distinzione fra
+    maiuscole e minuscole. Nel caso in cui nessuno dei criteri sin qui
+    forniti distingua le parole, quelle coincidenti devono essere
+    disposte secondo ordinamento lessicografico (ovverosia, si tiene conto
+    della differenza tra lettere maiuscole e minuscole solo in ultima
+    istanza).
+
+La funzione deve restituire il numero di righe scritte nel file
+`output_filename`.
+
+Esempio:
+  Nel file 'func4/func4_test1.txt' sono presenti le seguenti due righe:
+cat bat    rat
+Condor baT
+  L'invocazione di func4('func4/func4_test1.txt', 'func4/func4_out1.txt')
+  dovrà scrivere nel file 'func4/func4_out1.txt' le seguenti tre righe
+  restituendo il valore 3:
+baT bat
+cat Condor
+rat
+"""
+
+def func4(input_filename, output_filename):
+    righe_ordinate = []
+    with open(input_filename, 'r', encoding='utf-8') as file:
+        righe = file.readlines()
+        for riga in righe:
+            parole = riga.split()
+            parole.sort(key=lambda parola: (len(parola), conta_vocali(parola), conta_consonanti(parola), parola))
+            righe_ordinate.append(' '.join(parole))
+    
+    with open(output_filename, 'w', encoding='utf-8') as f:
+        for riga in righe_ordinate:
+            f.write(riga + '\n')
+    
+    return len(righe_ordinate) + 1
+
+def conta_vocali(parola):
+    count = 0
+    for carattere in parola:
+        if carattere in "aeiouAEIOU":
+            count += 1
+    return count
+
+def conta_consonanti(parola):
+    count = 0
+    for c in parola:
+        if c.isalpha() and c not in "aeiouAEIOU":
+            count += 1
+    return count
+
+# input_filename = 'func4/func4_test1.txt'
+# output_filename = 'func4/func4_out1.txt'
+# print(func4(input_filename, output_filename))
+
+# %% -------------------------------- FUNC.5 -------------------------------- #
+""" func5: 8 punti
+Si definisca una funzione func5(imagefile, output_imagefile, color) che riceve
+in ingresso due stringhe che rappresentano due percorsi a file di immagini PNG e
+un colore fornito come una tupla RGB.
+L'immagine nel file `imagefile` contiene esclusivamente segmenti orizzontali
+bianchi su uno sfondo nero. Ogni riga ha al più un segmento bianco.
+La funzione deve creare una nuova immagine in cui sono presenti gli stessi
+segmenti dell'immagine in ingresso e modificare il colore dei segmenti con
+lunghezza massima utilizzando il colore `color` in ingresso.
+
+L'immagine così ottuenuta deve essere salvata in formato PNG nel file con
+percorso `output_imagefile`.
+
+La funzione restituisce il numero di segmenti colorati nell'immagine
+in output.
+"""
+import images
+
+def func5(imagefile, output_imagefile, color):
+    img = images.load(imagefile)
+    altezza, larghezza = len(img), len(img[0])
+    segmenti_bianchi = []
+
+    # Trova i segmenti bianchi
+    for y in range(altezza):
+        x_start = None
+        for x in range(larghezza):
+            if img[y][x] == (255, 255, 255):
+                if x_start is None:
+                    x_start = x
+                if x == larghezza - 1:  # ultimo pixel della riga
+                    segmenti_bianchi.append((y, x_start, x))
+            else:
+                if x_start is not None:
+                    segmenti_bianchi.append((y, x_start, x - 1))
+                    x_start = None
+
+    # Trova la lunghezza massima
+    max_lunghezza = 0
+    for seg in segmenti_bianchi:
+        lunghezza = seg[2] - seg[1] + 1
+        if lunghezza > max_lunghezza:
+            max_lunghezza = lunghezza
+
+    # Colora i segmenti di lunghezza massima
+    conteggio_segmenti = 0
+    for seg in segmenti_bianchi:
+        y, x_start, x_end = seg
+        lunghezza = x_end - x_start + 1
+        if lunghezza == max_lunghezza:
+            for x in range(x_start, x_end + 1):
+                img[y][x] = color
+            conteggio_segmenti += 1
+
+    images.save(img, output_imagefile)
+    return conteggio_segmenti
+
+                        
+imagefile = 'func5/image01.png'
+output_imagefile = 'func5/expected01.png'
+color = (255,0,0)
+print(func5(imagefile, output_imagefile, color))
+
+# %% --------------------------------- EX.1 --------------------------------- #
+"""
+Ex1: 6 punti
+
+Implementare la funzione ex1 (in modo ricorsivo o utilizzando funzioni
+ricorsive) come segue. La funzione ex1 riceve in ingresso i seguenti
+argomenti:
+  - `directory`, una stringa che rappresenta il percorso di una directory
+  - `ext`, una stringa che rappresenta un'estensione di file.
+La funzione deve cercare in modo ricorsivo all'interno della `directory`
+e in tutte le sue sottodirectory i file che abbiano `ext` come estensione.
+Questi file devono essere interpretati come file di testo. La funzione
+ex1 deve calcolare la somma delle dimensioni di tutti i file trovati
+nelle sottodirectory e restituire un dizionario strutturato come
+come segue:
+  - le chiavi sono tutte le sottodirectory in cui è presente almeno
+    un file con estensione `ext`
+  - i valori sono la somma delle dimensioni di tali file contenuti in quella
+  sottodirectory.
+Le sottodirectory devono essere riportate con il percorso relativo alla
+directory corrente. Per esempio, data la struttura di directory:
+A/
+  B/
+    file1.png    #4 byte
+  file2.txt      #8 byte
+
+L'invocazione `ex1("A", ".png")` deve restituire `{"A/B":4}`
+
+La dimensione di un file può essere calcolata contando il numero di caratteri
+letti dal file.
+
+Si consiglia di utilizzare le funzioni os.listdir, os.path.isfile e
+os.path.isdir e NON la funzione os.join in Windows. Utilizzare
+la concatenazione tra stringhe con il carattere '/'.
+"""
+
+import os
+
+
+def ex1(directory, ext):
+    risultato = {}
+    for nome in os.listdir(directory):
+        fullname = directory + '/' + nome
+        if os.path.isdir(fullname):
+          trovati = ex1(fullname, ext)
+          risultato.update(trovati)
+        elif nome.endswith(ext):
+          size = os.path.getsize(fullname)
+          risultato[directory] = risultato.get(directory, 0) + size
+    return risultato
+    pass
+
+directory = 'ex1/A'
+ext = '.py'
+print(ex1(directory, ext))
+
+# %% --------------------------------- EX.2 --------------------------------- #
+"""
+Ex2: 6 punti
+
+Si definisca la funzione ex2(root) che riceve in ingresso la radice di un
+albero binario, come definito nella classe `BinaryTree` del modulo tree.py.
+La funzione deve restituire la somma di tutti i valori associati ai nodi che
+sono ad un livello pari nell'albero con radice `root`, e sottraendo tutti i
+valori associati ai nodi ad un livello dispari. La radice si assume a livello 0.
+
+Esempio:
+
+        ______5______                        ______2______
+       |             |                      |             |
+       8__        ___2___                __ 7__        ___5___
+          |      |       |              |      |      |       |
+          3      9       1             _4_     3_    _0_     _5_
+                                      |   |      |  |   |   |   |
+                                      2   -1     1  8   3   2   9
+
+  Se l'albero è quello di sinistra, la funzione deve restituire il valore 8.
+  Se l'albero è quello di destra, la funzione deve restituire il valore -22.
+"""
+
+
+def ex2(root):
+    return somma_differenza_albero(root, 0, 0)
+
+def somma_differenza_albero(nodo, profondità, totale):
+        if nodo is None:
+            return totale
+        if profondità % 2 == 0:
+            totale += nodo.value 
+        else:
+            totale -= nodo.value
+        totale = somma_differenza_albero(nodo.left, profondità +1, totale)
+        totale = somma_differenza_albero(nodo.right, profondità +1, totale)
+        return totale
+        pass
+###################################################################################
+if __name__ == '__main__':
+    # Place your tests here
+    print('*' * 50)
+    print('ITA\nEseguire grade.py per effettuare il debug con grader incorporato.')
+    print('Altrimenti, inserire codice qui per verificare le funzioni con test propri')
+    print('*' * 50)
+    print('ENG\nRun grade.py to debug the code with the automatic grader.')
+    print('Alternatively, insert here the code to check the functions with custom test inputs')
+    print('*' * 50)
+    
