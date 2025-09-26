@@ -1,0 +1,59 @@
+# Realizzare un programma in assembly MARS che, definita una stringa in memoria e letti due caratteri da tastiera search e replace, sostituisce il carattere seach con replace.
+
+.text
+.globl main
+
+main:
+	# carattere search
+	li $v0, 4
+	la $a0, search
+	syscall
+	
+	li $v0, 12		# codice per la lettura di un carattere di syscall
+	syscall
+	move $t0, $a0		# sposto il carattere in $t0
+	
+	# carattere replace
+	li $v0, 4
+	la $a0, replace
+	syscall
+	
+	li $v0, 12		# codice per la lettura di un carattere di syscall
+	syscall
+	move $t1, $a0		# sposto il carattere in $t0
+	
+	xor $t2, $t2, $t2	# contatore delle lettere replace
+	
+	la $t3, stringa		# indirizzo di inizio della stringa
+	
+ciclo:
+	lb $t3,($t2) 		# lettura i-esimo carattere della stringa - primo elemento
+	beq $t3, $zero, fine
+	
+	beq $t3, $t0, sostituisci
+	addi $t2, $t2, 1
+	j continua
+	          
+
+sostituisci:
+	sb $t1,($t2)		# scambio lettere 
+	addi $t2, $t2, 1
+	j continua
+	
+continua:
+    addi $t2, $t2, 1      # Passa al prossimo carattere della stringa
+    j ciclo     
+	
+fine:
+	li $v0, 4
+	la $a0, stringa
+	li $v0, 10
+	syscall
+	
+	
+	
+
+.data
+stringa: .asciiz "Questa è la stringa di prova"
+search: .asciiz "Inserire il carattere da sostituire: \n"
+replace: .asciiz "Inserire il carattere da rimpiazzare: \n"

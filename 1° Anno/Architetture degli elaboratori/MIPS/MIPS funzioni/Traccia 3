@@ -1,0 +1,98 @@
+# Scrivere in linguaggio assemblativo MIPS/MARS un programma che usa la funzione della traccia 2 per calcolare i secondi trascorsi tra due orari entrambi
+# contenuti entro il ciclo di una giornata.
+# Ad esempio, se i due orari inseriti fossero 12:30:00 e 13:40:30 il programma dovrebbe stampare: I secondi trascorsi tra i due orari sono: 4230
+
+.text
+.globl main
+main:
+    # Chiedi all'utente di inserire il primo orario
+    li $v0, 4
+    la $a0, prompt1
+    syscall
+
+    # Leggi il primo orario (ore:minuti:secondi)
+    li $v0, 8
+    la $a0, buffer1
+    li $a1, 9   # leggi al massimo 9 caratteri (compreso il terminatore '\0')
+    syscall
+
+    # Chiedi all'utente di inserire il secondo orario
+    li $v0, 4
+    la $a0, prompt2
+    syscall
+
+    # Leggi il secondo orario (ore:minuti:secondi)
+    li $v0, 8
+    la $a0, buffer2
+    li $a1, 9   # leggi al massimo 9 caratteri (compreso il terminatore '\0')
+    syscall
+
+    # Converte il primo orario in secondi
+    jal converti_in_secondi
+    move $s0, $v0  # $s0 contiene i secondi trascorsi dal primo orario
+
+    # Converte il secondo orario in secondi
+    jal converti_in_secondi
+    move $s1, $v0  # $s1 contiene i secondi trascorsi dal secondo orario
+
+    # Calcola i secondi trascorsi tra i due orari
+    sub $t0, $s1, $s0  # $t0 = secondi trascorsi tra i due orari
+
+    # Stampa il risultato
+    li $v0, 4
+    la $a0, output_msg
+    syscall
+
+    li $v0, 1
+    move $a0, $t0
+    syscall
+
+    # Termina il programma
+    li $v0, 10
+    syscall
+
+# Funzione per convertire un orario (hh:mm:ss) in secondi dalla mezzanotte
+# Argomento: $a0 = stringa contenente l'orario
+converti_in_secondi:
+    # Estrai ore, minuti e secondi dalla stringa
+    lb $t0, 0($a0)   # Ore (decine)
+    lb $t1, 1($a0)   # Ore (unità)
+    lb $t2, 3($a0)   # Minuti (decine)
+    lb $t3, 4($a0)   # Minuti (unità)
+    lb $t4, 6($a0)   # Secondi (decine)
+    lb $t5, 7($a0)   # Secondi (unità)
+
+    # Converti da ASCII a valori numerici
+    sub $t0, $t0, 48   # Conversione da carattere ASCII a valore numerico
+    sub $t1, $t1, 48
+    sub $t2, $t2, 48
+    sub $t3, $t3, 48
+    sub $t4, $t4, 48
+    sub $t5, $t5, 48
+
+    # Calcola i secondi totali dall'inizio della giornata
+    li $t6, 3600       # 3600 secondi in un'ora
+    mul $t0, $t0, 10    # Ore (decine) * 10
+    add $t0, $t0, $t1   # Ore totali
+    mul $t0, $t0, $t6   # Ore totali * 3600 (secondi in ore)
+
+    li $t6, 60         # 60 secondi in un minuto
+    mul $t2, $t2, 10    # Minuti (decine) * 10
+    add $t2, $t2, $t3   # Minuti totali
+    mul $t2, $t2, $t6   # Minuti totali * 60 (secondi in minuti)
+
+    add $t0, $t0, $t2   # Ore in secondi + Minuti in secondi
+
+    add $t4, $t4, $t5   # Secondi totali (decine + unità)
+    add $t0, $t0, $t4   # Ore in secondi + Minuti in secondi + Secondi
+
+    move $v0, $t0       # Restituisci i secondi totali
+    jr $ra              # Ritorna al chiamante
+
+.data
+prompt1: .asciiz "Inserisci il primo orario (formato hh:mm:ss): "
+prompt2: .asciiz "Inserisci il secondo orario (formato hh:mm:ss): "
+output_msg: .asciiz "I secondi trascorsi tra i due orari sono: "
+
+buffer1: .space 9   # per memorizzare l'orario 1 (hh:mm:ss + terminatore)
+buffer2: .space 9   # per memorizzare l'orario 2 (hh:mm:ss + terminatore)

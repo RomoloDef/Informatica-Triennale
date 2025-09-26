@@ -1,0 +1,36 @@
+# Scrivere un programma in linguaggio assemblativo MIPS/MARS che calcola la distanza tra due punti (x1,y1)(x2,y2).
+# NB: i punti x1,y1,x2,y2 sono interi definiti in memoria; la distanza si ottiene con la radice quadrata di (x1-x2)^2+(y1-y2)^2
+# ES (1,1) (2,2) d = 1,41421
+
+
+.text
+.globl main
+
+main:
+	lwc1 $f0, x1 # carico x1 nel registro $f0 del coprocessore
+	lwc1 $f1, x2 # carico x2 nel registro $f1 del coprocessore
+	lwc1 $f2, y1 # carico y1 nel registro $f2 del coprocessore
+	lwc1 $f3, y2 # carico y2 nel registro $f3 del coprocessore
+	
+	# prima parte
+	sub.s $f4, $f0, $f1 # sottraggo x2 a x1
+	mul.s $f4, $f4, $f4 # faccio potenza di 2 
+	# seconda aparte
+	sub.s $f5, $f2, $f3 # sottraggo y2 a y1
+	mul.s $f5, $f5, $f5 # faccio potenza di 2
+	# terza parte
+	add.s $f6, $f5, $f4 # sommo le due parti
+	sqrt.s $f7, $f6 # risultato della radice quadrata di $f6 in $f7
+	# stampo il risultato
+	li $v0, 2
+	mov.s $f12, $f7
+	syscall
+	#termine programma
+	li $v0, 10
+	syscall
+	
+.data
+x1: .float 1.0
+x2: .float 2.0
+y1: .float 1.0
+y2: .float 2.0

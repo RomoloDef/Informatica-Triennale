@@ -1,0 +1,29 @@
+# media aritmetica di cinque numeri positivi definiti in memoria
+
+.text
+.globl main
+
+main:
+
+	lw $t1, a	# carico a
+	lw $t2, b	# carico b
+	lw $t3, c	# carico c
+	lw $t4, d	# carico d
+	lw $t5, e	# carico e
+	li $t6, 5	# carico il numero complessivo dei numeri caricati
+	
+	add $t0, $t1, $t2	# $t0 = a+b
+	add $t0, $t0, $t3	# a + b + c
+	add $t0, $t0, $t4	# a + b + c + d
+	add $t0, $t0, $t5	# a + b + c + d + e
+	div $t0, $t0, $t6	# risultato / 5
+	
+	li $v0, 10
+	syscall
+
+.data
+a: .word 0
+b: .word 11
+c: .word 7
+d: .word 1982
+e: .word 10051980

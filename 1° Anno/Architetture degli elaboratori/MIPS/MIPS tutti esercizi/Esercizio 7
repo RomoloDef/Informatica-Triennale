@@ -1,0 +1,19 @@
+# Confronta due numeri positivi definiti in memoria e mettere in $t0 il valore 0 se a è maggiore di b, 1 altrimenti. Operare sui singoli bit
+
+.text
+.globl main
+
+main:
+
+	lw $t1, a 	# carico a
+	lw $t2, b	# carico b
+	
+	xor $t0, $t1, $t2	# differenza bit-a-bit tra $t1 e $t2
+	sltu $t0, $zero, $t0	# se c'è un bit diverso tra $t1 e $t2 si imposta 1 senno il contrario
+	
+	li $v0,10
+	syscall
+
+.data
+a: .word 5
+b: .word 7

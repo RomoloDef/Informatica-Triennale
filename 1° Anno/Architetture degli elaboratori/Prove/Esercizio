@@ -1,0 +1,39 @@
+# Scrivere un programma in assembly che definisca un vettore di word di lunghezza 6. Determinare con una stringa in output se le componenti inserite sono strettamenti crescenti
+# (v[i+1] > v[i]) per ogni i
+
+.data
+vettore: .word 1,2,3,4,5,6
+numero_elementi: .word 6
+stringa_output: .asciiz " le componenti sono strettamente crescenti"
+
+.text
+.globl main
+
+main:
+
+    la $t0, vettore			# carico l'indirizzo di base del vettore
+    lw $t1, numero_elementi		# carico il numero di elementi del vettore
+    li $t2, 0				# inizializzo l'indice del vettore
+    
+loop:
+    mul $t3, $t2, 4			# spiazzamento quindi indice * dimensione
+    add $t3, $t0, $t3			# addizioniamo lo spiazzamento alla posizione ovvero l'indirizzo base
+    
+    lw $t4,($t3)			# nella pratica questo è come se fosse array[i]
+    
+    addiu $t2, $t2, 1       	# incrementa l'indice
+    beq $t2, $t1, messaggio 	# se abbiamo raggiunto l'ultimo elemento, vai al messaggio
+    
+    mul $t3, $t2, 4         	# calcola lo spiazzamento
+    add $t3, $t0, $t3       	# aggiungi lo spiazzamento all'indirizzo base
+    lw $t5,($t3)            	# carica array[i+1] in $t5
+    
+    bgt $t5, $t4, loop      	# se array[i+1] è maggiore di array[i], continua il ciclo
+
+messaggio:
+    li $v0, 4
+    la $a0, stringa_output
+    syscall
+
+    li $v0, 10
+    syscall

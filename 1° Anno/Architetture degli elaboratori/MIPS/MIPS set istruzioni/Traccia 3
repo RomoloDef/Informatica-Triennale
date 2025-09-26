@@ -1,0 +1,26 @@
+# Scrivere un programma che converta un valore da scala Celsius a scala Fahrenheit. Definire in memoria una variabile intera (word) riportante
+# il valore in scala Celsius. Riportare il risultato in scala Fahrenheit in $t0 e in una cella di memoria.
+
+.text
+.globl main
+
+main:
+	lw $t1, gradoC # inserisco gradoC in $t1
+	li $t2, 9 # inserisco 9 in $t1
+	li $t3, 5 # inserisco 5 in $t1
+	# calcolare la formula per convertire
+	div $t4, $t2, $t3 # divido 9 e 5
+	mul $t0, $t1, $t4 # moltiplico gradoC per questa divisione
+	li $t5, 32 # carico 32 in $t5
+	add $t0, $t0, $t5 # addiziono
+	
+# termine del programma
+li $v0, 1
+move $a0, $t0
+syscall
+
+li $v0, 10
+syscall
+	
+.data
+gradoC: .word 38 # inserisco il grado Celsius che voglio convertire

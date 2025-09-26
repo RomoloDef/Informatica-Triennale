@@ -1,0 +1,49 @@
+# sia dato un vettore costruito da N (compreso tra 0 e 10) interi, calcolare la somma e trovare il massimo
+
+.data
+vettore: .space 40
+
+.text
+.globl main
+
+main:
+	li $v0, 5
+	syscall
+	move $t1, $v0	# dimensione del vettore
+	
+	li $t2, 0	# indice del vettore
+	
+	li $t4, 0 	# inizializzazione della somma
+	
+	li $t5, 0	# inizializzazione massimo
+	
+ciclo:	
+	li $v0, 5
+	syscall
+	move $t0, $v0		# intero da inserire all'interno del vettore
+	beq $t2, $t1, fine
+	mul $t3, $t3, $t1	# posizione = indice*dimensione
+	sw $t0, vettore($t3)	# salvare l'intero nella posizione
+	add $t4, $t4, $t0	# somma
+	bge $t0, $t5, massimo
+	j skippa
+	
+massimo:
+	move $t5, $t0
+
+skippa:
+	addi $t2, $t2, 1	# incremento indice
+	j ciclo
+
+fine:
+	move $a0, $t4
+	li $v0, 1
+	syscall
+	move $a0, $t5
+	li $v0, 1
+	syscall
+	li $v0, 10
+	syscall
+	
+	
+	

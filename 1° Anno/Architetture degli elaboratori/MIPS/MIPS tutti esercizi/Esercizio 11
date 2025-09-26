@@ -1,0 +1,76 @@
+# Scrivere un programma in linguaggio assemblativo MIPS/MARS che, dato in input da tastiera lo stipendio di un dipendente, calcola la trattenuta da versare. Lo stipendio è immesso da testiera con un numero intero
+
+.text
+.globl main
+
+main:
+
+	li $v0, 4		# carico il codice della syscall
+	la $a0, stipendio	# carico la stringa in memoria
+	syscall
+	
+	li $v0, 5		# carico il codice di syscall per leggere un intero
+	syscall
+	move $t0, $v0		# sposto il numero intero letto nel registro $t0
+	
+	li $t1, 10000		# carico il valore 100000
+	li $t2, 28000		# carico il valore 280000
+	li $t3, 50000		# carico il valore 500000
+	
+	lwc1, $f0, ventitre		# carico il valore 23.0
+	lwc1, $f1, ventotto		# carico il valore 28.0
+	lwc1, $f2, quarantatre		# carico il valore 43.0
+	lwc1, $f3, cento		# carico il valore 100.0
+	
+	
+	blt $t0, $t1, FINE
+	j PRIMOCASO
+	
+PRIMOCASO:
+	bgt $t0, $t2, SECONDOCASO
+	div.s $f4, $f0, $f3	# faccio il 23%
+	mfc1 $t4, $f4		# sposto il valore calcolato in un registro generale
+	mul $t5, $t0, $t4	# calcolo la trattenuta da versare
+	
+	li $v0,1
+	syscall
+	
+	li $v0,10
+	syscall
+	
+SECONDOCASO:
+	bgt $t0, $t3, TERZOCASO
+	div.s $f5, $f1, $f3	# faccio il 28%
+	mfc1 $t6, $f5		# sposto il valore calcolato in un registro generale
+	mul $t7, $t0, $t6	# calcolo la trattenuta da versare
+	
+	li $v0,1
+	syscall
+	
+	li $v0,10
+	syscall
+	
+TERZOCASO:
+	div.s $f6, $f2, $f3	# faccio il 43%
+	mfc1 $t8, $f6		# sposto il valore calcolato in un registro generale
+	mul $t9, $t0, $t8	# calcolo la trattenuta da versare
+
+	
+	li $v0,1
+	syscall
+	
+	li $v0,10
+	syscall
+	
+FINE:
+
+	li $v0,10
+	syscall
+	
+
+.data
+ventitre: .float 23.0
+ventotto: .float 28.0
+quarantatre: .float 43.0
+cento: .float 100.0
+stipendio: .asciiz "Inserisci lo stipendio di cui vuoi calcolare la trattenuta: "

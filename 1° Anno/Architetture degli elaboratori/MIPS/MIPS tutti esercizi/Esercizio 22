@@ -1,0 +1,51 @@
+# Scrivere un programma in assembly che definisca un vettore di word di lunghezza 6. Il programma deve ricavare il vettore inverso, cioè un vettore che ha le componenti invertite e, infine, stampi il vettore ricavato.
+# Esempio 156 432 5332 -23 0 688
+# invertito 688 0 -23 5332 432 156
+
+.text
+.globl main
+
+main:
+	la $t0, vettore		# indirizzo al primo elemento del primo vettore
+	la $t1, vettore2	# indirizzo al primo elemento del secondo vettore
+	lw $t2, lunghezza	# lunghezza dei due vettori
+	li $t3, 0		# indice del primo vettore
+	li $t4, 5		# indice del secondo vettore
+	
+loop:	
+	mul $t5, $t3, $2	# indice * dimensione (posizione relativa) - primo vettore
+	mul $t6, $t4, $t2	# indice * dimensione (posizione relativa) - secondo vettore
+
+	lw $t7, 0($t8)	# $t7 = vettore[i]
+	sw $t7, 0($t1)	# $t7 = vettore2[j]
+	
+	addi $t3, $t3, 1	# incremento indice. i++
+	addi $t4, $t4, -1	# decremento indice. j--
+	ble $t3, $t4, loop	# verifico se l'indice è minore o uguale all'altro per continuare
+	
+	# Stampa il vettore inverso
+    	li $t3, 0
+    	la $t5, vettore2
+    	
+print_loop:
+    mul $t5, $t3, 4
+    lw $a0, 0($t1)
+    li $v0, 1
+    syscall
+    addi $t3, $t3, 1
+    blt $t3, $t2, print_loop
+
+    # Uscita dal programma
+    li $v0, 10             # Codice syscall per uscire dal programma
+    syscall
+
+    # Uscita dal programma
+    li $v0, 10             # Codice syscall per uscire dal programma
+    syscall
+	
+	
+
+.data
+vettore: .word 156, 432, 5332, -23, 0, 688
+vettore2: .space 24				# indico he lo spazio del vettore è di 24 che diviso per 4 fa 6 quindi anch'esso ha lunghezza 6
+lunghezza: .word 6

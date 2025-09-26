@@ -1,0 +1,82 @@
+.text
+.globl main
+
+main:
+    # Stampa la stringa di input (prompt)
+    li $v0, 4          # syscall per stampare una stringa
+    la $a0, stringin   # indirizzo della stringa di input (prompt)
+    syscall
+
+    # Leggi la stringa di input
+    li $v0, 8          # syscall per leggere una stringa
+    la $a0, stringin   # indirizzo della stringa di input
+    li $a1, 256        # lunghezza massima della stringa da leggere
+    syscall
+
+    # Trova i dittonghi ascendenti relativi alla lettera 'I' nella stringa
+    la $a0, stringin   			# indirizzo della stringa di input
+    jal count_ascending_diphthongs
+
+    # Uscita dal programma
+    li $v0, 10         # syscall per uscire
+    syscall
+
+# Funzione per contare i dittonghi ascendenti relativi alla lettera 'I' nella stringa
+# Argomenti:
+#   $a0: indirizzo della stringa
+# Utilizza $t0, $t1, $t2 per scorrere la stringa
+count_ascending_diphthongs:
+    li $t0, 0          # inizializza l'indice di scorrimento della stringa
+    li $t1, 0          # contatore dei dittonghi ascendenti
+
+loop:
+    lb $t2, 0($a0)     		# carica un carattere dalla stringa
+    beqz $t2, end_loop 		# se è raggiunto il terminatore '\0', esci dal loop
+
+    # Controlla se il carattere corrente è 'I' 
+    li $t3, 73
+    beq $t2, $t3, check_next_vowel # se il carattere corrente è 'I', controlla il successivo
+
+    # Continua a scorrere la stringa
+    addi $a0, $a0, 1   # avanza alla prossima posizione nella stringa
+    j loop
+
+check_next_vowel:
+    # Carica il carattere successivo
+    lb $t2, 1($a0)
+    beqz $t2, end_loop # se è raggiunto il terminatore '\0', esci dal loop
+
+    # Verifica se il carattere successivo è una delle vocali ascendenti
+    li $t3, 65         # 'A'
+    beq $t2, $t3, increment_diphthong_count
+    li $t3, 69         # 'E'
+    beq $t2, $t3, increment_diphthong_count
+    li $t3, 73         # 'I'
+    beq $t2, $t3, increment_diphthong_count
+    li $t3, 79         # 'O'
+    beq $t2, $t3, increment_diphthong_count
+    li $t3, 85         # 'U'
+    beq $t2, $t3, increment_diphthong_count
+
+    # Se non è una vocale ascendente, continua a scorrere la stringa
+    addi $a0, $a0, 1   # avanza alla prossima posizione nella stringa
+    j loop
+
+increment_diphthong_count:
+    # Se è stato trovato un dittongo ascendente con 'I', incrementa il contatore
+    addi $t1, $t1, 1   # incrementa il contatore dei dittonghi ascendenti
+
+    # Avanza alla posizione successiva nella stringa
+    addi $a0, $a0, 1   # avanza alla posizione successiva
+    j loop
+
+end_loop:
+    # Stampa il numero totale di dittonghi ascendenti con 'I' trovati nella stringa
+    li $v0, 1           # syscall per stampare un intero
+    move $a0, $t1       # carica il valore del contatore
+    syscall
+
+    jr $ra             # ritorna alla funzione chiamante
+
+.data
+stringin: .asciiz "Inserisci una stringa tuta in maiuscolo: "

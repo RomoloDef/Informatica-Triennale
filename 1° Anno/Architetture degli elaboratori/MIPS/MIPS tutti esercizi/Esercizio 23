@@ -1,0 +1,50 @@
+# Scrivere un programma in assembly che definisca un vettore di word di lunghezza 6. Determinare con una stringa in output se le componenti inserite sono strettamente crescenti (v[i+1] > v[i] per ogni i
+
+.text
+.globl main
+
+main:
+    li $t0, 0                   # Inizializza l'indice i
+    la $t1, array               # Carica l'indirizzo del vettore
+    lw $t2, lunghezza_array     # Carica la lunghezza del vettore
+    sub $t2, $t2, 1             # Calcola l'ultimo indice valido
+
+for_loop:
+    blt $t0, $t2, check_order   # Controlla se l'indice i è minore della lunghezza-1
+
+    # Se siamo arrivati alla fine senza trovare una violazione
+    la $a0, crescente           # Carica l'indirizzo della stringa crescente
+    li $v0, 4                   # Codice di syscall per stampare una stringa
+    syscall
+    j fine                      # Salta alla fine del programma
+
+check_order:
+    mul $t3, $t0, 4             # Calcola l'offset per l'elemento i nel vettore
+    lw $t4, array($t3)          # Carica v[i]
+
+    # Calcola l'offset per l'elemento i+1 nel vettore
+    addi $t5, $t3, 4            # $t5 = $t3 + 4 (offset per array[i+1])
+    lw $t6, array($t5)          # Carica v[i+1]
+
+    blt $t4, $t6, increment_i    # Se v[i] < v[i+1], continua con il prossimo elemento
+    j decrescente_messaggio      # Altrimenti, salta alla sezione "decrescente"
+
+increment_i:
+    addi $t0, $t0, 1            # Incrementa l'indice i
+    j for_loop                   # Ritorna al ciclo principale
+
+decrescente_messaggio:
+    la $a0, decrescente         # Carica l'indirizzo della stringa decrescente
+    li $v0, 4                   # Codice di syscall per stampare una stringa
+    syscall
+    j fine                      # Salta alla fine del programma
+
+fine:
+    li $v0, 10                  # Codice di syscall per uscire dal programma
+    syscall
+
+.data
+array: .word 1, 2, 3, 4, 5, 6
+lunghezza_array: .word 6
+crescente: .asciiz "Le componenti sono strettamente crescenti\n"
+decrescente: .asciiz "Le componenti non sono strettamente crescenti\n"

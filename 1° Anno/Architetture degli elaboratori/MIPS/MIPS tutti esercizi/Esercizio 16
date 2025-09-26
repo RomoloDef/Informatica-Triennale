@@ -1,0 +1,47 @@
+# Scrivere in linguaggio assemblativo MIPS/MARS un programma che dato in input base altezza di un triangolo rettangolo passi tali valori ad una funzione attraverso la quale si possano stabilire ipotenusa, area e perimetro del triangolo.
+
+.text
+.globl main
+
+main:
+    lwc1 $f12, base      # Carica la base in $f12 - registri $f12+2 per mandare in stampa i valori
+    lwc1 $f14, altezza   # Carica l'altezza in $f14
+
+    jal CALCOLO          # Chiama la subroutine CALCOLO
+
+    # Stampa l'ipotenusa
+    li $v0, 2
+    mov.s $f12, $f16     # Carica l'ipotenusa in $f12 per la stampa
+    syscall
+
+    # Stampa l'area
+    li $v0, 2
+    mov.s $f12, $f18     # Carica l'area in $f12 per la stampa
+    syscall
+
+    # Stampa il perimetro
+    li $v0, 2
+    mov.s $f12, $f20     # Carica il perimetro in $f12 per la stampa
+    syscall
+
+    # Termina il programma
+    li $v0, 10
+    syscall
+
+CALCOLO:
+    mul.s $f16, $f12, $f12     # Calcola base^2
+    mul.s $f18, $f14, $f14     # Calcola altezza^2
+    add.s $f20, $f16, $f18     # Somma base^2 + altezza^2 per trovare ipotenusa^2
+    sqrt.s $f16, $f20          # Calcola l'ipotenusa
+
+    mul.s $f18, $f12, $f14     # Calcola base * altezza per trovare l'area
+    div.s $f18, $f18, $f12     # Divide per 2 per ottenere l'area
+
+    add.s $f20, $f12, $f14     # Calcola base + altezza per trovare il perimetro
+    add.s $f20, $f20, $f16     # Aggiunge l'ipotenusa per completare il perimetro
+
+    jr $ra                     # Ritorna alla funzione chiamante
+
+.data
+base: .float 5.0
+altezza: .float 7.0

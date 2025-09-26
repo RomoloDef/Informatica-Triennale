@@ -1,0 +1,35 @@
+# Realizzare un programma in assembly MARS che, definita una stringa in memoria e letto un carattere da tastiera, calcola il numero di occorrenze del carattere nella stringa.
+
+.text
+.globl main
+
+main:
+	li $v0, 12		# codice per la lettura di un carattere di syscall
+	syscall
+	move $t0, $a0		# sposto il carattere in $t0
+	
+	xor $t1, $t1, $t1	# contatore del carattere inserito
+	
+	la $t2, stringa		# indirizzo di inizio della stringa in $t0
+
+ciclo:
+	lb $t9,($t2)			# lettura i-esimo carattere
+	bne $t9, $t0, non_trovata	# se sono diversi i due caratteri allora si salta a noon trovata
+	addi $t1, $t1, 1		# si incrementa il valore del contatore
+	
+non_trovata:
+	add $t2, $t2, 1
+	bnez $t9, ciclo
+	
+	move $a0, $t1
+	li $v0, 1
+	syscall
+	
+	li $v0, 10
+	syscall
+	
+
+
+.data
+stringa: .asciiz "Questa stringa è la prova"
+carattere: .asciiz "Inserisci il carattere di cui vuoi trovare le occorrenze"

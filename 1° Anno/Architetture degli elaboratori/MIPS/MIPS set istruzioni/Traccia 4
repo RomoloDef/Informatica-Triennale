@@ -1,0 +1,39 @@
+# Scrivere un programma che, definiti due numeri appartenenti all'intervallo [-32768, 32767] in memoria, X e Y, determina le seguenti informazioni:
+# $t0 = 0 se X è un numero positivo o $t0 = 1 se X è un numero negativo (non usare l'istruzione di salto)
+# $t1 = 0 se Y è pari $t1=1 se Y è dispari (non usare operazioni logiche-aritmetiche e istruzioni di salto)
+# $t2 riporta X+Y
+# $t3 riporta il valore massimo in valore assoluto tra (±X) + (±Y)
+
+.text
+.globl main
+
+main:
+	lw $t4, X         # Carico il valore di X dalla memoria in $t4
+    	lw $t5, Y         # Carico il valore di Y dalla memoria in $t5
+    	
+    	#$t0
+    	sra $t0, $t4, 15  # Shift aritmetico a destra di 15 bit per ottenere il segno di X in $t0
+    	#$t1
+    	andi $t1, $t5, 1   # Esegue un AND bit a bit tra $t5 e 1 per controllare l'ultimo bit di Y
+    	# Calcolo $t2
+    	add $t2, $t4, $t5 # somma inserita in $t2
+    	#$t3
+    	abs $t6, $t4       # Calcolo il valore assoluto di X e salvato in $t6
+    	abs $t7, $t5       # Calcolo il valore assoluto di Y e salvato in $t7
+    	add $t3, $t6, $t7  # Somma i valori assoluti di X e Y
+
+    # Termina il programma
+    li $v0, 10
+    syscall
+
+
+
+
+
+
+
+.data
+X: .word 100 # definisco 100 in X
+Y: .word -23 # definisco -23 in Y
+
+

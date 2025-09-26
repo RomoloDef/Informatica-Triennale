@@ -1,0 +1,39 @@
+.data
+vettore: .word 0,1,2,3,4,5 
+numeroelementi: .word 6
+tabulato: .asciiz "\n"
+
+.text
+.globl main
+
+main:
+	li $t0, 0
+	lw $t1, numeroelementi
+	sub $t1, $t1, 1
+	
+ciclo:
+	bge $t0, $t1, fine 
+	
+	mul $t2, $t0, 4
+	lw $t3, vettore($t2)
+	mul $t4, $t1, 4
+	lw $t5, vettore($t4)
+	
+	sw $t5, vettore($t2)           # vettore[$t0] = $t5
+   	sw $t3, vettore($t4)           # vettore[$t1] = $t3
+	
+	move $a0, $t3
+	li $v0, 1
+	syscall
+	
+	la $a0, tabulato
+	li $a0, 4
+	syscall
+	
+	addi $t0, $t0, 1
+	addi $t1, $t1, -1
+	j ciclo
+	
+fine:
+	li $v0, 10
+	syscall

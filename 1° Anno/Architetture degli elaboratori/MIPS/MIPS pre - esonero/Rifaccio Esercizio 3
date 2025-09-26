@@ -1,0 +1,69 @@
+.data
+stringin: .asciiz "Scrivi la tua stringa in maiuscolo: "
+stringa: .space 256
+
+.text
+.globl main
+
+main:
+    # Lettura della stringa che chiede di inserire una stringa
+    li $v0, 4
+    la $a0, stringin
+    syscall
+    
+    # Lettura della stringa da tastiera
+    li $v0, 8
+    la $a0, stringin	# indirizzo di stringa della stringa
+    li $a1, 256
+    syscall
+    
+    la $t0, stringin	# lettura indirizzo della stringa immessa da tastiera
+    
+    li $t2, 73		# lettura del carattere ASCII I = 73
+    li $t3, 0 			# contatore dei dittonghi
+    
+ciclo:
+    
+    lb $t1, ($t0)				# lettura i - esimo carattere
+    beq $t1, $zero, fine_ciclo			# controllo
+    bge $t1, $t2, controllo_dittonghi		# se trovo la lettera I allora passo ad un controllo
+    addi $t0, $t0, 1				# incremento l'indirizzo della stringa e quindi la continuo a scorrere
+    j ciclo					# si continua il ciclo fino a quando non si ragiunge la fine della stringa
+    
+controllo_dittonghi:
+    # devo ora controllare che il carattere successivo alla lettera I sia una vocale maiuscola
+    
+    lb $t1, ($t0)			# lettura del carattere successivo
+    beqz $t1, fine_ciclo 		# se è raggiunto il terminatore '\0', esci dal loop
+    
+     # Verifica se il carattere successivo è una delle vocali ascendenti
+        li $t4, 65         # 'A'
+        beq $t1, $t4, conteggio_dittonghi
+        li $t4, 69         # 'E'
+        beq $t1, $t4, conteggio_dittonghi
+        li $t4, 73         # 'I'
+        beq $t1, $t4, conteggio_dittonghi
+        li $t4, 79         # 'O'
+        beq $t1, $t4, conteggio_dittonghi
+        li $t4, 85         # 'U'
+        beq $t1, $t4, conteggio_dittonghi
+
+        # Se non è una vocale ascendente, continua a scorrere la stringa
+        addi $t0, $t0, 1   # avanza alla prossima posizione nella stringa
+        j ciclo
+        
+conteggio_dittonghi:
+            addi $t3, $t3, 1   # incrementa il contatore dei dittonghi ascendenti
+
+        # Avanza alla posizione successiva nella stringa
+            addi $t0, $t0, 1   # avanza alla posizione successiva
+            j ciclo
+
+fine_ciclo:
+
+    li $v0, 1
+    move $a0, $t3
+    syscall
+
+    li $v0, 10
+    syscall

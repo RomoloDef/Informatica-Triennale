@@ -1,0 +1,73 @@
+# Scrivere un programma in assembly che definisca un vettore di word di lunghezza 6. Il programma
+# deve ricavare il vettore inverso, cioè un vettore che ha le componenti invertite e, infine, stampi 
+# il vettore ricavato
+
+.text
+.globl main
+
+main:
+	li $t0, 0 			# inizializzo l'indice dell'array
+	la $t1, vettore			# inizializzo l'array
+	lw $t2, lunghezza_vettore	# inizializzo la lunghezza massima dell'array
+	
+	# Calcola l'indirizzo di fine array inverso
+    	la $t3, array_inverso
+    	add $t3, $t3, $t2    # $t3 = indirizzo di fine array_inverso
+
+for_loop:
+        # Verifica se abbiamo finito di invertire l'array
+        beq $t0, $t2, end_program
+
+        # Calcola l'indirizzo dell'elemento corrente nell'array originale
+        sub $t4, $t2, $t0   # $t4 = lunghezza - 1 - i
+        sll $t4, $t4, 2      # Moltiplica per 4 (ogni elemento è una parola da 4 byte)
+        add $t5, $t1, $t4    # $t5 = indirizzo di array[lunghezza - 1 - i]
+
+        # Carica l'elemento dall'array originale
+        lw $t6, 0($t5)       # $t6 = array[lunghezza - 1 - i]
+
+        # Calcola l'indirizzo di memoria per l'elemento nell'array inverso
+        sub $t7, $t3, $t4    # $t7 = indirizzo di fine array_inverso - (lunghezza - 1 - i)
+        sw $t6, 0($t7)       # Salva l'elemento nell'array inverso
+
+        # Incrementa l'indice per l'array
+        addi $t0, $t0, 1     # Incrementa l'indice i
+
+        # Continua il loop
+        j for_loop
+
+end_program:
+        # Stampa il vettore inverso
+        li $t0, 0            # $t0 = indice per l'array inverso
+        la $t1, array_inverso
+print_loop:
+            # Carica un elemento dall'array inverso
+            lw $a0, 0($t1)
+
+            # Stampa l'elemento
+            li $v0, 1
+            syscall
+
+            # Stampa un carattere di nuova linea
+            li $v0, 4
+            la $a0, newline
+            syscall
+
+            # Passa all'elemento successivo dell'array inverso
+            addi $t1, $t1, 4
+
+            # Incrementa l'indice
+            addi $t0, $t0, 1
+
+            # Verifica se tutti gli elementi sono stati stampati
+            bne $t0, $t2, print_loop
+
+        # Uscita dal programma
+        li $v0, 10           # Syscall per uscire dal programma
+        syscall
+		
+.data
+vettore: .word 156, 432, 5332, -23, 0, 688
+array_inverso: .space 24
+lunghezza_vettore: .word 6
+newline: .asciiz "\n"

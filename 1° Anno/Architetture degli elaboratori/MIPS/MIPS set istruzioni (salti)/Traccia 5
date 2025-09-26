@@ -1,0 +1,57 @@
+# Scrivere un programma in linguaggio assemblativo MARS che legga un valore intero da tastiera e scriva su videoterminale il numero di 1 che 
+# compongono il numero acquisito
+# ESEMPIO
+# INPUT: 521 (in binario 1000001001)
+# OUTPUT: 3
+
+# Non completato
+
+.text
+.globl main
+
+main:
+    # Stampa del primo messaggio
+    li $v0, 4           # Carica il codice di servizio per la stampa della stringa
+    la $a0, numero      # Carica l'indirizzo della stringa 'numero' nella syscall
+    syscall
+
+    # Lettura del primo messaggio 
+    li $v0, 5           # Carica il codice di servizio per la lettura di un intero
+    syscall
+    move $s0, $v0       # Salvo il valore in $s0
+    
+    # Stampa del secondo messaggio
+    li $v0, 4           # Carica il codice di servizio per la stampa della stringa
+    la $a0, numero_binario  # Carica l'indirizzo della stringa 'numero_binario' nella syscall
+    syscall
+    
+    # Lettura del secondo messaggio
+    li $v0, 5           # Carica il codice di servizio per la lettura di un intero
+    syscall
+    move $s1, $v0       # Salvo il valore in $s0
+    
+    # Inizia il ciclo per stampare i bit del numero
+    li $t0, 31          # Inserisco il numero massimo di bit
+    li $t2, 0           # Inizializza un contatore a 0
+
+stampa_binario_ciclo:
+    beq $t2, $t0, fine_shift  # Se il contatore è uguale a $t0, termina il ciclo
+    srl $s0, $s0, 1           # Altrimenti, esegui uno shift logico a destra di 1
+    addi $t2, $t2, 1          # Incrementa il contatore
+    j stampa_binario_ciclo     # Ripeti il ciclo
+
+fine_shift:
+    andi $t1, $s0, 1    # Isola il bit meno significativo
+    li $v0, 11          # Carica il codice di servizio per la stampa di un carattere
+    addi $a0, $t1, '0'  # Converte il bit in carattere ('0' o '1')
+    syscall             # Esegui la syscall per stampare il bit
+
+    subi $t0, $t0, 1    # Decrementa il contatore per passare al bit successivo
+    bgez $t0, stampa_binario_ciclo  # Ripeti il ciclo fino a quando non hai stampato tutti i bit
+    
+    li $v0, 10
+    syscall
+
+.data
+numero: .asciiz "Inserisci il numero: "
+numero_binario: .asciiz "Il numero in binario è: "

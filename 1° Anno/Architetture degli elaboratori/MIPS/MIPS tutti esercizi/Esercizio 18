@@ -1,0 +1,51 @@
+# Dati due dadi con facce numerate da 0 a 5. Lanciare due dadi e scrivere su videoterminare se è uscita una coppia.
+
+.text
+.globl main
+
+main:
+    # Inizializzazione del generatore di numeri casuali
+    li $v0, 40           # Carico il codice di syscall per srand (servizio 40)
+    la $a0, seed         # Carico l'indirizzo della variabile seed (srand richiede un puntatore a int)
+    syscall
+
+    # Generazione di un numero casuale tra 0 e 5
+    li $v0, 42           # Carico il codice di syscall per rand (servizio 42)
+    syscall
+    lw $t0, rand_min     # Carico il valore minimo per la generazione casuale (0)
+    lw $t1, rand_max     # Carico il valore massimo per la generazione casuale (5)
+    div $v0, $t1         # Eseguo la divisione per ottenere il resto (modulo)
+    mfhi $t0             # Carico il resto (numero casuale tra 0 e 5) in $t0 - primo numero
+   
+    li $v0, 42
+    div $v0, $t1         # Eseguo la divisione per ottenere il resto (modulo)
+    mfhi $t2           	 # Carico il resto (numero casuale tra 0 e 5) in $t2 - secondo numero
+    
+    beq $t1, $t2, VINTO
+    j PERSO
+    
+VINTO:
+	li $v0, 4
+	la $a0, vittoria
+	syscall
+	j FINE
+
+PERSO:
+	li $v0, 4
+	la $a0, sconfitta
+	syscall
+	j FINE
+
+FINE:
+	
+	li $v0, 10
+	syscall
+
+.data
+seed: .word 123		# seme iniziale per la generazione di numeri casuali
+vittoria: .asciiz 	"I due dadi hanno fatto uscire una coppia"
+sconfitta: .asciiz 	"Non è uscita una coppia"
+
+rand_min: .word 0     # Valore minimo per la generazione casuale
+rand_max: .word 5     # Valore massimo per la generazione casuale
+    

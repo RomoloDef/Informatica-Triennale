@@ -1,0 +1,48 @@
+# Scrivere un programma in assembly che definisca un vettore di word di lunghezza 6. Determinare con una stringa di output se le componenti
+# inserite sono strettamente crescenti (v[i+1] > v[i] per ogni i)
+
+.text
+.globl main
+
+main:
+	li $t0, 0			# inizializzo l'indice dell'array
+	la $t1, array			# indirizzo di partenza per l'array
+	lw $t2, lunghezza_array		# lunghezza dell'array
+	sub $t2, $t2, 1			# lunghezza array - 1
+	
+for_loop:
+	mul $t3, $t0, 4 				# spiazzamento all'i-esimo elemento indice*dimensione
+	add $t4, $t0, 1					# $t4 = i+1
+	lw $t5,array($t3)				#v[i]
+	lw $t6,array($t4)				# v[i+1]
+	bge $t6, $t5, crescente_messaggio		# se la condizione è vera salta a crescente
+	j decrescente_messaggio				# sennò vai direttamente a decrescente
+	
+	addi $t0, $t0, 1		# incremento l'indice di 1
+	
+	blt $t0, $t1, fine		# verifico se finisce di controllare gli elementi
+	
+	li $v0, 10
+	syscall
+	
+crescente_messaggio:
+	la $a0, crescente		# carico l'indirizzo della stringa nel registro $a0
+	li $v0, 4			# carica il codice di syscall 4
+	syscall
+	j fine
+	
+decrescente_messaggio:
+	la $a0, decrescente   		# carico l'indirizzo della stringa decrescente nel registro $a0
+    	li $v0, 4             		# carico nuovamente il codice di syscall per la stampa della stringa
+    	syscall
+
+fine:
+	li $v0, 10
+	syscall
+	
+
+.data
+array: .word 1,2,3,4,5,6
+lunghezza_array: .word 6
+crescente: .ascii "Le componenti sono strettamenti crescenti"
+decrescente: .ascii "Le componenti non sono strettamenti crescenti"

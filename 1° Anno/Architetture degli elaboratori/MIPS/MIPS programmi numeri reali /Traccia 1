@@ -1,0 +1,30 @@
+# Scrivere un programma in linguaggio assemblativo MIPS/MARS che legga da testiera cinque numeri interi e stampi su videoterminale il risultato della media tra i cinque numeri
+
+.text
+.globl main
+
+main:	
+	lwc1  $f0, numero1 	# Carico nel coprocessore matematico il numero 1
+	lwc1  $f1, numero2	# Carico nel coprocessore matematico il numero 2
+	lwc1  $f2, numero3	# Carico nel coprocessore matematico il numero 3
+	lwc1  $f3, numero4	# Carico nel coprocessore matematico il numero 4
+	lwc1  $f4, numero5	# Carico nel coprocessore matematico il numero 5
+	
+	add.s $f5, $f0, $f1	# Addiziono i numeri
+	add.s $f5, $f5, $f2	# Addiziono i numeri
+	add.s $f5, $f5, $f3	# Addiziono i numeri
+	add.s $f5, $f5, $f4	# Addiziono i numeri
+	
+	lwc1 $f6, cinque  	# Carico nel coprocessore il numero dei termini di cui fare la media
+	div.s $f5, $f5, $f6
+	
+	li $v0, 10
+	syscall
+
+.data
+numero1: .float 6.0
+numero2: .float 10.0
+numero3: .float 69.0
+numero4: .float 2.0
+numero5: .float 1.0
+cinque: .float 5.0

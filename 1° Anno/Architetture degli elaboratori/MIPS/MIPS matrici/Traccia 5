@@ -1,0 +1,68 @@
+# Definire una matrice 10x10 di byte. Realizzare un programma in linguaggio assemblativo che inizializza la matrice con valori casuali 0 e 1. Permettere ad un utente di scegliere riga e colonna e decidere dopo cinque tentativi quanti elementi con valore 1 ha individuato. Ogni volta che individua un 1 l'elemento è settato a 0.
+
+.text
+.globl main
+
+.data
+matrice: .space 100
+R: .word 10
+C: .word 10
+
+main:
+	li $t0, 1
+	li $t1, 1
+	lw $t3, R
+	lw $t4, C
+	li $v0, 42
+	li $a1, 1
+	syscall
+	move $t2, $a0
+	
+analisi_riga:
+	li $t1, 1
+	
+analisi_colonna:
+	# faccio la formula per calcolare l'elemento
+	# r,c = C(r-1) + (c-1)
+	sub $t6, $t0, 1
+	mul $t9, $t6, $t3
+	sub $t7, $t1, 1
+	add $t9, $t9, $t7
+	# bisogna salvare il numero generato all'interno della matrice
+	sb $t2, matrice($t9)
+	addi $t1, $t1, 1
+	ble $t1, $t3, analisi_colonna
+	addi $t0, $t0, 1
+	ble $t0, $t2, analisi_riga
+	
+ciclo:
+	xor $t5, $t5, $t5
+	li $v0, 5
+	syscall
+	move $a0, $v0
+	move $t0, $a0
+	li $v0, 5
+	syscall
+	move $a1, $v0
+	move $t4, $a1
+	
+	sub $t6, $t0, 1
+	mul $t9, $t6, $t3
+	sub $t7, $t1, 1
+	add $t9, $t9, $t7
+	lb $t8, matrice($t9)
+	addi $t5, $t5, 1
+	li $t6, 1
+	ble $t5, $t6, ciclo
+	beq $t8, imposto
+	
+imposto:
+	
+	li $t8, 0
+	sb $t8, matrice($t9)
+	j fine
+	
+fine:
+	li $v0, 10
+	syscall
+	

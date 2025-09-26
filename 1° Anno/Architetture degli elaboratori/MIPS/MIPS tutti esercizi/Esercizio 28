@@ -1,0 +1,48 @@
+.data
+stringa1: .ascii "Ciao"
+stringa2: .ascii "Ziao"
+lunghezza_stringa: .word 4
+
+.text
+.globl main
+
+main:
+	la $t0, stringa1	# carico l'indirizzo di base della stringa 1
+	la $t1, stringa2	# carico l'indirizzo di base della stringa 2
+	
+	li $t2, 0		# carico un indice inizializzato a 0 per lo scorrimento di entrambe le stringhe
+	li $t5, 0		# contatore di lettere uguali
+	lw $t6, lunghezza_stringa
+	
+ciclo:
+	beq $2, $t6, fine
+	lb $t3, ($t0)		# lettura dell'i-esimo termine della prima stringa
+	lb $t4, ($t1)		# lettura dell'i-esimo termine della seconda stringa
+	
+	beq $t4, $t3, SIMILITUDINE
+		
+	# Incremento contatori lettere delle due stringhe e l'indice
+	addiu $t0, $t0, 1
+	addiu $t1, $t1, 1		
+	addiu $t2, $t2, 1
+	b ciclo
+	
+SIMILITUDINE:
+	
+	addiu $t5, $t5, 1		# incremento il contatore di lettere uguali
+	
+	addiu $t0, $t0, 1
+	addiu $t1, $t1, 1		
+	addiu $t2, $t2, 1
+	b ciclo
+	
+fine:
+	div $t5, $t6 		# calcolo la similitudine
+    	mflo $t7		# prendo il quoziente da $lo e lo metto in $t7
+    
+    	li $v0, 10
+    	syscall
+	
+	li $v0, 10
+	syscall
+	

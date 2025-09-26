@@ -1,0 +1,51 @@
+.data
+array: .word 48,9,7,4,5,10
+dim: .word 6
+
+.text
+.globl main
+
+main:
+la $a1, array
+lw $a2, dim
+
+jal funzione
+move $a0, $v0
+li $v0, 1
+syscall
+
+li $v0, 10
+syscall
+
+funzione:
+blez $a2, caso_base
+
+lw $t0, ($a1) #prendo elemento per elemento dell'array
+
+subu $sp, $sp, 8
+sw $ra, 0($sp)
+sw $t0, 4($sp)
+add $a1, $a1, 4
+sub $a2, $a2, 1
+jal funzione
+la $a1, array
+
+
+controlla:
+
+lw $ra, 0($sp)
+lw $t2, 4($sp) #qua stiamo riprendendo gli elementi dell'array
+add $sp, $sp, 8
+bgt $t2, $v0, scambia
+jr $ra 
+
+
+
+caso_base:
+la $a1, array
+lw $v0, ($a1) #prendo il primo elemento dell'array
+jr $ra
+
+scambia:
+move $v0, $t2
+j controlla

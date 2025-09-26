@@ -1,0 +1,38 @@
+# Scrivere un programma che crei un vettore di 100 interi contenenti numeri casuali compresi tra 0-50.
+# Successivamente il programma chiede all'utente di inserire un numero compreso tra 0-50 e ricerca tale numero nel vettore.
+# Per ogni occorrenza stampa la posizione in cui è stato trovato e alla fine della ricerca riporta anche il numero di elementi trovato
+
+.text
+.globl main
+
+main:
+	li $t0, 0	# inizializzo l'indice dell'array
+	la $t1, array	# indirizzo di partenza dell'array
+	li $t2, 100	# lunghezza massima dell'array
+	
+generare_numero:
+
+	li $v0, 42	# codice per generare un numero casuale
+	li $a0, 51	# massimo valore + 1 per fare il numero 50
+	syscall
+	
+	sw $v0, 0($t2)	# salvo i numeri nell'array
+	
+	addi $t0, $t0, 1	# incremento il l'indice
+	addi $1, $t1, 4		# si passa al prossimo elemento
+	
+	la $v1, numero		# carico il codice per inserire il numero
+	syscall
+	
+	
+	
+	blt $t0, $t1, generare_numero
+	
+	li $v0, 10
+	syscall
+	
+	
+
+.data
+array: .space 400 #(100 * 4 byte)
+numero: .asciiz "Inserisci il numero da ricercare: " 

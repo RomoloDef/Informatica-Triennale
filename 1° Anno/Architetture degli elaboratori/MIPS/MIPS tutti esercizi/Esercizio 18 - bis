@@ -1,0 +1,42 @@
+# Dati due dadi con facce numerate da 0 a 5. Lanciare due dadi e scrivere su videoterminare se è uscita una coppia.
+
+.text
+.globl main
+
+main:
+
+	# generazione del primo numero del primo dado
+	li $v0, 42	# codice syscall per la generazione del numero
+	li $a1, 6	# valore massimo che il numero casuale può raggiungere
+	syscall
+	move $t0, $a0
+	
+	# generazione del secondo numero del secondo dado
+	li $v0, 42	# codice syscall per la generazione del numero
+	li $a1, 6	# valore massimo che il numero casuale può raggiungere
+	syscall
+	move $t1, $a0
+	
+	beq $t1, $t0, VITTORIA		# se i due valori generati sono uguali allora passa a VITTORIA
+	
+	la $a0, messaggio_sconfitta
+    	li $v0, 4
+    	syscall
+    	j fine
+	
+VITTORIA:
+	la $a0, messaggio_coppia
+	li $v0, 4
+	syscall
+	j fine
+	
+	
+fine:
+	li $v0, 10
+	syscall
+	
+
+
+.data
+messaggio_coppia: .ascii "è uscita una coppia\n"
+messaggio_sconfitta: .ascii "non è uscita una coppia\n"	

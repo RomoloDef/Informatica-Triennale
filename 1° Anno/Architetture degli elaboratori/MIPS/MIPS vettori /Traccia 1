@@ -1,0 +1,65 @@
+# Scrivere un programma in assembly che definisca un vettore di word di lunghezza 10. Legga i numeri immessi da tastiera dall'utente.
+# Stampa i valori immessi nel vettore
+
+.text
+.globl main
+
+main:
+	li $t0, 0 	# inizializzo l'indice dell'array
+	li $t1, array	# inizializzo l'array
+	li $t2, 10	# inizializzo la lunghezza massima dell'array
+	
+input_loop:
+	# carico il messaggio di inserire il numero
+	li $v0, 4		# codice
+	la $v0, messaggio	# carico il messaggio
+	syscall
+	
+	# lettura del messaggio per inserire il numero
+	li $v0, 5		# codice
+	syscall
+	move $t3, $v0		# sposto il contenuto del messaggio dal registro $v0 al registro $t3
+	
+	sw $t3, 0($t1)		# salva il numero dell'array all'indirizzo $t1
+	add $t1, $t1, 1		# si passa all'elemento successivo dell'array
+	
+	add $$t0, $t0, 1	# incremento l'indice
+	
+	bne $t0, $t2, input_loop	# si verifica che l'array sia completo
+	
+	# Stampa i valori immessi nell'array
+    	li $t0, 0            # Ripristina l'indice a 0 per la stampa
+    	la $t1, array        # Ripristina il puntatore all'inizio dell'array
+
+print_loop:
+    	# Carica un elemento dall'array
+    	lw $a0, 0($t1)
+
+    	# Stampa l'elemento
+    	li $v0, 1
+    	syscall
+
+    	# Stampa un carattere di nuova linea
+    	li $v0, 4
+    	la $a0, newline
+    	syscall
+
+    	# Passa all'elemento successivo dell'array
+    	addi $t1, $t1, 4
+
+    	# Incrementa l'indice
+    	addi $t0, $t0, 1
+
+    	# Verifica se tutti gli elementi sono stati stampati
+    	bne $t0, $t2, print_loop
+
+    	# Uscita dal programma
+    	li $v0, 10
+    	syscall
+		
+	
+.data
+array: .space 40 # Array di 10 word (ogni word è 4 byte)
+messaggio: .asciiz "Inserisci un numero: "
+nuovalinea: .asciiz "\n"
+

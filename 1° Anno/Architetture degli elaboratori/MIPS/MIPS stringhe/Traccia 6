@@ -1,0 +1,51 @@
+# Realizzare un programma in assembly MARS che concatena due stringhe definite in memoria. La concatenazione è l'unione di due stringhe.
+# Es: stringa1: "Gatto", stringa2: "matto" --> concatenazione = "Gattomatto"
+
+.text
+.globl main
+
+main:
+    # Trova la lunghezza della prima stringa (stringa1)
+    la $t0, stringa1        # Carica l'indirizzo di inizio della prima stringa in $t0
+    li $t1, 0               # Inizializza il contatore della lunghezza a 0
+
+    # Calcola la lunghezza della prima stringa (stringa1)
+loop1:
+    lb $t2, ($t0)           # Carica il carattere corrente della stringa1
+    beqz $t2, calc_end      # Se il carattere è '\0', termina il ciclo
+    addi $t0, $t0, 1        # Avanza al prossimo carattere
+    addi $t1, $t1, 1        # Incrementa il contatore della lunghezza
+    j loop1
+
+calc_end:
+    # Trova l'indirizzo di inizio della seconda stringa (stringa2)
+    la $t0, stringa2        # Carica l'indirizzo di inizio della seconda stringa in $t0
+
+    # Copia la seconda stringa (stringa2) dopo la prima (stringa1)
+    la $t3, stringa1        # Carica l'indirizzo di inizio della prima stringa in $t3
+    add $t3, $t3, $t1       # Aggiungi la lunghezza della prima stringa per trovare la fine
+    j copy_loop
+
+copy_loop:
+    lb $t2, ($t0)           # Carica il carattere corrente della seconda stringa (stringa2)
+    beqz $t2, end_copy      # Se il carattere è '\0', termina il ciclo
+
+    sb $t2, ($t3)           # Copia il carattere corrente nella posizione corretta dopo la prima stringa
+    addi $t0, $t0, 1        # Avanza al prossimo carattere della seconda stringa
+    addi $t3, $t3, 1        # Avanza alla posizione successiva nella stringa concatenata
+    j copy_loop
+
+end_copy:
+    # Stampa la stringa concatenata
+    li $v0, 4               # Carica il codice di servizio per la stampa della stringa
+    la $a0, stringa1        # Carica l'indirizzo di inizio della stringa concatenata (stringa1)
+    syscall
+
+    # Termina il programma
+    li $v0, 10              # Carica il codice di servizio per l'uscita dal programma
+    syscall
+	
+
+.data
+stringa1: .asciiz "Gatto"
+stringa2: .ascii "matto"

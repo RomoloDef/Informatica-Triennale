@@ -1,0 +1,25 @@
+# Scrivere un programma in linguaggio assemblativo MARS che definiti cinque interi positivi definiti in memoria ne calcoli la media aritmetica (per valori interi)
+# riportare il risultato in $t0 o stamparlo su videoterminale
+
+.text
+.globl main
+
+main:
+	li $t1, 0 # carico 0
+	li $t2, 11 # carico 11
+	li $t3, 7 # carico 7
+	li $t4, 1982 # carico 1982
+	li $t5, 10051980 #carico 10051980
+	add $t0, $t1, $t2 # sommo il contenuto di $t1 e $t2 in $t0
+	add $t0, $t0, $t3 # aggiungo il contenuto di $t3
+	add $t0, $t0, $t4 # aggiungo il contenuto di $t4
+	add $t0, $t0, $t5 # aggiungo il contenuto di $t5
+	li $t6, 5 # carico in $t6 5 che è il numero di interi
+	div $t0, $t0, $t6 # faccio la media
+
+# termine del programma
+li $v0,10
+syscall
+
+	
+	

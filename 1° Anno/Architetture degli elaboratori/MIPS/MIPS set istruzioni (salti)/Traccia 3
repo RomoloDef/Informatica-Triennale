@@ -1,0 +1,42 @@
+# Scrivere un programma in linguaggio assemblativo MARS che legge un valore intero da tastiera e scrive su videoterminale se il bit alla terza posizione meno significativa del numero acquisito ha un 1. 
+
+.text
+.globl main
+
+main:
+	li $v0, 4 # Carico il codice di sistema per la stampa di una stringa
+	la $a0, numero # carico l'indirizzo della stringa numero
+	syscall
+	
+	li $v0, 5 # carico il codice per la lettua
+	syscall
+	move $t0, $v0 # sposto il contenuto di $v0 in $t0
+	
+	srl $t1, $t0, 2 # shifto a destra di due posizioni il bit che mi serve
+	
+	 andi $t1, $t1, 1    # $t1 conterrà 1 se il bit spostato è 1, altrimenti conterrà 0
+
+    	# Stampo il risultato in base al valore del bit
+    	beq $t1, $zero, bit_è_0   # Se $t1 == 0 (bit è 0), salta a bit_is_0
+
+    	# Se il bit è 1, stampa un messaggio che indica che è 1
+    	li $v0, 4           # Carica il codice di sistema per la stampa di una stringa
+    	la $a0, uno    # Carica l'indirizzo della stringa one_msg
+    	syscall             # Esegui la syscall per la stampa
+    	j fine              # Salta alla fine del programma
+
+      bit_è_0:
+   	 # Se il bit è 0, stampa un messaggio che indica che è 0
+    	li $v0, 4           # Carica il codice di sistema per la stampa di una stringa
+    	la $a0, zero    # Carica l'indirizzo della stringa zero_msg
+    	syscall             # Esegui la syscall per la stampa
+	
+      fine:
+    	# Termina il programma
+    	li $v0, 10          # Carica il codice di sistema per l'uscita dal programma
+    	syscall             # Esegui la syscall
+
+.data
+numero: .asciiz "Inserisci un numero intero: "
+uno:    .asciiz "Il bit alla terza posizione meno significativa è 1.\n"
+zero:   .asciiz "Il bit alla terza posizione meno significativa è 0.\n"

@@ -1,0 +1,44 @@
+# Realizzare un programma in assembli MIPS che permetta l'immisione da input, di un valore x intero (word) e stampa, a videoterminale, y cosi definito
+# Y = [log„2(x)]
+
+.text
+.globl main
+
+main:
+	# stampa della stringa
+	li $v0, 4	# codice syscall per stampare la stringa e chiedere il numero
+	la $a0, x	# caricamento della strnga
+	syscall	
+	
+	# lettura vera e propria del numero
+	li $v0, 5	# codice syscall per lettura di un intero
+	syscall
+	move $t0, $a0	# sposto il valore del numero inserito nel registro $t0
+	
+	li $t1, 2	# carico nel registro $t1, il valore 2 per poter ciclare e dividere sempre il valore di x
+	li $t2, 1	# carico nel registro $t1, il valore 1 per poter fare il confronto
+	li $t3, 0	# contatore del logaritmo
+	li $t4, 0	# carico nel registro $t4, il valore 0 per poter fare un salto
+	
+ciclo:
+	bgtz $t0, divisibile
+	j fine
+
+divisibile:
+	div $t0, $t0, $t1	# divido sempre per 2 il valore di x
+	mfhi $t5		# salvo il resto
+	
+	beq $t5, $t4, ciclo	# se il resto è 0 si continua a dividere
+	addi $t3, $t3, 1	# incremento il contatore
+	j ciclo			# e continuo
+	
+fine:
+	move $a0, $t5
+	li $v0, 1		# stampo il valore di x
+	syscall
+	
+	li $v0, 10
+	syscall
+	
+.data
+x: .asciiz "Inserisci il valore x intero: "

@@ -1,0 +1,57 @@
+# Realizzare un programma in assembly MARS che, definita una stringa in memoria e letto un carattere alfabetivo da tastiera, che trova la prima
+# occorrenza in un astringa senza distinzione tra maiuscole e minuscole.
+
+.text
+.globl main
+	
+main:
+    	# Stampa del messaggio per inserire il carattere
+    	li $v0, 4       # Carica il codice di servizio per la stampa della stringa
+    	la $a0, N       # Carica l'indirizzo della stringa 'N' nella syscall
+    	syscall
+
+    	# Lettura del carattere da tastiera
+    	li $v0, 12      # Carica il codice di servizio per la lettura di un carattere
+    	syscall
+    	move $t8, $v0   # Salva il carattere letto in $t8
+    	
+    	# Inizializza il contatore delle occorrenze
+    	li $t2, 0       # $t2 = 0 (contatore delle occorrenze)
+
+    	# Inizializza il puntatore alla stringa
+    	la $t1, stringa # Carica l'indirizzo di inizio della stringa in $t1
+    	
+ciclo:
+	lb $t9, ($t1)   # Carica il carattere corrente della stringa in $t9
+   	beqz $t9, fine  # Termina il ciclo se troviamo il terminatore di stringa (\0)
+   	
+   	beq $t9, $t8, trovata	# se i caratteri corrispondono c'è la corrispondenza
+   	
+   	addi $t1, $t1, 1	# incrementa
+   	j ciclo
+   	
+trovata:
+	# Stampa del messaggio 
+    	li $v0, 4       		# Carica il codice di servizio per la stampa della stringa
+    	la $a0, carattere_trovato       # Carica l'indirizzo della stringa 'carattere_trovato' nella syscall
+    	syscall
+    	
+    	#Termine programma
+    	li $v0, 10
+    	syscall
+    	
+fine:	
+	# Stampa del messaggio
+	li $v0, 4			# Carica il codice di servizio per la stampa della stringa
+	la $a0, carattere_non_trovato	# Carica l'indirizzo della stringa 'carattere_non_trovato' nella syscall
+	syscall
+	
+	#Termine programma
+	li $v0, 10
+	syscall
+	
+.data
+N: .asciiz "Inserisci il carattere di cui si vogliono trovare le occorrenze: "
+stringa: .asciiz "prova di questa stringa"
+carattere_trovato: .asciiz "Prima occorrenza trovata"
+carattere_non_trovato: .asciiz "Carattere non trovato"

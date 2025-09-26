@@ -1,0 +1,38 @@
+# Scrivere un programma in assembly che definisca un vettore di word di lunghezza 10. Legga i numeri immessi da tastiera dall’utente. Stampa i valori immessi nel vettore.
+
+.text
+.globl main
+
+main:
+	lw $t1, lunghezza_vettore	# carico la lunghezza del vettore
+	li $t2, 0			# inizializzo l'indice del vettore a 0
+	
+	li $v0, 4		# codice per la syscall
+	la $a0, n		# carico il numero n
+	syscall
+	
+	li $v0, 5		# leggo il numero da tastiera
+	syscall
+	move $t0, $a0		# sposto il valore in $t0
+	
+	blt $t2, $t1, loop
+	
+loop:
+	mul $t3, $t1, 4			# indice*dimensione (moltiplico per 4 perchè è word)
+	la $t4, vettore			# copio l'i-esimo elemento nel registro $t4 cioè $t4 = v[i]
+	add $t4, $t4, $t3		# indirizzo base del vettore + (indice * 4
+	move $t4, $t0			# v[i] = n
+	move $a0, $t4			# sposto in $a0 così da stamparlo
+	li $v0, 1			# codice syscall
+	syscall
+	addi $t2, $t2, 1		# incremento l'indice
+	blt $t2, $t1, loop
+	
+li $v0, 10
+syscall
+	
+	
+.data
+n: .asciiz "Inserisci un numero: "
+vettore: .space 40
+lunghezza_vettore: .word 10

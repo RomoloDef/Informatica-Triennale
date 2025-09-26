@@ -1,0 +1,86 @@
+# Scrivere un programma in linguaggio assembaltivo MIPS/MARS che legga da tastiera tre numeri interi indicanti il raggio di altrettanti cerchi, calcola l'area di ciascun cerchio e riporta in $f0 l'area più grande, $f1 la mediana e $f2 la più piccola
+
+.text
+.globl main
+
+main:	
+	# Lettura del primo raggio
+	li $v0, 4		# carico il codice della syscall
+	la $a0, primoraggio	# carico la stringa in memoria
+	syscall
+	
+	li $v0, 5		# carico il codice di syscall per leggere un intero
+	syscall
+	move $t0, $v0		# sposto il numero intero letto nel registro $t0
+	mtc1 $t0, $f3		# sposto nel coprocessore
+	# Lettura del secondo raggio
+	li $v0, 4		# carico il codice della syscall
+	la $a0, secondoraggio	# carico la stringa in memoria
+	syscall
+	
+	li $v0, 5		# carico il codice di syscall per leggere un intero
+	syscall
+	move $t1, $v0		# sposto il numero intero letto nel registro $t0
+	mtc1 $t1, $f4		# sposto nel coprocessore
+	# Lettura del terzo raggio
+	li $v0, 4		# carico il codice della syscall
+	la $a0, terzoraggio	# carico la stringa in memoria
+	syscall
+	
+	li $v0, 5		# carico il codice di syscall per leggere un intero
+	syscall
+	move $t2, $v0		# sposto il numero intero letto nel registro $t0
+	mtc1 $t2, $f5		# sposto nel coprocessore
+	
+	lwc1 $f6, pigreco
+	
+	# calcolo delle aree di ciascun cerchio
+	# 1° area 
+	mul.s $f3, $f3, $f3	# raggio al quadrato
+	mul.s $f7, $f6, $f3	# pigreco per raggio al quadrato
+	# 2° area
+	mul.s $f4, $f4, $f4	# raggio al quadrato
+	mul.s $f8, $f6, $f4	# pigreco per raggio al quadrato
+	# 3° area
+	mul.s $f5, $f5, $f5	# raggio al quadrato
+	mul.s $f9, $f6, $f5	# pigreco per raggio al quadrato
+	
+	# Li riporto nei registri generali
+	mfc1 $t0, $f7
+	mfc1 $t1, $f8
+	mfc1 $t2, $f9
+	
+	# Ora abbiamo i tre valori da confrontare $t0, $t1 e $t2
+	
+	bgt $t0, $t1, PRIMOCONTROLLO
+	mtc1 $t1, $f0
+	j FATTO
+	
+PRIMOCONTROLLO:
+	
+	bgt $t0, $t2, SECONDOCONTROLLO
+	mtc1 $t2, $f0
+	j FATTO
+	
+SECONDOCONTROLLO:
+
+	mtc1 $t3, $f0
+	
+FATTO: 	
+
+	li $v0, 1       # Codice di syscall per stampare un intero
+	mfc1 $t4, $f0	# si sposta dal coprocessore
+    	move $a0, $t4   # Carica il valore più grande in $a0 per la stampa
+    	syscall
+    	
+    	li $v0, 10
+    	syscall
+	
+	
+	
+.data
+
+primoraggio: .asciiz "Inserisci il primo raggio: "
+secondoraggio: .asciiz "Inserisci il secondo raggio: "
+terzoraggio: .asciiz "Inserisci il terzo raggio: "
+pigreco: .float 3.14

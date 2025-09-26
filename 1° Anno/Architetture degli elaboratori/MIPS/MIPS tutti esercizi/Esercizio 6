@@ -1,0 +1,38 @@
+# Scrivere un programma in linguaggio assemblativo MARS che dato un valore intero in memoria e scrive su videoterminale se il bit alla terza 
+# posizione meno significativa ha un 1
+
+.text
+.globl main
+
+main:
+	
+	lw $t0, numero	# carico il numero nel registro $t0
+	li $t1, 0x4	# questa istruzione crea una maschera(costante) nella variabile $t1 che ha solo il terzo bit impostato a 1 che equivale a 4 in decimale
+	
+	and $t2, $t0, $t1	# l'istruzione and invece applica l'and bit-a-bit tra $t0 e $t1 con il risultato in $t2
+	
+	bne $t2, $t1, VERO
+	j FALSO
+
+VERO:
+	li $v0, 4
+	la $a0, frase
+	syscall
+	
+	j FINE
+	
+FALSO:
+	li $v0,4
+	la $a0, frasesbagliata
+	syscall
+	
+FINE:
+	li $v0,10
+	syscall
+	
+	
+
+.data
+numero: .word 4
+frase: .ascii "Il bit alla terza posizione meno significativa ha un 1\n"
+frasesbagliata: .ascii "Il bit alla terza posizione meno significativa non ha un 1\n"

@@ -1,0 +1,19 @@
+# Considerate la regola di Collatz: dato un intero positivo n, se n è pari lo si divide per 2,
+# se è dispari lo si moltiplica per 3 e si aggiunge 1 al risultato. Quando n è 1 ci si ferma
+# Ad esempio, la sequenza di Collatz di 7 è: 7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2 1
+# Scrivere in linguaggio assemblativo MIPS/MARS una funzione che, dato un numero, dia il successivo in una sequenza di Collatz.
+# Quindi, usare la funzione in un programma che chiede all’utente un numero e mostra la sequenza di Collatz del numero e la lunghezza.
+# Numero: 7
+# 7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2 1
+# Lunghezza: 17
+
+.text
+.globl main
+
+main:
+	
+	
+
+
+.data
+n: .word 7

@@ -1,0 +1,46 @@
+# Scrivere in linguaggio assemblativo MIPS/MARS una funzione che riceve in ingresso due numeri interia e b, scrivere una funzione che restituisca il risultato di a elevato alla b;
+# Proporre quindi un adeguato main di prova(i numeri possono essere definiti in memoria o - meglio - inseriti da tastiera).
+# Il risultato deve essere mostrato su videoterminale
+
+.text
+.globl main
+
+power:
+
+	lw $t0, base 		# inizializzo base
+	lw $t1, esponente	# inizializzo esponente
+	li $t2, 1		# inizializzo variabile temporanea
+    	
+    	# ciclo per elevamento alla potenza
+    	ciclo:
+    		li $t1, 1 		# inizializzo una variabile temporanea
+    		beq $t2, $zero, end	# se b = 0, termina il ciclo
+    		mult $t2, $t0		# moltiplico per la variabile temporanea
+    		mflo $t2		# salvo
+    		addi $11, $11, -1	# decremento b di uno
+    		j ciclo			# ripeto il ciclo
+    		
+    	end:
+    		li $v0, 10
+    		syscall
+    		
+    	# Memorizza il risultato
+    	sw $t2, risultato	# salvo
+    	jr $ra
+    	
+main:
+    	jal power
+    		
+    	lw $a0, risultato
+    	li $v0, 1
+    	syscall
+    	li $v0, 10
+    	syscall
+    	
+.data
+base:.word 3
+esponente:.word 4
+risultato: .word 1
+
+
+ 

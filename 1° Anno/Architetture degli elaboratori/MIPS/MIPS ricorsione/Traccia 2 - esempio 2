@@ -1,0 +1,39 @@
+# f(x) = f(x-2) - 2
+# f(1) = 14
+# f(0) = 10
+
+.text
+.globl main
+
+main:
+	li $v0, 5
+	syscall
+	move $a0, $v0
+	jal RICORSIONE
+	move $a0, $v0
+	li $v0, 1
+	syscall
+	li $v0, 10
+	syscall
+	
+RICORSIONE:
+	li $t0, 2
+	ble $a0, $t0, caso_base
+	subu $sp, $sp, 8
+	sw $ra, 0($sp)
+	sw $a0, 4($sp)
+	sub $a0, $a0, 2		# f(x-2)
+	jal RICORSIONE
+	addiu  $sp, $sp, 8
+	lw $ra, 0($sp)
+	lw $a0, 4($sp)
+	sub $v0, $v0, 2
+	jr $ra
+	
+caso_base:
+	li $v0, 10	# x = 0
+	beqz $a0, salta
+	li $v0, 14	# x = 1
+
+salta:
+	jr $ra

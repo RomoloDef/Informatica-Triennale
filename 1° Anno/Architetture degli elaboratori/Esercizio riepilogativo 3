@@ -1,0 +1,41 @@
+.data
+matrice: .space 80 # 5 x 4 x di dimensione
+R: .word 5
+C: .word 4
+
+.text 
+.globl main
+
+main:
+	li $t0, 0	# indice delle righe
+	
+	li $v0, 5
+	syscall
+	move $t1, $a0	# indice della colonna
+	
+	lw $t2, R
+	lw $t3, C
+	
+	li $s0, 0	# contatore della somma
+	
+ciclo:
+	li $v0, 5
+	syscall
+	move $t4, $a0	# valore da inserire all'interno della matrice
+	li $t5, 1
+	sub $t6, $t1, 1	 # (c-1)
+	sub $t7, $t0, 1	 # (r-1)
+	mul $t7, $t7, $t3	
+	add $t9, $t7, $t6	# C(r-1) + (c-1)
+	mul $t9, $t9, 4
+	sb $t4, matrice($t9) 
+	add $s0, $s0, $t4
+	addi $t0, $t0, 1
+	ble $t0, $t2, ciclo
+	move $a0, $s0
+	li $v0, 1
+	syscall
+	li $v0, 10
+	syscall
+	
+	

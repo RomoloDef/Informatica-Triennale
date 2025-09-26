@@ -1,0 +1,52 @@
+# Dichiarazione di un vettore su MIPS inserendo i valori da tastiera
+
+# Inanzitutto inserisco i dati che mi servono
+.data
+vettore: .space 40	# esempio di 10 elementi all'interno di un array (10 * 4 (dimensione in byte di ogni intero) )
+lunghezza_vettore: .word 10	# lunghezza desiderata
+# Inizio a scrivere il mio programma
+.text
+.globl main
+
+main:
+ 	# carico i dati inseriti in memoria
+ 	la $t0, vettore		# carico l'indirizzo base del vettore
+ 	lw $t1, lunghezza_vettore 	# carico la lunghezza del vettore
+ 	li $t2, 0		# inizializzo a 1 l'indice del vettore
+ 	
+ 	# Come si fa a leggere e inserire dei valori all'interno di un array ? Tramite un loop
+ 	
+input_loop:
+	# Lettura dell'intero
+	li $v0, 5	# codice syscall per lettura di un intero
+	syscall
+	
+	# Inserimento dell'intero letto all'interno dell'array
+	sw $v0, 0($t0)			# letteralmente, salva l'intero in $v0 all'interno del vettore $t0 - quindi è come dire che salvo l' i-esimo termine
+	addu $t0, $t0, 4		# fatto ciò bisogna anche incrementare e quindi passare all'indirizzo successivo
+	
+	addiu $t2, $t2, 1 		# incremento l'indice dell'array
+	blt $t2, $t1, input_loop	# se l'indice è ancora piu piccolo della lunghezza dell'array allora ricomincia
+
+	# Come si fa per stampare l'array quindi? Utilizzando un altro ciclo o loop
+	
+    	la $t0, vettore    		# Carica l'indirizzo di base dell'array
+    	lw $t1, lunghezza_vettore   	# Carica la lunghezza dell'array
+
+    	li $t2, 0        		# Inizializza l'indice a 0
+    	
+print_loop:
+
+	# Ad uno ad uno si caricano gli elementi che prima erano stati letti e vengono mandati instampa con il codice di syscall 1
+    	lw $a0, 0($t0)   # Carica l'elemento corrente dell'array
+    	li $v0, 1        # Codice di sistema per stampare un intero
+    	syscall          # Stampa l'intero
+
+    	addiu $t0, $t0, 4  # Aggiorna l'indirizzo di base dell'array
+
+    	addiu $t2, $t2, 1  # Incrementa l'indice
+    	blt $t2, $t1, print_loop  # Se l'indice è minore della lunghezza, continua il ciclo
+
+    # Uscita dal programma
+    li $v0, 10
+    syscall

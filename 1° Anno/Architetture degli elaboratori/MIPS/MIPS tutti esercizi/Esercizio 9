@@ -1,0 +1,60 @@
+# Scrivere un programma in linguaggio assemblativo MARS che dati un intero positivo a>2 (word) ed un intero positivo (word) b>1 e ne restituisca in output il prodotto (axb) senza utilizzare l'istruzione mul.
+
+.text
+.globl main
+
+main:
+
+	lw $t0, a	# carico a
+	lw $t1, b	# carico b
+	li $t2, 2	# carico 2
+	li $t3, 1	# carico 1
+	
+	li $t4, 0	# contiene il risultato finale
+	li $t5, 1	# maschera per estrarre i bit
+	
+	blt $t0, $t3, PRIMOMESSAGGIO
+	blt $t1, $t2, SECONDOMESSAGGIO
+	j LOOP
+	
+LOOP:
+	beq $t1, $zero, FINE	# si controlla si $t1 è diventato 0
+	
+	and $t6, $t1, $t4	# si estrae il bit meno significativo
+	
+	# Se il bit estratto è 1, somma $t0 al risultato parziale in $t2
+    	beq $t4, $zero, SKIP
+    	add $t2, $t2, $t0
+    	
+SKIP:
+    	# Shifta $t0 a sinistra di 1 bit (moltiplica per 2) e shifta $t1 a destra di 1 bit
+    	sll $t0, $t0, 1
+    	srl $t1, $t1, 1
+
+    	# Ripeti il ciclo
+    	j LOOP
+	
+	
+	
+PRIMOMESSAGGIO:
+	li $v0, 4
+	la $a0, sbagliato
+	syscall
+	
+SECONDOMESSAGGIO:
+	li $v0, 4
+	la $a0, sbagliato
+	syscall
+	
+FINE:
+	li $v0, 1
+    	move $a0, $t2
+    	syscall
+	li $v0,10
+	syscall
+	
+
+.data
+a:.word 10
+b:.word 5
+sbagliato: .ascii "Il valore non corrisponde alle regole date dalla consegna"

@@ -1,0 +1,66 @@
+# Scrivere un programma in linguaggio assemblativo MARS che legge un valore intero da tastiera e scrive su videoterminale il valore della posizione specificata da un altro numero acquisito da
+# tastiera successivamente (si può assumere che il secondo valore immesso sia un numero compreso tra 0 e 31)
+
+.text
+.globl main
+
+main:
+    # Stampa del primo messaggio 
+    li $v0, 4 		# Carica il codice di servizio per la stampa della stringa
+    la $a0, valore	# Carica l'indirizzo della stringa 'valore' nella syscall
+    syscall
+    
+    # Lettura del numero intero del primo messaggio
+    li $v0, 5		# Carica il codice di servizio per la lettura di un intero
+    syscall
+    move $s0, $v0 	# Salvo il valore in $s0
+    
+    # Stampa del secondo messaggio
+    li $v0, 4		# Carica il codice di servizio per la stampa della stringa
+    la $a0, numero	# Carica l'indirizzo della stringa 'numero' nella syscall
+    syscall
+    
+    # Lettura della posizione da cui ricavare il valore del secondo messaggio
+    li $v0, 5		# Carica il codice di servizio per la lettura di un numero
+    syscall
+    move $s1, $v0 	# Salvo il numero in $s1
+    
+    # Verifica della posizione
+    li $t0, 31 			# Inserisco il massimo valore della posizione
+    slt $t1, $s1, $zero 	# se la posizione è minore di 0 allora $t1 = 1 altrimenti $t1 = 0
+    bne $t1, $zero, errore_msg 	# se $t1 != 0 (quindi la posizione è minore di 0) allora messaggio di errore tramite salto
+    slt $t1, $t0, $s1 		# se 31 è minore della posizione allora $t1 = 1 altrimenti $t1 = 0
+    bne $t1, $zero, errore_msg 	# se $t1 != 0 (quindi la posizione è maggiore di 31) allora messaggio di errore tramite salto
+    
+    # Esecuzione dell'operazione per ottenere il valore del bit nella posizione specificata
+    move $t1, $s0    # Copia il valore in $t1
+    move $t2, $s1    # Copia il numero di shift in $t2
+
+shift_loop:
+    beq $t2, $zero, end_shift    # Se $t2 è zero, termina il ciclo
+    srl $t1, $t1, 1              # Shift logico a destra di $t1
+    sub $t2, $t2, 1              # Decrementa $t2
+    j shift_loop                 # Salta a shift_loop
+
+end_shift:
+    andi $t1, $t1, 1             # Applica un AND logico con 1 per ottenere il bit di interesse
+    
+    # Termine del programma 
+    li $v0, 1
+    move $a0, $t1
+    syscall
+    j uscita
+    
+     errore_msg:
+     li $v0, 4 		# Carico il codice di servizio
+     la $a0, errore	# Carico la stringa errore
+     syscall
+     
+     uscita:
+     li $v0, 10 	# Carico codice di uscit
+     syscall
+
+.data
+valore: .asciiz "Inserisci un numero intero "
+numero: .asciiz "Inserisci la posizione del bit da cui ricavare il valore (0-31): "
+errore: .asciiz "Errore: la posizione del bit deve essere compresa tra 0 e 31.\n"

@@ -1,0 +1,27 @@
+# La ridotta n-esima della seria armonica è definita come: Hn = 1 + 1/2 + 1/3 + ... + 1/n.
+# Si scriva un programma in linguaggio assemblativo MIPS/MARS che ripeta i passi seguenti:
+# legga da tastiera un numero intero n
+# se il numero è minore o uguale a 0 termina l'esecuzione
+# se il numero è maggiore di 0 stampa Hn (cioè la somma dei primi n termini della serie
+
+.text
+.globl main
+
+main:
+	# Stampa del messaggio per inserire n
+    	li $v0, 4     # Carica il codice di servizio per la stampa della stringa
+    	la $a0, n     # Carica l'indirizzo della stringa 'n' nella syscall
+    	syscall
+
+	# Lettura del messaggio per inserire n
+	li $v0, 5           # Carica il codice di servizio per la lettura di un intero
+    	syscall
+    	mtc1 $v0, $f0       # Converte il valore del primo raggio in virgola mobile e lo salva in $f0
+    	
+    	
+    	
+    	
+
+
+.data
+n: .asciiz "Inserisci il numero intero n: "

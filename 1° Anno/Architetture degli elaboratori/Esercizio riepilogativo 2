@@ -1,0 +1,32 @@
+.text
+.globl main
+main:
+	la $a0,stringa 
+	li $a1,255 
+	li $v0,8 
+	syscall
+	#Calcolo della lunghezza della stringa
+	la $t0,stringa #lettura indirizzo della stringa letta
+ciclo: 
+	lb $t1,($t0) 
+	beqz $t1,fine_calcolo_lung 
+	add $t0,$t0,1 
+	j ciclo 
+fine_calcolo_lung:
+	sub $t0,$t0,1 	#eliminazione del simbolo di andata a capo
+	move $t9,$t0 	#alla fine del ciclo in $t9 ci sarà la posizione assoluta dell'ultimo elemento
+	la $t0,stringa 	#posizione primo elemento della lista
+scambia:
+	lb $t2,($t0) 	#lettura i elemento (primo valore di i=0)
+	lb $t3,($t9) 	#lettura j elemento (primo valore di j=n)
+	sb $t3,($t0) 	#scambio lettere $t2.->pos[j] e $t3->pos[i]
+	sb $t2,($t9) 
+	add $t0,$t0,1 	# Incremento i
+	sub $t9,$t9,1 	# Decremento j
+	blt $t0,$t9, scambia
+	la $a0,stringa #Stampa stringa inversa
+	li $v0,4
+	syscall
+
+.data
+stringa:.space 255

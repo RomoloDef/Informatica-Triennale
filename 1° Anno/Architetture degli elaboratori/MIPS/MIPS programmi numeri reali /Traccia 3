@@ -1,0 +1,82 @@
+# Sullo stipendio dei lavoratori lo stato applica una trattenuta fiscale in base alla seguente tabella:
+# 10000 - 28000 euro 23 %
+# 28001 - 50000 euro 28 %
+# 50001 ed oltre 43 %
+# Scrivere un programma in linguagio assemblativo MIPS/MARS che, dato un input da tastiera lo stipendio di un dipendente, calcola la trattenuta da versare
+
+.text
+.globl main
+
+main:
+   Li
+    
+    # Lettura dello stipendio inserito dall'utente
+    li $v0, 5           # Carica il codice di servizio per la lettura di un intero (stipendio)
+    syscall
+    move $s0, $v0       # Salva il valore dello stipendio in $s0
+
+    # Verifica della fascia di trattenuta fiscale
+    li $t0, 10000       # Limite inferiore fascia 1
+    li $t1, 28000       # Limite superiore fascia 1
+    li $t2, 28001       # Limite inferiore fascia 2
+    li $t3, 50000       # Limite superiore fascia 2
+    li $t4, 50001       # Limite inferiore fascia 3
+
+    # Condizioni per determinare la fascia di trattenuta
+    bge $s0, $t0, PRIMA_TARIFFA
+    j FINE
+
+PRIMA_TARIFFA:
+    ble $s0, $t1, CALCOLA_TRATTENUTA_1
+    bge $s0, $t2, SECONDA_TARIFFA
+    j FINE
+
+SECONDA_TARIFFA:
+    ble $s0, $t3, CALCOLA_TRATTENUTA_2
+    bge $s0, $t4, TERZA_TARIFFA
+    j FINE
+
+CALCOLA_TRATTENUTA_1:
+    # Calcola la trattenuta al 23%
+    lwc1 $f0, ventitre    # Carica 23.0 nel registro $f0
+    lwc1 $f1, cento       # Carica 100.0 nel registro $f1
+    div.s $f2, $f0, $f1   # Calcola 23.0 / 100.0 = 0.23 (percentuale)
+    mtc1 $s0, $f3         # Carica lo stipendio in virgola mobile in $f3
+    mul.s $f4, $f3, $f2   # Calcola lo stipendio * percentuale
+    j STAMPA_TRATTENUTA
+
+CALCOLA_TRATTENUTA_2:
+    # Calcola la trattenuta al 28%
+    lwc1 $f0, ventotto    # Carica 28.0 nel registro $f0
+    lwc1 $f1, cento       # Carica 100.0 nel registro $f1
+    div.s $f2, $f0, $f1   # Calcola 28.0 / 100.0 = 0.28 (percentuale)
+    mtc1 $s0, $f3         # Carica lo stipendio in virgola mobile in $f3
+    mul.s $f4, $f3, $f2   # Calcola lo stipendio * percentuale
+    j STAMPA_TRATTENUTA
+
+TERZA_TARIFFA:
+    # Calcola la trattenuta al 43%
+    lwc1 $f0, quarantatre  # Carica 43.0 nel registro $f0
+    lwc1 $f1, cento        # Carica 100.0 nel registro $f1
+    div.s $f2, $f0, $f1    # Calcola 43.0 / 100.0 = 0.43 (percentuale)
+    mtc1 $s0, $f3          # Carica lo stipendio in virgola mobile in $f3
+    mul.s $f4, $f3, $f2    # Calcola lo stipendio * percentuale
+
+STAMPA_TRATTENUTA:
+    # Stampa il valore della trattenuta
+    li $v0, 2             # Carica il codice di servizio per la stampa di un float
+    mov.s $f12, $f4       # Carica il risultato da stampare nel registro $f12
+    syscall
+
+FINE:
+    li $v0, 10            # Termina il programma
+    syscall
+
+.data
+stipendio: .asciiz "Inserisci lo stipendio del dipendente "
+ventitre: .float 23.0
+ventotto: .float 28.0
+quarantatre: .float 43.0
+cento: .float 100.0
+
+

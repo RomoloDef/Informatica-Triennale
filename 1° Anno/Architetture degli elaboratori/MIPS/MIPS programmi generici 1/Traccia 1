@@ -1,0 +1,40 @@
+# Descrivere l'algoritmo che dato un numero intero maggiore di 2 (definito in memoria) stabilisca se il numero è primo (valore 1 in $t2) o no (valore 2 in $t2)
+# Provare ad implementare il programma in linguaggio assemblativo MARS
+# Esempio numeri primi 1,3,5,7,11,13
+# PS: un numero è primo solo se è divisibile per sè stesso e per 1
+
+.text
+.globl main
+
+main:
+	lw $t0, numero 	# Carico il valore del numero nel registro $t0
+	li $t1, 1	# Inizializzo il registro $t1 a 1
+	li $t3, 2	# Inizializzo il registro $t2 a 2 così che posso fare un primo salto
+	
+	# Inizio a vedere i casi specifici
+	ble $t0, $t3, NON_PRIMO # se il numero è minore di 2 come dice la consegna allora il valore va in $t2
+	li $t2, 1 # Inizializzo $t2 a 1 perchè presuppongo che non sia primo
+	
+	NON_PRIMO:
+	li $t2, 2 # imposto il valore 2 perchè non è primo
+	
+	# Ora ciclo per vedere se il numero è primo
+	li $t4, 3 # bisogna inizializzare un divisore per vedere se è effettivamente primo
+	
+	Ciclo:
+	bge $t4, $t0, PRIMO # se il divisore è maggiore del numero allora tutti i divisori sono stati provati
+	div $t0, $t4 # divido il numero per il divisore scelto
+	mfhi $t5 # resto divisione
+	
+	addi $t4, $t4, 1 # Incremento il divisore
+	j Ciclo
+	
+	PRIMO:
+	j end
+	
+	end:
+	li $v0,10
+	syscall
+
+.data
+numero: .word 3

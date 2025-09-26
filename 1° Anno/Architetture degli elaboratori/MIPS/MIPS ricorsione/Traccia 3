@@ -1,0 +1,47 @@
+# f(x,y) = 1 se almeno x o y è uguale a 0
+# f(x,y) = x * f(y, x-1)
+
+.text
+.globl main
+
+main:
+	li $v0, 5	# lettura x
+	syscall
+	move $a0, $v0
+	li $v0, 5	# lettura y
+	syscall
+	move $a1, $v0
+	jal FUNZIONE
+	li $v0, 1
+	syscall
+	li $v0, 10
+	syscall
+	
+FUNZIONE:
+	li $t0, 1
+	beqz $a0, caso_base
+	beqz $a1, caso_base
+	sub $a0, $a0, 1
+	move $t0, $a0      	# salva x-1 in $t0 per dopo
+        move $t1, $a1      	# salva y in $t1 per dopo
+        subu $sp, $sp, 16  	# crea spazio sullo stack
+    	sw $ra, 0($sp)     	# salva il return address
+    	sw $a0, 4($sp)     	# salva $a0
+    	sw $a1, 8($sp)     	# salva $a1
+    	sw $t0, 12($sp)    	# salva $t0
+	move $a0, $t1      	# $a1 = x - 1
+	jal FUNZIONE
+	lw $t0, 12($sp)    	# ripristina $t0
+    	lw $a1, 8($sp)     	# ripristina $a1
+    	lw $a0, 4($sp)     	# ripristina $a0
+    	lw $ra, 0($sp)     	# ripristina il return address
+    	addu $sp, $sp, 16  	# ripulisce lo stack
+	mul $v0, $a1, $v0
+	jr $ra
+	
+caso_base:
+	li $v0, 1
+	jr $ra
+	
+	
+	

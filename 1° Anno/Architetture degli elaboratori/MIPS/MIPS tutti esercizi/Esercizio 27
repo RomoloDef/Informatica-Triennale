@@ -1,0 +1,18 @@
+# Realizzare un programma in assembly MARS che rimuove il carattere spazio, " ", da una stringa definita in memoria.
+
+.text
+.globl main
+
+main:
+	
+	la $t0, stringa_spaziata
+	li $v0, 4
+	la $t1, stringa_non_spaziata
+	li $v0, 4
+	li $v0, 10
+	syscall
+
+
+.data
+stringa_spaziata: .asciiz "Questa stringa ha degli spazi"
+stringa_non_spaziata: .asciiz "Questastringahadeglispazi"

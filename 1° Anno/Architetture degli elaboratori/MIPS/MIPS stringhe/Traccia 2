@@ -1,0 +1,52 @@
+# Realizzare un programma assembly MARS che, definita una stringa in memoria e letto un carattere da tastiera, calcola il numero di occorrenze del
+# carattere nella stringa
+
+.text
+.globl main
+
+main:
+    # Stampa del messaggio per inserire il carattere
+    li $v0, 4       # Carica il codice di servizio per la stampa della stringa
+    la $a0, N       # Carica l'indirizzo della stringa 'N' nella syscall
+    syscall
+
+    # Lettura del carattere da tastiera
+    li $v0, 12      # Carica il codice di servizio per la lettura di un carattere
+    syscall
+    move $t8, $v0   # Salva il carattere letto in $t8
+
+    # Inizializza il contatore delle occorrenze
+    li $t2, 0       # $t2 = 0 (contatore delle occorrenze)
+
+    # Inizializza il puntatore alla stringa
+    la $t1, stringa # Carica l'indirizzo di inizio della stringa in $t1
+
+ciclo:
+    lb $t9, ($t1)   # Carica il carattere corrente della stringa in $t9
+    beqz $t9, fine  # Termina il ciclo se troviamo il terminatore di stringa (\0)
+
+    # Confronto il carattere corrente con quello cercato
+    beq $t9, $t8, incrementa_contatore  # Se i caratteri corrispondono, incrementa il contatore
+
+    # Altrimenti, continua con il prossimo carattere
+    addi $t1, $t1, 1  # Incrementa il puntatore alla stringa
+    j ciclo           # Ripeti il ciclo
+
+incrementa_contatore:
+    addi $t2, $t2, 1  # Incrementa il contatore delle occorrenze
+    addi $t1, $t1, 1  # Incrementa il puntatore alla stringa
+    j ciclo           # Ripeti il ciclo
+
+fine:
+    # Stampa il numero di occorrenze del carattere
+    move $a0, $t2     # Carica il numero di occorrenze in $a0
+    li $v0, 1         # Carica il codice di servizio per la stampa di un intero
+    syscall
+
+    # Termina il programma
+    li $v0, 10        # Carica il codice di servizio per l'uscita dal programma
+    syscall
+
+.data
+N: .asciiz "Inserisci il carattere di cui si vogliono trovare le occorrenze: "
+stringa: .asciiz "prova di questa stringa"

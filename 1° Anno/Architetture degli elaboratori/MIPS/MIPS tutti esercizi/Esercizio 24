@@ -1,0 +1,70 @@
+# Scrivere un programma in assembly che definsice un vettore di 10 elementi con numeri casuali compresi tra 0 e 999 e calcoli alcuni dati statistici:
+# 1) somma
+# 2) media
+# 3) min
+# 4) max
+# PS: si consgilia di usare unna funzione per ogni analisi statistica
+
+.text
+.globl main
+
+main:
+	# caricamneto dell'indirizzo di inizio del vettore
+	la $t0, vettore		# indirizzo del vettore
+	li $t1, 10		# lunghezza del vettore
+	li $t4, 0		# inizializzo la somma a 0
+	
+	jal RIEMPI_VETTORE
+	
+	jal CALCOLA_MEDIA
+	
+	li $v0, 10
+	syscall
+	
+RIEMPI_VETTORE:
+	
+	li $t2, 0		# inizializzo a 0 l'indice del vettore
+	
+loop:
+	# Generazione di un numero casuale compreso tra 0 e 999
+    	li $v0, 42          # Codice syscall per generare un numero casuale
+    	li $a0, 1000        # Massimo valore del numero casuale (999 + 1)
+    	syscall
+    	move $t3, $v0       # $t2 contiene il numero casuale generato
+
+    	# Salvataggio del numero casuale nel vettore
+    	sw $t3, ($t0)       # Salva il numero casuale all'indirizzo corrente nel vettore
+
+    	# Incremento dell'indirizzo per puntare al prossimo elemento nel vettore
+    	addi $t0, $t0, 4    # Incrementa l'indirizzo del vettore di 4 byte (una parola)
+
+    	# Incremento
+    	addi $t2, $t2, 1   # incremnta l'indice
+
+    	# Verifica se abbiamo generato tutti gli elementi del vettore
+    	blt $t2, $t1, loop      # Ripete il ciclo se il contatore non è zero
+    	
+    	jr $ra
+    	
+CALCOLA_MEDIA:
+		
+		li $t2, 0
+		li $t4, 0
+    	
+loopMEDIA:	
+		# calcolo la somma
+		lw $t3, vettore($t2)	# $t3 = v[i]
+		add $t4, $t4, $t3	# somma = somma + v[i]
+		
+		addi $t2, $t2, 4	# indice++
+		blt $t2, $t1, loopMEDIA
+		# calcolo la media
+		div $t4, $t4, $t1	# media = somma / lunghezza array
+		move $a0, $t4
+		li $v0, 1
+		syscall
+		jr $ra
+	
+
+.data
+vettore: .space 40

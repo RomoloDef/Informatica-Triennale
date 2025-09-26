@@ -1,0 +1,97 @@
+# Scrivere un programma in linguaggio assemblativo MIPS/MARS che legga da testiera tre numeri interi indicanti il raggio di altrettanti cerchi
+# calcola l'area di ciascun cerchio e riporta in $f0 l'area più grande, $f1 la mediana e $f2 la più piccola
+
+.text
+.globl main
+
+main:
+    # Stampa del messaggio per inserire il primo raggio
+    li $v0, 4           # Carica il codice di servizio per la stampa della stringa
+    la $a0, raggio1     # Carica l'indirizzo della stringa 'raggio1' nella syscall
+    syscall
+    
+    # Lettura del raggio inserito dall'utente
+    li $v0, 5           # Carica il codice di servizio per la lettura di un intero (raggio1)
+    syscall
+    mtc1 $v0, $f4       # Converte il valore del primo raggio in virgola mobile e lo salva in $f4
+    
+    # Stampa del messaggio per inserire il secondo raggio
+    li $v0, 4           # Carica il codice di servizio per la stampa della stringa
+    la $a0, raggio2     # Carica l'indirizzo della stringa 'raggio2' nella syscall
+    syscall
+    
+    # Lettura del raggio inserito dall'utente
+    li $v0, 5           # Carica il codice di servizio per la lettura di un intero (raggio2)
+    syscall
+    mtc1 $v0, $f5       # Converte il valore del secondo raggio in virgola mobile e lo salva in $f5
+    
+    # Stampa del messaggio per inserire il terzo raggio
+    li $v0, 4           # Carica il codice di servizio per la stampa della stringa
+    la $a0, raggio3     # Carica l'indirizzo della stringa 'raggio3' nella syscall
+    syscall
+    
+    # Lettura del raggio inserito dall'utente
+    li $v0, 5           # Carica il codice di servizio per la lettura di un intero (raggio3)
+    syscall
+    mtc1 $v0, $f6       # Converte il valore del terzo raggio in virgola mobile e lo salva in $f6
+    
+    lwc1 $f0, piGreco   # Carica il valore di piGreco (pi greco) nel registro $f0
+    
+    # Calcolo 1° Area
+    mul.s $f4, $f4, $f4  # Calcola il quadrato del primo raggio
+    mul.s $f4, $f4, $f0  # Moltiplica per piGreco per ottenere l'area del primo cerchio
+    
+    # Calcolo 2° Area
+    mul.s $f5, $f5, $f5  # Calcola il quadrato del secondo raggio
+    mul.s $f5, $f5, $f0  # Moltiplica per piGreco per ottenere l'area del secondo cerchio
+    
+    # Calcolo 3° Area
+    mul.s $f6, $f6, $f6  # Calcola il quadrato del terzo raggio
+    mul.s $f6, $f6, $f0  # Moltiplica per piGreco per ottenere l'area del terzo cerchio
+    
+    # Ordinamento delle aree
+    # Confronta le aree per trovare la più grande, la mediana e la più piccola
+    c.lt.s $f4, $f5     # Confronta $f4 con $f5 (primo e secondo)
+    bc1t swap1           # Se $f4 < $f5, salta a swap1
+    nop                  # Istruzione di "no operation" per l'istruzione di branch
+    
+    mov.s $f8, $f4       # Se non si verifica il salto, copia $f4 in $f8
+    mov.s $f4, $f5       # Copia $f5 in $f4
+    mov.s $f5, $f8       # Copia $f8 (valore originale di $f4) in $f5
+    
+swap1:
+    c.lt.s $f4, $f6     # Confronta $f4 con $f6 (primo e terzo)
+    bc1t swap2           # Se $f4 < $f6, salta a swap2
+    nop                  # Istruzione di "no operation" per l'istruzione di branch
+    
+    mov.s $f8, $f4       # Se non si verifica il salto, copia $f4 in $f8
+    mov.s $f4, $f6       # Copia $f6 in $f4
+    mov.s $f6, $f8       # Copia $f8 (valore originale di $f4) in $f6
+    
+swap2:
+    c.lt.s $f5, $f6     # Confronta $f5 con $f6 (secondo e terzo)
+    bc1t end             # Se $f5 < $f6, salta a end
+    nop                  # Istruzione di "no operation" per l'istruzione di branch
+    
+    mov.s $f8, $f5       # Se non si verifica il salto, copia $f5 in $f8
+    mov.s $f5, $f6       # Copia $f6 in $f5
+    mov.s $f6, $f8       # Copia $f8 (valore originale di $f5) in $f6
+    
+end:
+    # Ora $f4 contiene l'area più piccola, $f5 contiene la mediana, $f6 contiene l'area più grande
+    
+    # Salva le aree nei registri appropriati
+    mov.s $f0, $f6  # $f0 contiene l'area più grande
+    mov.s $f1, $f5  # $f1 contiene la mediana
+    mov.s $f2, $f4  # $f2 contiene l'area più piccola
+    
+    # Termina il programma
+    li $v0, 10
+    syscall
+
+.data
+raggio1: .asciiz "Inserisci il primo raggio: "
+raggio2: .asciiz "Inserisci il secondo raggio: "
+raggio3: .asciiz "Inserisci il terzo raggio: "
+piGreco: .float 3.14
+

@@ -1,0 +1,29 @@
+.data
+stringa: .asciiz "Ciao a tutti"
+
+.text
+.globl main
+
+main:
+	xor $t0, $t0, $t0
+	li $t1, 32
+	li $t2, 0
+	
+ciclo:
+	lb $t9, stringa($t0)
+	beq $t9, $zero, fine
+	beq $t9, $t1, sostituzione
+	j continua
+
+sostituzione: 
+	sb $t2, stringa($t0)
+	j ciclo
+	
+continua:
+	addi $t0, $t0, 1
+	j ciclo
+	
+fine:
+	li $v0, 10
+	syscall
+	

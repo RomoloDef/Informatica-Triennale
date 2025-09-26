@@ -1,0 +1,50 @@
+# Scrivere in linguaggio assemblativo MIPS/MARS un programma che dato in input base e altezza di un trinagolo rettangolo passi tali valori ad una
+# funzione attraverso la quale si possano stabilire ipotenusa, area e perimetro del triangolo
+
+.text
+.globl main
+
+main:
+	lwc1 $f0, base 		# carico la base
+	lwc1 $f1, altezza	# carico l'altezza
+	jal CALCOLO		# salto a funzione
+	move $t0, $a0		# sposto
+	move $t1, $a1		# sposto
+	move $t2, $a2		# sposto
+	
+	# Termine del programma
+	li $v0,10
+	syscall
+	
+CALCOLO:
+	# calcolo dell'ipotenusa
+	mul.s  $f0, $f0, $f0	# potenza del primo cateto
+	mul.s  $f1, $f1, $f1	# potenza del secondo cateto
+	add.s  $f3, $f1, $f0	# somma
+	sqrt.s $f3, $f3		# radice quadrata -> risultato = ipotenusa
+	mtc1 $a0, $f3		# sposto da coprocessore a intero
+	# calcolo dell'area
+	lwc1 $f10, due
+	mul.s $f4, $f0, $f1	# base per altezza
+	div.s $f4, $f4, $f10	# diviso due
+	mtc1 $a1, $f4		# sposto da coprocessore a intero
+	# calcolo del perimetro
+	add.s $f5, $f0, $f1	# sommo i primi due lati
+	add.s $f5, $f5, $f4	# aggiungo l'ultimo lato (ipotenusa)
+	mtc1 $a2, $f5		# sposto da coprocessore a intero
+	jr $ra
+
+.data
+base: .float 3.0
+altezza: .float 4.0
+due: .float 2.0
+
+	
+	
+	
+	
+	
+	
+	
+	
+	

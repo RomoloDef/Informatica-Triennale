@@ -1,0 +1,36 @@
+# Scrivere in linguaggio assemblativo MIPS/MARS una funzione che riceve in ingresso due numeri interi a e b, scrivere una funzione che restituisca il risultato di a elevato alla b; proporre quindi un adeguato main di prova (i numeri possono essere definiti in memoria o - meglio - inseriti da tastiera). Il risultto deve essere mostrato su videoterminale.
+
+.text
+.globl main
+
+main:
+
+	lw $t0, a	# carico a
+	lw $t1, b	# carico b 
+	
+	li $t2, 1	# carico il risultato parziale della potenza
+	
+	jal POTENZA
+	
+	li $v0, 1		# codice per stampare un intero
+	move $a0, $t2		# sposto il risultato in $a0 per farlo stampare
+	syscall
+	
+	li $v0, 10		# termine del programma
+	syscall
+	
+POTENZA:
+	beq $t1, $zero, FINE	    # se il contenuto di $t1 è minore di 0 si fa direttamente alla fine del programma
+	mult $t2, $t0               # Moltiplico il risultato parziale per la base
+        mflo $t2                    # Memorizzo il risultato della moltiplicazione in $t2
+        addi $t1, $t1, -1           # Decremento l'esponente di 1
+        j POTENZA                   # Ripeto il ciclo
+	
+FINE:
+	jr $ra
+	
+
+
+.data
+a: .word 2
+b: .word 3
