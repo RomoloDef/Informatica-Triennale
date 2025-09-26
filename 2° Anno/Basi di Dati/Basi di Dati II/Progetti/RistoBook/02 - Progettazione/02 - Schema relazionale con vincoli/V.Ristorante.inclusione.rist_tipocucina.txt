@@ -1,0 +1,56 @@
+-- inclusione: Ristorante(id) occorre in rist_tipocucina(ristorante)
+
+Definizione degli eventi da intercettare e come possiamo gestirli:
+	INSERT(new) in Ristorante
+		Dobbiamo accertarci che occorra in rist_tipocucina(ristorante)
+
+	UPDATE(OLD, NEW) in Ristorante:
+		Impiediamo l'update di Ristorante(id)
+
+	DELETE(OLD) in Ristorante:
+		Innocuo.
+
+
+	INSERT(NEW) in rist_tipocucina:
+		Innocuo.
+
+	UPDATE(OLD, NEW) in rist_tipocucina:
+		Impediamo l'update di rist_tipocucina(ristorante)
+
+	DELETE(old) in rist_tipocucina:
+		Dobbiamo accertarci che OLD.ristorante occorra ancora in rist_tipocucina(ristorante).
+
+
+Strategia di implementazione del vincolo: Trigger + Politiche di accesso ai dati
+
+
+Politiche di accesso ai dati:
+
+REVOKE UPDATE ON Ristorante(id) FROM PUBLIC;
+REVOKE UPDATE ON rist_tipocucina(ristorante) FROM PUBLIC;
+
+
+Trigger:
+	- Eventi: INSERT(NEW) in Ristorante
+	- Quando: AFTER
+	- Deferrable: TRUE
+	- Funzione(NEW):
+		if not exists (
+			select *
+			from rist_tipocucina
+			where ristorante = NEW.id
+		)
+			raise Exception(...)
+
+
+Trigger:			
+	- Eventi: DELETE(OLD) in rist_tipocucina
+	- Quando: AFTER
+	- Deferrable: TRUE
+	- Funzione(OLD):
+		if not exists (
+			select *
+			from rist_tipocucina
+			where ristorante = OLD.ristorante
+		)
+			raise Exception(...)

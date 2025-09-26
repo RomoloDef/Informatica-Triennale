@@ -1,0 +1,30 @@
+[V.Prenotazione.istante_pren_lt_istante_serv]
+	ALL p, ip, is  Prenotazione(p) and istante_pren(p, ip) and istante_serv(p, is)
+			--> ip < is
+
+e tutti gli altri... per esercizio.
+
+
+[V.Prenotazione.promozione_del_ristorante]
+	ALL pren, prom, r
+		Prenotazione(pren) and pren_prom(pren, prom) and pren_rist(pren, r) -->
+				prom_rist(prom, r).
+
+
+[V.Prenotazione.promozione_disponibile]
+	ALL pren, prom, i_serv
+		Prenotazione(pren) and pren_prom(pren, prom) and istante_serv(pren, i_serv) -->
+			EXISTS per   periodo(this, per) and  contiene(per, i_serv, true)
+
+[V.Prenotazione.promozione_ha_ancora_coperti]
+	ALL prom, max_c, d
+		Promozione(prom) and max_coperti(prom, max_c) and Data(d)
+		-->
+			EXISTS x   posti_prenotati(prom, d, x) and x <= max_c
+
+
+[V.Prenotazione.annullata.solo_se_non]
+	ALL p  Annullata(p) -->
+				not Rifiutata(p) and not Completata(p) and not NonUtilizzata(p)
+
+

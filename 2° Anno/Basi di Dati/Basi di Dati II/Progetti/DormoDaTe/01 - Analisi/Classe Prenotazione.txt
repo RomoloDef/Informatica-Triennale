@@ -1,0 +1,30 @@
+Classe Prenotazione
+
+
+[V.Prenotazione.sistemazioni_della_stessa_abitazione]
+	ALL p, sist1, sist2 
+		Prenotazione(p) and pren_sist(p, sist1) and pren_sist(p, sist2) -->
+			EXISTS a  abitazione(sist1, a) and abitazione(sist2, a).
+
+
+stato(x:DataOra): StatoPrenotazione
+	Questa operazione valuta allo stato che la prenotazione this ha (o aveva) all'istante 'x'.
+
+	pre: nessuna
+	post: 
+		E = { e, i |  ev_pren(e, this) and istante(e, i) and i <= x}.
+
+		result è tale che:
+			EXISTS y   (result, y) in argmax  [ i ].
+									  (e,i) in E
+
+
+
+abitazione(): Abitazione  // da aggiungere al diagramma delle classi
+	pre: nessuna
+	post:
+		result è tale da soddisfare:
+			ALL sist pren_sist(this, sist) --> abitazione(sist, result)
+
+		Nota: Il vincolo [V.Prenotazione.sistemazioni_della_stessa_abitazione]
+		garantisce che tutte le sistemazioni di una prenotazione sono della stessa abitazione, di cui la possibilità di usare ALL.

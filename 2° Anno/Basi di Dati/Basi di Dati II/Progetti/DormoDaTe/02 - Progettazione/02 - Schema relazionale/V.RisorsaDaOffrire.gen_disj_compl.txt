@@ -1,0 +1,68 @@
+[V.RisorsaDaOffrire.gen_compl]
+	ALL r  RisorsaDaOffrire(r) --> [
+		EXISTS x  ab_isa_ris(x,r) or st_isa_ris(x,r) or sist_isa_ris(x,r).
+	].
+
+[V.RisorsaDaOffrire.gen_disj]
+	not EXISTS [ r,a,st  ab_isa_ris(a,r) and st_isa_ris(st,r) ]
+	and
+	not EXISTS [ r,a,sist  ab_isa_ris(a,r) and sist_isa_ris(sist,r) ]
+	and
+	not EXISTS [ r,st,sist  st_isa_ris(st,r) and sist_isa_ris(sist,r) ].
+
+
+Strategia di gestione:
+
+Politiche di accesso ai dati:
+	- impedire UPDATE(id) ON RisorsaDaOffrire, Sistemazione, Stanza, Abitazione
+
+
+Trigger:
+	- eventi su RisorsaDaOffrire: INSERT
+	- eventi su Abitazione: DELETE	
+	- eventi su Stanza: DELETE
+	- eventi su Sistemazione: DELETE
+
+
+
+
+TRIGGER V_RisorsaDaOffrire_gen_compl_DELETE_Abitazione
+
+	Quando l'utnete tenta DELETE(old) su Abitazione, cancelliamo prima la ennupla associata nella tabella RisorsaDaOffrire. Questo semplica la vita all'utente.
+
+	- evento: DELETE(old) su Abitazione
+	- istante: BEFORE
+	- funzione(old):
+			DELETE FROM RisorsaDaOffrire WHERE id = old.id;
+			return OLD;	
+
+Operiamo similmente per DELETE su Stanza e su Sistemazione (per esercizio).
+
+
+
+CONSTRAINT TRIGGER V_RisorsaDaOffrire_gen_compl_INSERT_Risorsa
+	// Ad ogni inserimento in Risorsa, controlliamo che i vincoli
+	// [V.RisorsaDaOffrire.gen_compl] e [V.RisorsaDaOffrire.gen_disj] siano soddisfatti. Basta un solo trigger!
+
+	- evento INSERT(new) su RisorsaDaOffrire
+	- istante AFTER
+	- funzione(new):
+		error:Bool = FALSE
+
+		SELECT count(*)<>1 INTO STRICT error
+		FROM (
+			SELECT * FROM Abitazione where id = new.id
+			UNION ALL
+			SELECT * FROM Stanza where id = new.id			
+			UNION ALL
+			SELECT * FROM Sistemazione where id = new.id
+		);
+
+		IF error:
+			raise ...
+		RETURN NULL;
+
+
+
+Esercizio: progettare la gestione di tutti gli altri vincoli.
+

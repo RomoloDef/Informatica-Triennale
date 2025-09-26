@@ -1,0 +1,83 @@
+Use-case Strumenti_Ospite
+
+ricerca(
+	c:Città,
+	p:Periodo,
+	n:Intero > 0
+) : Abitazione [0..*]
+
+	L'operazione valuta all'insieme delle abitazioni della città 'c' che, nel periodo 'p' hanno sistemazioni libere per almeno 'n' persone.
+
+	pre: nessuna
+	post:
+		result = { a |	Abitazione(a) and
+						ab_citta(a,c) and
+						(EXISTS x posti_disponibili(a, p, x) and x >= n)
+		}.
+
+		Ovvero: result è l'insieme degli assegnamenti alla variabile 'a' di abitazioni (istanze della classe Abitazione) che sono nella città 'c' e per le quali l'operazione a.posti_disponibili(p) restituisce un valore 'x' che è >= n.
+
+
+esprimi_feedback_da_ospite(p:Prenotazione, v:Voto)
+	pre: 
+		Sia u:Utente l'oggetto associato all'istanza di attore che ha invocato l'operazione.
+
+		// 'p' è associata ad 'u'
+		ut_pren(u,p) and 		
+		// 'u' non ha già espresso feedback per 'p'
+		not feedback_da_ospite(u,p) and 
+		// 'p' è in uno stato che permette recensioni
+		EXISTS s  stato(p, s, adesso) and recensioni_ammesse(s, true).
+
+	post: 
+		Side-effect:
+			feedback_da_ospite(u,p)
+			voto(u,p, v)
+			istante(u,p),
+
+
+nuova_prenotazione(p:Periodo, Accompagnatori:Utente [0..*], S:Sistemazione [1..*], note: Stringa)
+	pre: 
+		Sia u:Utente l'oggetto associato all'istanza di attore che ha invocato l'operazione.
+
+		Sia U' = U unione {u}. // accompagnatori e responsaibile.
+
+		Le sistemazioni sono tutte della stessa abitazione che non è di alcun utente in U':
+		EXISTS a    Abitazione(a) and  
+					[ not EXISTS x   x in U'   and ut_abit(x,a) ] and
+					[ ALL s   s in S --> abitazione(s, a) ].
+
+		Le sistemazioni sono tutte disponibili:
+		ALL s  s in S --> indisponibile(s, p, false).
+
+		Le sistemazioni sono sufficienti:
+			Detto X = { s, c |  s in S and cap(s,c) }, deve essere:
+
+			SUM         [ c ] >= |U'|
+			(x,c) in X
+
+	post:
+		Side-effect
+			Nuovi elem. del dom. di interpr:  PREN, EV
+
+
+			Prenotazione(PREN)
+			ut_pren(x, PREN) per ogni x in U'
+			ut_resp(u, PREN)
+			periodo(PREN, p)
+			pren_sist(PREN, s) per ogni s in S
+
+			Evento(EV)
+			ev_pren(EV, PREN)
+			istante(ev, adesso)
+			descrizione(ev, note)
+
+
+			Sia INIZIALE tale che:  StatoPrenotazione(INIZIALE) e iniziale(INIZIALE, true). // Esiste ed è unico per costruzione
+
+			stato_raggiunto(EV, INIZIALE).
+
+
+
+
+Si lascia per esercizio la specifica delle altre operazioni.

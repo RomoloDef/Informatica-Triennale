@@ -1,0 +1,10 @@
+Associazioni feedback_verso_ospite e feedback_da_ospite
+
+
+[V.feedback.solo_se_ammesso]
+	Un feedback relativo ad una prenotazione 'p' può essere espresso solo se, in quell'istante 'p' è in uno stato che ammette recensioni.
+
+ALL p, u, i
+	Prenotazione(p) and Utente(u) and
+	( feedback_da_ospite(p,u) or feedback_verso_ospite(p,u) and istante(p,u,i) ) -->
+			ALL s   stato(p, i) --> recensioni_ammesse(s, true).

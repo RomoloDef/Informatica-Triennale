@@ -1,0 +1,47 @@
+FUNCTION n_clienti_medio_g(_prom:integer, p:Periodo): float
+
+Restituisci il risultato della query seguente:
+
+WITH DateDiInteresse AS (
+	-- Date di interesse della promozione _prom.
+	-- Se _prom non esiste o non ha periodi, restituisce la ennupla vuota
+	-- 
+	select  d::date as data -- *, 
+			-- extract(dow from d)::integer as day_of_week
+	from 	Promozione prom,			
+			periodo_promozione per, 
+			generate_series( 
+				((per.periodo).per).da,
+				((per.periodo).per).a,
+				'1 day'::interval
+			) as d			
+	where prom.id = _prom
+	  and per.promozione = prom.id
+	  and PeriodoStrutturato_dow_get( (per.periodo).g_sett, extract(dow from d)::integer)
+)
+Stats AS (
+	-- per ogni data di interesse 'di', restituisce la somma dei posti prenotati 
+	-- per quella data sfruttando la promozione _prom
+	-- Se la promozione non ha prenotazioni, restituisce (_prom, NULL, NULL)
+	-- Se la promozione non esiste, restituisce l'insieme vuoto.
+
+	select prom.id as prom, di.data, sum(pren.n) as coperti
+	from 	
+			( 	Promozione prom 
+				LEFT OUTER JOIN
+				Prenotazione pren
+				ON pren.promozione = prom.id
+			) 
+			LEFT OUTER JOIN 
+			DateDiInteresse di
+			ON TRUE
+			
+	where prom.id = _prom	 
+	  and (di.data IS NULL or di.data = pren.istante_serv::date)
+	  and pren.stato_corrente = 'completata'
+	  and Periodo_contiene(p, pren.istante_serv)	  
+	group by prom.id, di.data, pren.istante_serv::date
+)
+SELECT s.prom, avg(s.coperti)
+FROM Stats s;
+

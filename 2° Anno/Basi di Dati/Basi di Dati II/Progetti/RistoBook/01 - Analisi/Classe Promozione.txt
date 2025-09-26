@@ -1,0 +1,42 @@
+Classe Promozione
+
+n_clienti_medio_g(p:Periodo): Reale >= 0
+	pre:
+		P = { p, d, x  | 	Completata(p) and pren_prom(p, this) and
+							EXISTS i  istante_serv(p, i) and data(i, d) and
+							n(p,x)
+		}
+
+		Q = { d', n |	Data(d') and contiene(p, d') and 
+						EXISTS per_prom periodo(prom, per_prom) 
+												contiene(per_prom, d') and 
+						n = SUM                     [ x ]
+						    (p,d,x) in P and d = d'
+
+		|Q| != 0.
+
+		}
+
+
+	post:
+
+		result =   AVG    [ n ]
+		         (d', n) in Q
+
+
+
+
+coperti_prenotati(d:Data): Intero
+	pre: nessuna
+	post: 
+		Sia P = { p, x  | 	
+						Prenotazione(p) and prem_prom(p, this) and
+						n(p,x) and
+						EXISTS i_serv istante_serv(p, i_serv) and data(i_serv, d) and
+						not Rifiutata(p) and not Annullata(p)
+						EXISTS riass riassegnabile(p, riass) and
+							( NonUtilizza(p) --> riass = false)
+		}						
+
+		result = SUM   [x]
+				 (p,x) in P

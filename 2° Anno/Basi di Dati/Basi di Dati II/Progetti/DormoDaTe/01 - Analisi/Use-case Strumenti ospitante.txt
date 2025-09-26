@@ -1,0 +1,51 @@
+Use-case Strumenti_Ospitante
+
+
+feedback_verso_ospite(u:Utente,p:Prenotazione, v:Voto)
+	pre: ...  // per esercizio, v. Strumenti_Ospite
+	post: ...
+
+
+
+prenotazioni_da_processare(a:Abitazione): Prenotazione [0..*]
+	pre: 
+		Sia u:Utente l'oggetto associato all'istanza di attore che ha invocato l'operazione.
+		
+		ut_abit(u,a).
+
+	post:
+		Sia INIZIALE tale da soddisfare:
+			StatoPrenotazione(INIZIALE) and iniziale(INIZIALE, true).
+
+		// Si noti l'uso della porzione configurabile del sistema...
+
+		result = { p |  Prenotazione(p) and
+						abitazione(p, a) and
+						stato(p, INIZIALE)
+		}.
+
+
+cambia_stato(p:Prenotazione, nuovo_stato:StatoPrenotazione, descr:Stringa)
+	pre: 
+		Sia u:Utente l'oggetto associato all'istanza di attore che ha invocato l'operazione.
+
+		// La prenotazione è di una delle abitazioni di u
+		EXISTS a abitazione(p, a) and ut_abit(u,a)
+
+		and 
+
+		// La transizione richiesta è ammissibile
+
+		EXISTS s stato(p, s) and 
+				 transizione(s, nuovo_stato)
+
+
+	post:
+		Side-effect:
+			Nuovo elemento del dom. di interpr: EV
+
+			Evento(EV)
+			ev_pren(EV, p)
+			descrizione(EV, desc)
+			istante(EV, adesso)
+			stato_raggiunto(EV, nuovo_s).

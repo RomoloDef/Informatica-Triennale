@@ -1,0 +1,50 @@
+[V.RisorsaDaOffrire.gen_compl]
+	ALL r  RisorsaDaOffrire(r) --> [
+		EXISTS x  ab_isa_ris(x,r) or st_isa_ris(x,r) or sist_isa_ris(x,r).
+	].
+
+[V.RisorsaDaOffrire.gen_disj]
+	not EXISTS [ r,a,st  ab_isa_ris(a,r) and st_isa_ris(st,r) ]
+	and
+	not EXISTS [ r,a,sist  ab_isa_ris(a,r) and sist_isa_ris(sist,r) ]
+	and
+	not EXISTS [ r,st,sist  st_isa_ris(st,r) and sist_isa_ris(sist,r) ].
+
+
+Classe RisorsaDaOffrire
+	indisponibile(p:tsrange): Booleano
+		pre: nessuna
+		post:
+			result = true <-->
+				[ EXISTS q,v  indisponibilita(this, q) and 
+								valore(q,v) and interseca(p,q, true) ]
+
+				Nota: a differenza della specifica concettuale, ora q è un oggetto della nuova classe Indisponibilità.
+
+
+Classe Sistemazione
+
+	indisponibile(p:tsrange): Booleano
+		pre: nessuna
+		post:
+			Sia s. t.c. st_sist(this, s).
+
+			result = true <-->
+				[ indisponibile_[RisorsaDaOffrire,tsrange](this, p, true) or
+					indisponibile_[Stanza,tsrange](s, p, true) ]
+
+
+Classe Stanza
+	indisponibile(p:tsrange): Booleano
+		pre: nessuna
+		post:
+
+			Sia 'a' tale da soddisfare la formula: abit_st(a, this).
+
+			result = true <-->
+				[ 	indisponibile_[RisorsaDaOffrire,tsrange](this, p, true) 
+					or
+					indisponibile_[Abitazione,tsrange](a, p, true) 
+				].
+
+

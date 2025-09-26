@@ -1,0 +1,57 @@
+Sesso = {M,F}
+
+CoordGeo: {
+	- lat: reale tra -90 e +90
+	- lon: reale tra -180 e +180
+}
+
+	distanza_alla_più_vicina(c:CoordGeo, risorsa:TipoRisorsaGeografica): reale >= 0 (in metri)
+		Questa operazione del tipo di dato CoordGeo accentra l'interfaccia con il sistema esterno di geolocalizzazione e mappe online per calcolare la distanza tra il punto 'c' e la risorsa più vicina di tipo 'risorsa'.
+
+		pre: nessuna
+		post: 
+			result soddisfa la seguente formula:
+				EXISTS risorsa_nome  
+					nome(risorsa, risorsa_nome) and
+					distanza_alla_più_vicina_[SistemaEsterno](c, risorsa_nome, result)
+
+			Si veda la fase di progettazione per capire come sarà implementabile.
+
+			Nota: avremmo potuto evitare del tutto l'operazione e usare direttamente quella offerta dal sistema esterno (ovvero: distanza_alla_più_vicina_[SistemaEsterno]()).
+			Preferiamo invece accentrare nelle operazioni del tipo di dato tutte le chiamate al sistema esterno. In questo caso, il sistema esterno sarà più facilmente sostituibile con un altro, agendo solo qui.
+
+
+MembriFamiglia: {
+	- adulti: Intero > 0
+	- bambini: Intero >= 0	
+}		
+
+
+TipoStanza = {privata, comune}
+
+
+Periodo: {
+	- da: DataOra
+	- a: DataOra
+}
+	Vincoli sulle istanze del tipo di dato:	
+	[V.Periodo.legale]: ALL p,x,y Periodo(p) and da(p,x) and a(p,y) --> a >= da.
+
+
+	Operazioni del tipo di dato (le op. di tipi di dato non devono mai fare side-effect sugli oggetti e link del sistema!):
+
+	disgiunti(p1:Periodo, p2:Periodo): Booleano
+		pre: nessuna
+		post:
+			result = true <--> 
+				EXISTS x1, y1, x2, y2
+					da(p1, x1) and a(p1, y1) and da(p2, x2) and a(p2, y2) and 
+						(y1 < x2 or y2 < x1).
+
+
+	interseca(p1:Periodo, p2:Periodo): Booleano
+		pre:  nessuna
+		post: result = true <--> disgiunti(p1, p2, false)
+
+
+Voto = 0..5

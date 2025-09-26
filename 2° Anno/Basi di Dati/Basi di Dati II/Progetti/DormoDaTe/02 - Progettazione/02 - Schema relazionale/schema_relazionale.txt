@@ -1,0 +1,53 @@
+TipoRisorsaGeografica(__nome__)
+
+creare subito ennupla (nome="centro") ed impedire che venga cancellata o modificata (!)
+
+
+Utente(__username__, ...)
+
+indisponibilita(
+	__risorsa__:integer,
+	__indisp__:tsrange
+)
+	fk: (risorsa) references RisorsaDaOffrire(id) ON DELETE CASCADE
+
+
+RisorsaDaOffrire(__id__:serial, ...)
+	....
+
+Abitazione(__id__:integer, ...., utente)
+	fk: (id) references RisorsaDaOffrire(id) ON DELETE CASCADE -- accorpa ab_isa_ris
+	fk: (utente) references Utente(user_name) -- accorpa ut_abit
+
+Stanza(__id__:integer, tipo, abitazione:integer)	
+	fk: (id) references RisorsaDaOffrire(id) ON DELETE CASCADE -- accorpa st_isa_ris
+	fk: (abitazione) references Abitazione(id)
+
+Sistemazione( ... simile ...)	
+
+Prenotazione(__id__:serial, ..., responsabile)
+	inclusione: (id) compare in ut_pren(pren) // vincolo 1.. in ut_pren
+	fk: (responsabile, id) references ut_pren(utente, pren) -- accorpa ut_resp e implementa [V.Prenotazione.ut_resp_isa_ut_pren]
+
+ut_pren(__utente__, __pren__)
+	fk: (utente) references Utente(username)
+	fk: (pren) references Prenotazione(id)
+
+feedback_verso_ospite(__utente__, __pren__, ...)
+	fk (utente, pren) references ut_pren(utente, pren) -- implementa [V.feedback.verso_ospite_isa_ut_pren]
+
+feedback_da_ospite(__utente__, __pren__, ...)
+	fk (utente, pren) references ut_pren(utente, pren) -- implementa [V.feedback.da_ospite_isa_ut_pren]
+
+EventoPrenotazione(__pren__, __istante__, descrizione, stato_raggiunto)
+	fk: (pren) references Prenotazione(id) -- accorpa ev_pren
+	fk: (stato) references StatoPrenotazione(nome) -- accorpa stato_raggiunto
+
+StatoPrenotazione(__nome__:Stringa, iniziale:boolean, recensioni_ammesse:boolean, sistemazione_riservata:boolean)
+	
+transizione(da:Stringa, a:Stringa)
+	fk: (da) references StatoPrenotazione(nome)
+	fk: (a) references StatoPrenotazione(nome)
+
+
+Da completarsi per esercizio.

@@ -1,0 +1,2 @@
+[V.TipoRisorsaGeografica.oggetti]
+	EXISTS o   TipoRisorsaGeografica(o) and nome(o, "centro")

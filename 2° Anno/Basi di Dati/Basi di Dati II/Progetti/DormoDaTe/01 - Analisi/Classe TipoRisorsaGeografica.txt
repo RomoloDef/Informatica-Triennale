@@ -1,0 +1,28 @@
+Classe TipoRisorsaGeografica
+
+Decidiamo di affidarci ad un sistema esterno di mappe online per calcolare:
+	1) la città di una abitazione (di cui chiediamo all'utente che la offre le coordinate geografiche)
+
+	2) la distanza di una abitazione dal centro
+	
+	3) la distanza di una abitazione dalla più vicina risorsa geografica di un dato tipo (ad es., "stazione ferroviaria", "aeroporto", "banca", "metropolitana", "fermata bus", etc.). 
+
+Rendiamo allora il sistema configurabile ed estendibile, permettendo ad un attore privilegiato (ad es., staff di DormoDaTe) di creare istanze della classe TipoRisorsaGeografica per rappresentare le tipologie di risorse geografiche che vogliamo permettere di usare nell'operazione Abitazione.distanza_da_risorsa_più_vicina().
+
+Ad esempio, l'attore privilegiato potrebbe, in fase di configurazione, creare i seguenti oggetti di classe TipoRisorsaGeografica:
+	a) uno con nome = "centro"
+	b) uno con nome = "stazione ferroviaria"
+	c) uno con nome = "aeroporto"
+	d) uno con nome = "banca"
+	etc.
+
+
+
+[V.TipoRisorsaGeografica.oggetti]
+	Imponiamo che nel sistema debba sempre esistere un oggetto di classe TipoRisorsaGeografica che rappresenti il centro città, in quanto i requisiti ci chiedono esplicitamente che gli utenti debbano poter calcolare la distanza di una abitazione dal centro città.
+
+	EXISTS o   TipoRisorsaGeografica(o) and nome(o, "centro")
+
+
+
+Si veda la specifica dell'operazione Abitazione.distanza_da_risorsa_più_vicina_m()

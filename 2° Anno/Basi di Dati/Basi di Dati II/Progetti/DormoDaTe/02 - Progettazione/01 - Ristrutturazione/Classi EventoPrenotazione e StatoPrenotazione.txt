@@ -1,0 +1,69 @@
+
+Classe StatoPrenotazione
+	Gli oggetti di questa classe rappresentano gli stati possibili per gli oggetti di classe Prenotazione, con le loro caratteristiche (nel nostro caso: se una prenotazione in un certo stato possa ricevere recensioni, e se le sistemazioni di una prenotazione in un certo stato debbano considerarsi riservate, ovvero non disponibili per eventuali altre prenotazioni.)
+
+
+
+[V.StatoPren.solo_uno_iniziale]
+	Deve esistere esattamente uno stato iniziale per le prenotazioni:
+
+	EXISTS s [ StatoPren(s) and iniziale(s, true)
+				and
+				not EXISTS s'  StatoPren(s') and s' != s and iniziale(s', true) ].
+
+
+Classe EventoPrenotazione
+	Un oggetto (this) di questa classe rappresenta un evento accaduto ad un oggetto di classe Prenotazione, che, in un dato istante (this.istante) lo ha portato in un certo stato (quello coinvolto nel suo link di associazione stato_raggiunto).
+
+	precedente(): Evento [0..1]
+		L'opererazione valuta all'evento immediatamente precedente this (della stessa prenotazione), se esiste
+
+		pre: nessuno
+		post:
+			Siano i_this (istante di this) e p (prenotazione di this) tali che:  
+				istante(this, i_this) and ev_pren(this,p).
+
+			E = { e,i  | EventoPren(e) and ev_pren(e, p) and istante(e,i) and i < i_this }.
+
+			result è tale che:
+				EXISTS i  (result,i) in E and 
+						  not EXISTS e',i'   (e',i') in E and i < i'
+
+			oppure, in modo alternativo:
+			
+			result è tale che:
+				EXISTS i (result,i) in argmax [ i ]
+			                           (e,i) in E
+
+			Nota: in caso 'this' sia il primo evento di 'p', l'insieme E sarà vuoto, e non c'è modo di assegnare result di modo da soddisfare la formula. In questo caso, l'operazione, correttamente, non definisce alcun valore di ritorno.
+
+
+
+[V.EventoPren.transizioni_legali]
+	Gli oggetti di classe Prenotazione possono effettuare un cambio di stato ("transizione", a valle di un evento) dallo stato s' allo stato s solo se la transizione "s' --> s" è ammissibile, ovvero (s',s) è un link dell'associazione 'transizione' (modellata dall'attore privilegiato.)
+
+	ALL p, e, s
+		// Per ogni prenotazione 'p' e suo evento 'e' che lo ha portata nello stato 's'
+		Prenotazione(p) and 
+		EventoPren(e) and 
+		ev_pren(e,p) and 
+		stato_raggiunto(e,s)
+			--> [
+
+					// se 'p' non ha eventi precedenti 'e', allora 's' deve essere considerato uno stato iniziale per una prenotazione:
+
+					[ ( not EXISTS prec   precedente(e, prec) ) --> iniziale(s, true)
+
+					and
+
+					// se ev_prec è l'evento immediatamente precedente 'e' per 'p', che aveva portato 'p' nello stato 's_prec', allora la transizione di stato "s_prec --> s" deve essere ammissibile:
+
+					[  ALL ev_prec, s_prec    
+							precedente(e, ev_prec) and stato_raggiunto(ev_prec, s_prec) -->
+										transizione(s_prec, s) 
+					]
+			].
+			
+
+
+

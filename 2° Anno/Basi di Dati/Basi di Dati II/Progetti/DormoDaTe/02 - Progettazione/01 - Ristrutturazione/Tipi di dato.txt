@@ -1,0 +1,33 @@
+CREATE Domain Stringa as VARCHAR;
+
+CREATE TYPE Sesso AS ENUM ('F', 'M');
+
+CREATE DOMAIN IntegerGZ AS integer 
+	CHECK (value > 0);
+
+CREATE DOMAIN IntegerGEZ AS integer 
+	CHECK (value >= 0);
+
+CREATE DOMAIN RealGEZ AS float 
+	CHECK (value >= 0);
+
+
+CREATE DOMAIN CoordGeo AS POINT;
+
+CREATE FUNCTION distanza_alla_più_vicina(c:point, risorsa:Stringa): float
+	return curl('https://mymaps.moople.com?from=' + c + "&to=" + risorsa)
+		// chiamata a sistema esterno, fuori dal programma d'esame ;)
+
+
+CREATE TYPE __MembriFamiglia__ AS (
+	adulti IntegerGZ
+	bambini IntegerGEZ
+);		
+CREATE DOMAIN MembriFamiglia as __MembriFamiglia__
+	CHECK ( (value).adulti is not NULL and (value).bambini is not NULL );
+
+
+CREATE TYPE AS ENUM TipoStanza VALUES ('privata', 'comune');
+
+
+

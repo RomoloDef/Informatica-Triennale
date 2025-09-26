@@ -1,0 +1,44 @@
+
+Classe RisorsaDaOffrire
+	indisponibile(p:Periodo): Booleano
+		La risorsa da offrire this è indisponibile nel periodo p se e solo se p interseca uno dei valori dell'attributo this.indisponibilità.
+
+		pre: nessuna
+		post:
+			result = true <-->
+				[ EXISTS q  indisponibilità(this, q) and interseca(p,q, true) ]
+
+
+Classe Sistemazione
+	indisponibile(p:Periodo): Booleano
+		La sistemazione this è indisponibile nel periodo p se e solo se è esplicitamente indisponibile in quanto risorsa (v. RisorsaDaOffrire.indisponibile()) oppure è in una stanza indisponibile nel periodo p.
+
+		pre: nessuna
+		post:
+			Sia s. tale da soddisfare la formula: st_sist(this, s).
+
+			result = true <-->
+					// RisorsaDaoffrire.indisponibile() valuta a true su this e p
+				[ 	indisponibile_[RisorsaDaOffrire,Periodo](this, p, true) 
+					or
+					// Stanza.indisponibile() valuta a true su this e p
+					indisponibile_[Stanza,Periodo](s, p, true) ]
+
+
+
+
+Classe Stanza
+	indisponibile(p:Periodo): Booleano
+		La stanza this è indisponibile nel periodo p se e solo se è esplicitamente indisponibile in quanto risorsa (v. RisorsaDaOffrire.indisponibile()) oppure è in una abitazione indisponibile nel periodo p.
+
+		pre: nessuna
+		post:
+			Sia 'a' tale da soddisfare la formula: abit_st(a, this).
+
+			result = true <-->
+				[ 	indisponibile_[RisorsaDaOffrire,Periodo](this, p, true)  
+					or
+					indisponibile_[RisorsaDaOffrire,Periodo](a, p, true) 
+				].
+
+

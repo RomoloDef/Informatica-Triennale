@@ -1,0 +1,13 @@
+Gestione prenotazione clienti
+
+prenota(r:Ristorante, i:DataOra, n:Intero > 0, prom:Promozione [0..1])
+	pre:
+		... 
+		EXISTS a  apertura(r,a) and contiene(a, i, true)
+
+	post: ...
+
+
+annulla(p:Prenotazione):
+	pre: ...
+	post: ...	

@@ -1,0 +1,82 @@
+Email: Stringa '...'
+PartitaIVA: Stringa ~ '...' // standard internazionale
+
+
+Indirizzo: {
+	via: Stringa
+	civico: Stringa ~ '...'
+}
+
+Sconto: Reale > 0 and <= 1
+
+FasciaOraria: {
+	da: Ora
+	a: Ora
+}
+
+	[V.FasciaOraria.legale]
+		ALL f,x,y  FasciaOraria(f) and da(f,x) and a(f,y) --> y >= x.
+
+		contiene(o:Ora):Booleano
+			pre: nessuna
+			post: 
+				result = true <--> EXISTS x,y
+					da(this,x) and a(this,y) and x <= o and o <= y
+
+
+
+Periodo: {
+	da: Data
+	a: Data
+}
+
+	[V.Periodo.da_a]
+		ALL pp, x, y  Periodo(p) and da(p,x) and a(p,y) --> y >= x
+
+
+
+PeriodoStrutturato: {
+	per: Periodo
+	g_sett: 1..7 [1..*]
+	orario: FasciaOraria [1..*]
+}
+	Operazioni del tipo di dato:
+
+	contiene(d:Data): Booleano
+		pre: nessuna
+		post: 
+			result = true <--> [
+				EXISTS p,x,y per(this, p)  
+					da(p,x) and a(p,y) and i >= x and i <= y and
+
+				[ EXIST i_gsett  day_of_week(i, i_gsett) and  
+								 g_sett(this, i_gsett) ].
+
+			]
+
+	contiene(i:DataOra): Booleano
+		pre: nessuna
+		post:
+			result = true <--> [
+				EXISTS p,x,y per(this, p)  
+					da(p,x) and a(p,y) and i >= x and i <= y and
+
+				[ EXIST i_gsett  day_of_week(i, i_gsett) and  
+								 g_sett(this, i_gsett) ] and
+
+				[ EXISTS i_ora, f  ora(i, i_ora) and orario(this, f) and
+								contiene(f, i_ora)
+				]
+			].
+
+
+	
+
+	Esempio di istanza: p:PeriodoStrutturato = {
+		da = 2025-06-07,
+		a = 2025-06-15,
+		g_sett = {1,3,5,7},
+		orario = {
+			{ da = 8:00, a: 10:00 }, {da = 22:00, a = 01:00}
+		}
+	}

@@ -1,0 +1,89 @@
+Specifica Realizzativa dello Use-Case Gestione prenotazioni ristoranti
+
+accetta_prenotazione(p:Prenotazione):
+    algoritmo:
+        BEGIN TRANSACTION
+
+        Q = SELECT prenA *
+            FROM Prenotazione pren LEFT OUTER JOIN
+                        PrenotazioneAccettata prenA
+            ON pren.id = prenA.id
+            WHERE pren.id = p.id;
+
+        and
+
+        S = SELECT prenR *
+            FROM Prenotazione pren LEFT OUTER JOIN
+                        PrenotazioneRifiutata prenR
+            ON pren.id = prenR.id
+            WHERE pren.id = p.id;
+
+        SE Q e S sono vuoti:
+            errore, p non identifica una prenotazione
+
+        SE Q e S <> (NULL, ... , NULL)
+            errore, la prenotazione p è stata già eseguita
+
+        INSERT INTO istante_acc(istante, prenotazione) VALUES (i, p);
+
+        COMMIT;
+
+rifiuta_prenotazione(p: Prenotazione):
+    algoritmo:
+        BEGIN TRANSACTION
+
+        Q = SELECT prenR.*
+            FROM Prenotazione pren LEFT OUTER JOIN
+                        PrenotazioneRifiutata prenR
+            ON pren.id = prenR.id
+            WHERE pren.id = p.id;
+
+        and 
+
+        S = SELECT prenC.*
+            FROM Prenotazione pren LEFT OUTER JOIN
+                        PrenotazioneCompletata prenC
+            ON pren.id = prenC.id
+            WHERE pren.id = p.id;
+
+        and
+
+        V = SELECT prenNU.*
+            FROM Prenotazione pren LEFT OUTER JOIN
+                        PrenotazioneRifiutata prenNU
+            ON pren.id = prenNU.id
+            WHERE pren.id = p.id;
+
+        SE Q e S e V sono vuoti:
+            errore, p non identifica una prenotazione
+
+        SE Q e S e V <> (NULL, ... , NULL)
+            errore, la prenotazione p è stata già eseguita
+
+        INSERT INTO istante_rif(istante, prenotazione) VALUES (i, p)
+
+        COMMIT;
+
+contrassegna_prenotazione_completata(p:Prenotazione):
+    algoritmo:
+        BEGIN TRANSACTION
+
+        V = SELECT prenNU.*
+            FROM Prenotazione pren LEFT OUTER JOIN
+                        PrenotazioneRifiutata prenNU
+            ON pren.id = prenNU.id
+            WHERE pren.id = p.id;
+
+        SE V è vuoti:
+            errore, p non identifica una prenotazione
+
+        SE V <> (NULL, ... , NULL)
+            errore, la prenotazione p è stata già eseguita
+
+        INSERT INTO Completata(prenotazione) VALUES (p);
+
+        INSERT INTO istante_compl(istante, prenotazione) VALUES (i, p);
+
+        COMMIT;
+
+        
