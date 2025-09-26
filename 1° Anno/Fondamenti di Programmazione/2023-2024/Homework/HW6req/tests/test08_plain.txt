@@ -1,0 +1,13 @@
+The Quine–Putnam indispensability argument reasons that we should believe in
+abstract mathematical objects such as numbers and sets because mathematics is
+indispensable to science. One of the most important ideas in the philosophy
+of mathematics, it is credited to W. V. Quine and Hilary Putnam (pictured).
+The roots of the argument can be traced back to thinkers such as Gottlob 
+Frege and Kurt Gödel, but Quine introduced its key components, including 
+naturalism and confirmational holism. Putnam gave Quine's argument its first
+detailed formulation, although he later expressed disagreement with some
+aspects of the argument. Many counterarguments have been raised against the
+idea. An influential argument by Hartry Field holds that mathematical entities
+are dispensable to science. Other philosophers, such as Penelope Maddy, have
+argued that we do not need to believe in all of the entities that are
+indispensable to science.

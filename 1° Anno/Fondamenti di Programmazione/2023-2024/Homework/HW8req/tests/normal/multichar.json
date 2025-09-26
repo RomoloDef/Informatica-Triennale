@@ -1,0 +1,6 @@
+{
+    "encrypted_text":  "aaabaaac",
+    "pharaohs_cypher": {"aa":"bc","bb":"c","cc":"d"},
+    "expected":        [ "d" ],
+    "time":            0.5
+}

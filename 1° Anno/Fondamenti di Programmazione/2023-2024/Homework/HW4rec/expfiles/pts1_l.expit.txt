@@ -1,0 +1,93 @@
+Andreuccetti Anna          	31.0
+Cofone Luciano             	31.0
+Hofer Emanuele             	31.0
+Santelli Manfredi          	31.0
+Scarsellini Guido          	31.0
+Crisanaz Maddalena         	30.78
+Scarsellini Morgana        	30.75
+Miletta Marco              	30.5
+Paternoster Tommaso        	30.5
+Portogalli Zoe             	30.5
+Tamborrino Elisabeth       	30.5
+Pasquini Aurelio           	30.11
+Tampieri Laila             	30.05
+Accorinti Evan             	30.0
+Petrache Francesco         	30.0
+Seye Gennaro               	30.0
+Bargi Malak                	29.83
+Bilotta Andreas            	29.8
+Ait Taleb Maria Giulia     	29.75
+Prodan Gianluca            	29.75
+Doda Mariavittoria         	29.69
+Poccianti Elisabeth        	29.69
+Bernardis Antonietta       	29.67
+Piagnani Morgana           	29.67
+Bellosi Penelope           	29.62
+Santin Yassin              	29.62
+Graffeo Massimo            	29.55
+Cangi Ian                  	29.53
+Yupanqui Conde Maria Grazia	29.47
+Carubi Flavia              	29.42
+Battistella Sabrina        	29.33
+Milia Milena               	29.33
+Scanu Elena Sofia          	29.33
+Di Cesare Annarita         	29.25
+Dinca Marwa                	29.25
+Ragazzo Ahmed              	29.25
+Baccellini Anna            	29.22
+Marinetto Michelangelo     	29.13
+Lagorio Cristina           	29.12
+Tagliabue Beatrice Maria   	29.09
+Basile Astrid              	29.06
+Alimenti Raffaella         	29.0
+Cuzzola Basma              	29.0
+Dragoi Rachele             	29.0
+Fatichi Christian          	29.0
+Foraboschi Oscar           	29.0
+Ghiglia Esmeralda          	29.0
+Gjini Laila                	29.0
+Iannaco Antonella          	29.0
+Monzani Debora             	29.0
+Mucciarelli Sergio         	29.0
+Randazzo Annamaria         	29.0
+Scarano Mattias            	29.0
+Scarano Mattias            	29.0
+Bigliazzi Mauro            	28.95
+Desideri Raoul             	28.92
+Bazzanti Mariarosaria      	28.88
+Mechi Bianca Maria         	28.79
+Corbucci Delia             	28.71
+Kowalska Christian         	28.7
+Inturri Jakob              	28.69
+Cannoni Alma               	28.67
+Sbrocchi Maria Francesca   	28.64
+Denti Maryam               	28.6
+Lorenzetti Vito            	28.56
+Campostrini Antonia        	28.5
+Lamberti Justin            	28.5
+Sadini Orlando             	28.5
+Ricceri Tea                	28.47
+Duro Alessandra            	28.43
+Fratoni Nour               	28.42
+Bardelli Viola             	28.41
+Gargaloni Gianluca         	28.33
+Migliaro Ziyad             	28.33
+Spanu Flavia               	28.27
+Manciu Antonio Pio         	28.25
+Rosignoli Vincenzo         	28.2
+Nechifor Viola             	28.19
+Porru Danilo               	28.17
+Portici Melissa            	28.14
+Vagaggini Mirco            	28.14
+Godel Santo                	28.12
+Zamperini Carla            	28.09
+Bazzi Athena               	28.0
+Bazzi Cristina             	28.0
+Capella Antonietta         	28.0
+Civoli Sole                	28.0
+Giannico Francesco Maria   	28.0
+Lentini Pierluigi          	28.0
+Paba Marisol               	28.0
+Tacconi Anwar              	28.0
+Vallecchi Denise           	28.0
+Zini Leonardo              	28.0

@@ -1,0 +1,21 @@
+Ho suddiviso il mio programma in due funzioni oltre a quella gia assegnata di default dal codice:
+    
+La prima che ho sviluppato, è una funzione che verifica la lunghezza di due stringhe e, utilizzando
+il metodo count, verifica anche se tutti i caratteri di una delle due è presente nell'altra. Le due
+stringhe prese in considerazione "chiave" e "quasi_anagramma" rappresentano in linea teorica, la chiave 
+del dizionario (che ha un carattere in meno rispetto alla sequenza di numeri da cercare nella stringa finale)
+e il quasi anagramma che è formato come detto dalla consegna da un carattere aggiuntivo.
+
+La seconda funzione, è una funzione di decodifica che prende in input la stringa "encrypte_text" e il dizionario
+"pharaohs_cypher". In output invece bisogna far tornare l'insieme di tutte le stringhe con le sostituzioni. Per fare
+questo innanzitutto creo una variabile insieme che servirà alla fine della funzione. Itero per ogni chiave e valore del dizionario
+e facendo ciò inizializzo una variabile che corrisponde alla lunghezza della chiave piu uno. Dopo di che, dato l'indice i,
+itero nella stringa utilizzando il range tra la lunghezza della stringa meno la variabile creata prima piu uno. Grazie a questo ora
+posso creare la mia slice nella stringa. Richiamando la prima funzione verifico la stringa col quasi anagramma e posso procedere a creare tramite le slice
+le stringhe sostituite. Queste sono formate dalla slice [:indice] piu il valore piu la slice [i+l:] cosi da sostituire nella stringa, solo la parte interessata.
+Aggiungo tramite update tutte le stringhe all'insieme prima creato e ritorno infine l'insieme. Non prima però di aver definito il caso base della ricorsione
+Infatti se la lunghezza dell'insieme è uguale a 0 allora bisogna ritornare l'insieme con l'encrypted text
+
+La terza e ultima funzione, è quella gia definita del codice in cui semplicemente richiamo la seconda funzione per decodificare,
+trovo la lunghezza minima di ogni stringa con map e infine tramite una set comprehension aggiungo all'insieme ogni stringa con la lunghezza minima
+

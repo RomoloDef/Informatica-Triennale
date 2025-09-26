@@ -1,0 +1,27 @@
+Ubiquitous computing (or "ubicomp") is a concept in software
+engineering, hardware engineering and computer science where computing
+is made to appear anytime and everywhere. In contrast to desktop
+computing, ubiquitous computing can occur using any device, in any
+location, and in any format. A user interacts with the computer, which
+can exist in many different forms, including laptop computers,
+tablets, smart phones and terminals in everyday objects such as a
+refrigerator or a pair of glasses. The underlying technologies to
+support ubiquitous computing include Internet, advanced middleware,
+operating system, mobile code, sensors, microprocessors, new I/O and
+user interfaces, computer networks, mobile protocols, location and
+positioning, and new materials.
+
+This paradigm is also described as pervasive computing, ambient
+intelligence, or "everyware". Each term emphasizes slightly different
+aspects. When primarily concerning the objects involved, it is also
+known as physical computing, the Internet of Things, haptic computing,
+and "things that think". Rather than propose a single definition for
+ubiquitous computing and for these related terms, a taxonomy of
+properties for ubiquitous computing has been proposed, from which
+different kinds or flavors of ubiquitous systems and applications can
+be described.
+
+Ubiquitous computing themes include: distributed computing, mobile
+computing, location computing, mobile networking, sensor networks,
+human–computer interaction, context-aware smart home technologies, and
+artificial intelligence.
