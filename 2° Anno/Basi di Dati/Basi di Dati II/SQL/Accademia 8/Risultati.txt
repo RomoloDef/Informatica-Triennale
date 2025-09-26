@@ -1,0 +1,72 @@
+1. Quali sono le persone (id, nome e cognome) che hanno avuto assenze solo
+nei giorni in cui non avevano alcuna attività (progettuali o non progettuali)? Ordinare il risultato per id crescenti.
+
+select p.id, p.nome, p.cognome
+from persona as p
+
+except 
+
+select distinct p.id, p.nome, p.cognome
+from persona as p, assenza as a
+where p.id = a.persona
+and (
+	a.giorno = any (
+		select giorno
+		from attivitanonprogettuale as anp
+		where anp.persona = a.persona
+	)
+	or a.giorno = any(
+		select giorno
+		from attivitaprogetto as ap
+		where ap.persona = a.persona
+	)
+)
+order by id;
+
+2. Quali sono le persone (id, nome e cognome, ordinate per id crescente) che non hanno mai partecipato ad alcun progetto durante la durata del progetto "Pegasus"?
+
+select distinct p.id, p.nome, p.cognome
+from persona as p
+
+except
+
+select distinct p.id, p.nome, p.cognome
+from persona as p, attivitaprogetto as ap, progetto as prj
+where prj.nome = 'Pegasus'
+and ap.persona = p.id
+and ap.giorno between prj.inizio and prj.fine
+
+order by id
+
+3. Quali sono id, nome, cognome e stipendio dei ricercatori con stipendio maggiore di tutti i professori (associati e ordinari)?
+
+select distinct p.id, p.nome, p.cognome, p.stipendio
+from persona as p
+where p.posizione = 'Ricercatore'
+and p.stipendio > all (
+	select p.stipendio
+	from persona as p
+	where p.posizione = 'Professore Associato' or p.posizione = 'Professore Ordinario'
+)
+
+4. Quali sono le persone (ordinate per id crescente) che hanno lavorato su progetti con un budget superiore alla media dei budget di tutti i progetti?
+
+select p.id, p.nome, p.cognome
+from persona as p, progetto as prj, attivitaprogetto as ap
+where p.id = ap.persona
+  and ap.progetto = prj.id
+  and prj.budget > (select avg(prj2.budget) from progetto as prj2)
+order by p.id asc;
+
+5. Quali sono i progetti (ordinati con id crescente) con un budget inferiore allala media , ma con un numero complessivo di ore dedicate alle attivita ’ di ricerca sopra la media?
+
+select distinct prj.id, prj.nome 
+from progetto as prj, attivitaprogetto as ap
+where prj.id = ap.progetto
+and prj.budget < (select avg(prj.budget) from progetto as prj)
+and ap.oredurata > (select avg(ap.oredurata) from attivitaprogetto as ap where tipo = 'Ricerca e Sviluppo')
+order by id asc
+
+
+
+
