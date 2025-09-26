@@ -4,7 +4,7 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
 
 # 📖 Materiale
 
-<h2>Primo Anno - A. A. 2023/2024</h2>
+## Primo Anno - A. A. 2023/2024
 
 <table>
   <tr>
@@ -14,11 +14,11 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
 
 - [Calcolo Differenziale](1°%20Anno/Calcolo%20Differenziale)
 - [Progettazione di Sistemi Digitali](1°%20Anno/Progettazione%20di%20Sistemi%20Digitali)
-- [Metodi Matematici per l'Informatica](1°%20Anno/Metodi%20Matematici%20per%20l'Informatica)
+- [Metodi Matematici per l'Informatica](1°%20Anno/Metodi%20Matematici%20per%27Informatica)
 - [Fondamenti di Programmazione](1°%20Anno/Fondamenti%20di%20Programmazione)
 
-</td>
-<td>
+    </td>
+    <td>
 
 **secondo semestre**
 
