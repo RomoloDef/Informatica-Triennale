@@ -12,7 +12,7 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
 
 **primo semestre**
 
-- [Calcolo Differenziale](#)
+- [Calcolo Differenziale](#)(/Users/romolodeffereria/Desktop/UniversitàGitHub/Informatica-Triennale/1° Anno/Calcolo Differenziale)
 - [Progettazione di Sistemi Digitali](#)
 - [Metodi Matematici per l'Informatica](#)
 - [Fondamenti di Programmazione](#)
