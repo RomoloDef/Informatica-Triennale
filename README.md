@@ -14,15 +14,15 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
 
 - [Calcolo Differenziale](1°%20Anno/Calcolo%20Differenziale)
 - [Progettazione di Sistemi Digitali](#)
-- [Metodi Matematici per l'Informatica](#)
-- [Fondamenti di Programmazione](#)
+- [Metodi Matematici per l'Informatica](#)(1°%20Anno/Metodi%20Matematici%20per%20l'informatica)
+- [Fondamenti di Programmazione](#)(1°%20Anno/Fondamenti%20di%20Programmazione)
 
     </td>
     <td>
 
 **secondo semestre**
 
-- [Calcolo Integrale](#)
+- [Calcolo Integrale](#)(1°%20Anno/Calcolo%20Integrale)
 - [Architettura degli Elaboratori](#)
 - [Introduzione agli Algoritmi](#)
 - [Metodologie di Programmazione](#)
