@@ -1,0 +1,162 @@
+CREATE TABLE Nazione (
+	nome varchar not null,
+	primary key (nome)
+);
+
+CREATE TABLE citta_naz (
+	nazione varchar not null,
+	citta serial not null,
+	primary key (citta, nazione),
+	foreign key (nazione) references Nazione(nome),
+	foreign key (citta) references Citta(id)
+	
+);
+
+CREATE TABLE Citta (
+	nome varchar not null,
+	id serial not null,
+	primary key (id)
+);
+
+CREATE TABLE citta_off (
+	citta serial not null,
+	officina serial not null
+	primary key (cite, officina)
+	foreign key (nazione) references Nazione(nome),
+	foreign key (citta) references Citta(id)
+);
+
+CREATE TABLE Officina (
+	nome varchar not null,
+	indirizzo Indirizzo not null,
+	id serial not null,
+	primary key (id)
+);
+
+CREATE TABLE lavora (
+	officina serial not null,
+	staff CodiceFiscale not null,
+	primary key (officina, staff),
+	foreign key (officina) references Officina (id),
+	foreign key (staff) references Staff (cf)
+);
+
+CREATE TABLE dirige (
+	officina serial not null,
+	staff CodiceFiscale not null,
+	unique officina
+	foreign key (officina) references Officina (id),
+	foreign key (staff) references Staff (cf)
+);
+
+CREATE TABLE Staff (
+	is_dipendente boolean not null,
+	is_dirigente boolean not null,
+	assunzione Date -- anche NULL,
+	nascita Date -- anche NULL,
+	persona CodiceFiscale not 
+	foreign key (persona) references Persona(cf)	// accorpamento
+);
+
+CREATE TABLE Persona (
+	staff serial not null, 		
+	nome varchar not null,
+	cognome varchar not null, 
+	cf CodiceFiscale not null,
+	indirizzo Indirizzo not null,
+	tel Telefono not null,
+	primary key (cf)
+);
+
+CREATE TABLE Cliente (
+	persona CodiceFiscale not null, 		// accorpamento
+	targa Targa not null,
+	foreign key (persona) references Persona(cf),
+	foreign key (targa) references Veicolo(targa)
+	
+);
+
+
+CREATE TABLE Veicolo (
+	targa Targa not null
+	primary key (targa)
+
+);
+
+CREATE TABLE rip_veic_corrente (
+	veicolo Targa not null,
+	riparazioneincorso serial not null,
+	primary key (veicolo, riparazioneincorso),
+	foreign key (veicolo) references Veicolo (targa)
+	foreign key (riparazioneincorso) references RiparazioneInCorso (id)
+);
+
+CREATE TABLE RiparazioneInCorso (
+	accettazione DateTime not null,
+	id serial not null,
+	primary key (id)
+);
+
+CREATE TABLE rip_veicolo_term (
+	veicolo Targa not null,
+	riparazioneterminata serial not null,
+	primary key (veicolo, riparazioneterminata),
+	foreign key (veicolo) references Veicolo (targa),
+	foreign key (rbparazioneterminata) references RiparazioneTerminata(id)
+);
+
+CREATE TABLE RiparazioneTerminata (
+	accettazione Date not null,
+	terminazione Date not null,
+	id serial not null,
+	primary key (id)
+);
+
+CREATE TABLE mod_veic (
+	veicolo Targa not null,
+	modello varchar not null,
+	primary key (veicolo, modello),
+	foreign key (veicolo) references Veicolo (targa),
+	foreign key (modelli) references Modello (id)
+);	
+
+CREATE TABLE Modello (
+	nome varchar not null,
+	casaproduttrice varchar not null,	// accorpamento
+	primary key (nome)
+	foreign key (casaproduttrice) references CasaProduttrice (nome)
+	
+);
+
+CREATE TABLE mod_tip (
+	modello nome not null,
+	tipologia nome not null,
+	primary key (modello, tipologia),
+	foreign key (modello) references Modello (nome),
+	foreign key (tipologia) references Tipologia (nome)
+);
+
+CREATE TABLE Tipologia (
+	nome varchar not null,
+	primary key (nome)
+);
+
+CREATE TABLE CasaProduttrice (
+	nome varchar not null, 
+	primary key (nome)
+);
+
+
+
+	
+
+	
+
+
+
+
+
+
+
+
+	

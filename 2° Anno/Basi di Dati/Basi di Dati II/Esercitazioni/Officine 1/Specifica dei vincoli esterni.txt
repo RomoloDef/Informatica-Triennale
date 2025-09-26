@@ -1,0 +1,10 @@
+Specifica classe RiparazioneTerminata
+
+[V.RiparazioneTerminata.riconsegna]
+	Per ogni r:RiparazioneTerminata, deve essere:
+		r.riconsegna > r.accettazione.
+
+
+FOR ALL Rip, RipT, Val_Rip, Val_RipT (RiparazioneTerminata(RipT) AND Riparazione(Rip) AND
+
+accettazione(Rip, Val_Rip) AND riconsegna(RipT, Val_RipT)) -> Val_RipT > Val_Rip

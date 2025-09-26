@@ -1,0 +1,119 @@
+Nazione(__nome__: Stringa)
+
+-- senza accorpamento
+
+Citta(id: serial, nome)
+	fk: (id) occorre in citta_naz(citta)
+
+-- senza accorpamento
+citta_naz (nazione: Stringa__citta__: Integer
+	fk:  nazione references Nazione(nome)
+	fk:  citta references Citta(id)
+);
+
+-- con accorpamento
+
+Citta (id: serial, nome:Stringa, nazione: Stringa)  -- accorpa citta_naz
+	fk: (nazione) references Nazione(nome)
+);
+
+Officina(__id__: serial, nome: Stringa, indirizzo: Indirizzo, citta: integer, direttore: CodiceFiscale ) -- accorpa citta off
+	fk: (citta) references Citta(id)
+	fk: (direttore) references Staff(persona)
+	unique (direttore)
+
+	v.inclusione: (id, direttore) deve comparire in Staff(officina, persona)
+
+Persona(__cf__: CodiceFiscale, nome: Stringa, cognome: Stringa, indirizzo: Indirizzo, tel: Telefono)
+
+Staff(__persona__: CodiceFiscale assunzione*:Date, nascita*: Date, is_direttore: Boolean, is_dirigente: Boolean, officina: integer)	
+	fk: (persona) references Persona(cf)
+	fk: (officina) references Officina(id)
+	ennupla: (check) : (is_dipendente is true) = (assunzione is not null) --> stiamo formalizzando i vincoli
+	ennupla: (is_direttore is true) = (nascita is not null)
+	ennupla: (is_direttore is true or is_dipendente)
+
+
+Cliente(__persona__: CodiceFiscale)		-- accorpa cliente_veic
+	fk: (persona) references Persona(cf)
+	inclusione: (persona) occorre in Veicolo(cliente)
+);
+
+Veicolo(__targa__: Targa, cliente: CodiceFiscale)
+	fk: (cliente) references Cliente(persona)
+
+RiparazioneinCorso(__id__: serial, accettazione: TimeStamp, veicolo: Targa)
+	fk: (veicolo) references Veicolo(targa)
+	unique: (veicolo)
+
+RiparazioneTerminata(...)
+	ennupla: riconsegna > accettazione
+
+
+
+Trigger:
+
+(Faccio passo dopo passo quello che fa il prof)
+
+-- [V.direttore.is_direttore]
+
+-- ALL s, o dirige(s, o) --> is_direttore(s, true)
+
+Strategia di valutazione: due TRIGGER
+
+TRIGGER 1:
+
+Quando intercettarli: AFTER
+
+Eventi da intercettare:
+	-INSERT(new) in Officina
+	-UPDATE(old, new) in Officina
+
+Funzione(old, new): -- per INSERT/UPDATE in Officina
+	-- mi interessa solo new, posso assumerlo sempre definito
+
+	Let error:Boolean:= FALSE
+
+	if new.direttore --> prendi la ennupla in dirige --> se is_direttore == FALSE:
+
+	SELECT (s.is_direttore = FALSE) INTO STRICT error
+	FROM Staff s
+	WHERE s.persona = new.direttore;
+	
+	if error:
+		raise Exception...
+	else:
+		return new 
+
+
+TRIGGER 2
+
+Eventi da intercettare:		
+
+	-UPDATE(old, new) in Staff     solo se new.is_direttore <> old.is_direttore
+
+Quando intercettarli: AFTER
+
+Solo se NOT new.is_direttore
+
+Funzione(old, new):
+	-- mi interessa solo new, posso assumerlo sempre definito
+
+	if NOT new.is_direttore():
+		if EXIXTS(
+			SELECT *
+			FROM Officina
+			WHERE direttore = new.persona
+		);
+			raise Exception
+	return NULL
+		
+
+
+
+	
+
+	
+	
+	
+	
