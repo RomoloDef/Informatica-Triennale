@@ -14,7 +14,7 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
 
 - [Calcolo Differenziale](1°%20Anno/Calcolo%20Differenziale)
 - [Progettazione di Sistemi Digitali](1°%20Anno/Progettazione%20di%20Sistemi%20Digitali)
-- [Metodi Matematici per l'Informatica](1°%20Anno/Metodi%20Matematici%20per%27Informatica)
+- [Metodi Matematici per l'Informatica](1°%20Anno/Metodi%20Matematici%20per%20l'Informatica)
 - [Fondamenti di Programmazione](1°%20Anno/Fondamenti%20di%20Programmazione)
 
     </td>
