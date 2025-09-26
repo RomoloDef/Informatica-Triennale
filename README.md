@@ -51,10 +51,10 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
 
 **secondo semestre**
 
-- [Reti di Elaboratori](#)
-- [Progettazione di Algoritmi](#)
-- [Basi di Dati II](#)
-- [Sistemi Operativi II](#)
+- [Reti di Elaboratori](2°%20Anno/Reti%20di%20Elaboratori)
+- [Progettazione di Algoritmi](2°%20Anno/Algoritmi%20II)
+- [Basi di Dati II](2°%20Anno/Basi%20di%20Dati/Basi%20di%20Dati%20II)
+- [Sistemi Operativi II](2°%20Anno/Sistemi%20Operativi)
 
     </td>
   </tr>
