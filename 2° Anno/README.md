@@ -1,2 +1,0 @@
-# Informatica Triennale
-Materiale Universitario
