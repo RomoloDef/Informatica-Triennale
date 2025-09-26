@@ -1,0 +1,65 @@
+Nazione(__nome__)
+
+Citta(__id__, nome, nazione)
+	fk: nazione references Nazione(nome)
+
+Persona(__cf__, nome, cognome, nascita)
+
+Paziente(__persona__, email, indirizzo)
+	fk: persona references Persona(cf)
+	incl.: persona compare in telefono(paziente) 
+
+Medico(__persona__, spec_prim)
+	fk: persona references Persona(cf)
+	incl:  persona compare in med_spec(medico)
+	fk:    persona compare in med_spec_prim(medico)
+	fk:    spec_prim references Specializzazione(nome)
+	fk:    (persona, spec_prim) references med_spec(medico, spec) -- [V.med_spec_prim_isa_med_spec]
+
+
+
+
+telefono(
+	__paziente__:CodiceFiscale,
+	__valtel__:Telefono
+)
+	fk: paziente ref. Paziente(persona)
+
+Padiglione(__nome__)
+
+Piano(__n__, __padiglione__)
+	fk: padiglione references Padiglione(nome)
+		ON UPDATE CASCADE
+
+Settore(__n__, __piano__, __padiglione__)
+	fk: (piano, padiglione) references Piano(n, padiglione)
+		ON UPDATE CASCADE
+
+Stanza(__n__, __sett__, __piano__, __padiglione__,  capienza)
+	fk: (sett, piano, padiglione) references Settore(n, piano, padiglione) 
+		ON UPDATE CASCADE
+
+Letto(__n__, __stanza__, __sett__, __piano__, __padiglione__)
+	fk: (stanza, sett, piano, padiglione) references Stanza(n, sett, piano, padiglione)
+
+
+med_spec(__medico__:CodiceFiscale, __spec__)
+	fk: medico references Medico(persona)
+	fk: spec references Specializzazione(nome)
+
+
+Prestazione(__id__:serial, istante_pren, inizio_presunto, medico_resp*:CodiceFiscale)
+	check: inizio_presunto >= istante_pren -- [V.Prestazione.istante_presunto_dopo_istante_pren]
+	fk: medico_resp references Medico(persona)
+
+PrestazioneFinalizzata(__id__:integer, inizio)
+	fk: id references Prestazione(id)
+
+PrestazioneFinalizzataNonEseguita(__id__)
+	fk: id references PrestazioneFinalizzata(id)
+
+
+Ricovero(__id__:integer, letto, stanza, sett, piano, padiglione)
+	fk: (letto, stanza, sett, piano, padiglione) references Letto(n, stanza, sett, piano, padiglione)
+
+Nota: la scelta dei vincoli di identificazioni primari per le classi Letto, Stanza, Settore, Piano, e il combinato e il conseguente l'accorpamento delle associazioni let_ric, let_stanza, sett_stanza, set_piano, piano_pad ha portato a duplicazioni di dati (aspetto negativo), con il vantaggio di avere tutte le info necessari alla operazione di use-case itinerario() nella tabella Ricovero!  Si raccomanda di provare alternative e confrontarne pro e contro.

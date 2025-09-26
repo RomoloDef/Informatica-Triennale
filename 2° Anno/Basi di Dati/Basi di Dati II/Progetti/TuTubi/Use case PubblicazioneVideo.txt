@@ -1,0 +1,42 @@
+Specifica use case PubblicazioneVideo
+
+	nuovoVideo(t:Stringa, d:Stringa, f:FileVideo, c:Categoria, T:Tag [1..*]) : Video
+		pre: nessuna
+		post:			
+			Viene creato e restituito result:Video tale che:
+				- result.titolo = t
+				- result.descrizione = d
+				- result.flusso = f
+				- result.istante = adesso
+
+			Viene creato il link (c, result): cat_video.
+
+			Per ogni t:T, viene creato il link (t,result): tag_video.
+
+			Sia u:Utente l'oggetto che rappresenta l'attore che ha invocato l'operazione.
+
+			Viene creato il link 
+				(u,result):	utente_pubblica_video.
+
+
+			Formalmente:
+
+
+				Nuovi elementi del dom. di interp.: alpha
+
+				Variazione nelle ennuple che interpretano i simboli di predicato:
+
+					- Video(alpha)
+					- titolo(alpha, t)
+					- descrizione(alpha, d)
+					- flusso(alpha, f)
+					- istante(alpha, adesso)
+					- cat_video(c, alpha).
+					- tag_video(t, alpha) per ogni t:T
+					- utente_pubblica_video(u,alpha).
+
+				result = alpha
+
+
+
+Questo svolgimento potrebbe essere incompleto. E' infatti possibile che manchino le specifiche di ulteriori operazioni o di altri use-case, che si lasciano eventualmente per esercizio.

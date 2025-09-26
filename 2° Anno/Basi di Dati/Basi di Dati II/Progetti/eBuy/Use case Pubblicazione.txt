@@ -1,0 +1,54 @@
+Specifica use case Pubblicazione
+
+
+nuovoPost(
+	desc:Stringa, 
+	prezzoBase: Denaro,
+	valuta: Valuta,
+	garanziaAnni: Intero >= 0,
+	cat: Categoria,
+	asta: Booleano,
+	nuovo: Booleano,
+	rialzo: Denaro [0..1],
+	scad: DataOra [0..1]
+): Post
+ 	pre:
+ 		Sia u:Utente è l'oggetto che rappresenta l'istanza di attore che ha invocato l'operazione.
+
+ 		scad > adesso
+ 		and
+ 		(tipo = asta) <--> Denaro(rialzo)
+ 		and
+ 		(tipo = asta) <--> DataOra(scad).
+ 		and
+ 		(nuovo = true) --> garanziaAnni >= 2.
+
+
+
+ 	post:
+ 		- Dominio di interpretazione: nuovo simbolo ALPHA
+ 		- Variazioni delle relazioni che interpretano i simboli di predicato:
+ 			- ALPHA viene aggiunto alla relazione che interpreta Post, ovvero, con abuso di linguaggio (non è FOL!):
+
+ 		- result = ALPHA
+
+ 			- Post(ALPHA) 
+ 			- nuovo = true: Nuovo(ALPHA) altrimenti Usato(ALPHA).
+ 			- asta = true, allora: Asta(ALPHA) 	
+ 				altrimenti: CompraloSubito(ALPHA) 
+ 			- descrizione(ALPHA, desc)
+ 			- prezzoBase(ALPHA, prezzoBase)
+ 			- garanziaAnni(ALPHA, garanziaAnni)
+ 			- istante(ALPHA, adesso)
+ 			- rialzo(ALPHA, rialzo)
+ 			- scadenza(ALPHA, scadenza)
+ 			- post_cat(ALPHA, cat)
+ 			- post_valuta(ALPHA, val)
+ 			- venditore(u, ALPHA)
+
+ 		- result = ALPHA
+
+ cambiaPrezzo(p:CompraloSubito, nuovoPrezzo: Denaro)
+ 	pre: p non è stato già venduto
+ 	post:
+ 		p.prezzoBase = nuovoPrezzo

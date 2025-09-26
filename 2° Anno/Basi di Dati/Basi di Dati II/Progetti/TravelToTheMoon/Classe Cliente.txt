@@ -1,0 +1,37 @@
+Classe Cliente
+
+	eta(d:Data): Intero >= 0
+		pre: 
+			d >= this.nascita 
+			
+			Formalmente:
+
+			FOR ALL n nascita(this, n) ---> n <= d
+ 			
+		post: 
+			L'operazione non effettua side-effect sui dati.
+
+			result =  (d - this.nascita) espressa in anni approssimata per difetto
+
+
+Result deve soddisfare la seguente formula:
+
+FOR ALL n, nascita(this, n) --> result = adesso - n
+
+Oppure 
+
+FOR ALL n, dn nascita(this, n) AND data(n, dn) --> result = d - dn oppure anni(d - dn, result)
+
+
+Nota:
+	anni/2 è un simbolo di predicato per il tipo durata soggetto alla semantica di mondo reale, (quindi va definita da noi). La semantica di anni(d, x)
+	e che d:Durata è pari a x anni (intero)
+	
+
+	
+
+
+
+ 
+
+

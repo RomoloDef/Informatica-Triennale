@@ -1,0 +1,7 @@
+Specifica dei tipi di dato
+
+
+Denaro: Reale >= 0
+
+
+Popolarita = {bassa, media, alta}

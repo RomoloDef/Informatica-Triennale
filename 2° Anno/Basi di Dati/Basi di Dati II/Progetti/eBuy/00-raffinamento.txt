@@ -1,0 +1,70 @@
+1. Degli utenti registrati interessa:
+  1.1. nome utente
+  1.2. data registrazione
+  1.3. la tipologia, ovvero:
+    1.3.1. utente privato
+    1.3.2. utente professionale, nel qual caso interessa:
+       1.3.2.1. la URL della vetrina online
+
+
+2. Dei post interessa:
+  2.1. utente venditore
+  2.2. descrizione oggetto
+  2.3. categoria oggetto (v. req. 4)
+  2.4. istante di pubblicazione
+  2.5. metodi di pagamento accettati (bonifico e/o carta di credito, ma è preferibile che il sistema possa accogliere nuovi metodi di pagamento)
+  2.6. se l'oggetto è nuovo o usato
+  2.7. la modalità di vendita, che può essere
+    2.7.1. Asta, nel qual caso interessa:
+      2.7.1.1. prezzo iniziale
+      2.7.1.2. ammontare rialzo
+      2.7.1.3. istante scadenza
+      2.7.1.4. la sequenza di Bid (v. req. 3)
+
+    2.7.2. Compralo subito, nel qual caso interessa:
+       2.7.2.1. Prezzo di vendita
+       2.7.2.2. L'utente privato acquirente (se disponibile)
+
+  2.8. lo stato dell'oggetto, ovvero:
+     2.8.1. nuovo, nel qual caso interessa:
+        2.8.1.1. anni di garanzia (>=2)
+
+     2.8.2. usato
+     	2.8.2.1. anni di garanzia (>=0)
+	    2.8.2.2. le condizioni dell'oggetto, ovvero un valore tra {ottimo, buono, discreto, da sistemare}
+
+  2.9. Dei post la cui asta è conclusa con un bid aggiudicatario oppure venduti ad un acquirente, interessa il feedback (opzionale) del bidder aggiudicatario/utente acquirente. Di ogni feedback interessa:
+    2.9.1. voto: da 0 a 5
+    2.9.2. commento: stringa (opzionale).
+
+
+
+3. Dei bid interessa:
+   3.1. Il post oggetto del bid
+   3.2. L'utente privato che ha effettuato il bid (bidder)
+
+4. Le categorie (degli oggetti) dei post formano una foresta. Di ogni categoria (nodo della foresta) interessa:
+   4.1. l'eventuale super-categoria (massimo 1)
+   4.2. le eventuali sottocategorie.
+
+
+
+
+999. Il sistema deve offrire le seguenti funzionalità:
+  999.1. Gli utenti devono potersi registrare come privati o venditori professionali
+
+  999.2. Gli utenti devono poter pubblicare post in modalità Asta e Compralo Subito.
+
+  999.3. Gli utenti devono poter proporre un nuovo bid per un post (non scaduto) di tipo Asta 
+  
+  999.4. Gli utenti devono poter acquistare (l'oggetto di) un post di tipo Compralo Subito
+
+  999.5. Di ogni bid interessa calcolare il prezzo associato (...)
+
+  999.6. Dato un post di tipo Asta, interessa calcolare se l'asta associata è conclusa oppure no.
+
+  999.7. Di ogni post Asta la cui asta è conclusa (come da req. 999.5), deve essere possibile calcolare il bid aggiudicatario (se esiste)
+
+  999.8. Deve permettere di calcolare, dato un utente professionale, la sua popolarità (nella gamma bassa, media, alta). La popolarità dipende dal numero di utenti che hanno effettuato negli ultimi 12 mesi bid per gli articoli da loro messi all’asta, o che hanno acquistato (sempre negli ultimi 12 mesi) articoli secondo la modalità “compralo subito”. In particolare, la popolarità di un venditore professionale è bassa se tale numero è inferiore a 50, media se tra 50 e 300, alta se superiore a 300.
+
+  999.9. Deve permettere di calcolare l'affidabilità di un utente (in qualità di venditore): l'affidabilità di un utente si calcola a partire dai feedback che ha ricevuto per gli oggetti che ha messo in vendita. In particolare, l’affidabilità di un venditore è data dalla media aritmetica m di tutti i feedback che ha ricevuto, diminuita di un fattore che è tanto più grande quanto maggiore è il numero di feedback negativi (ovvero ≤ 2). Tecnicamente, detta z la frazione dei feedback negativi rispetto ai feedback totali, l’affidabilità di un venditore è data da m(1 − z)/5. L’affidabilità è quindi sempre un reale tra 0 e 1 (dato che è pari ad m/5 ∈ [0, 1] se non ci sono feedback negativi (z = 0), mentre scende verso 0 all’aumentare della percentuale z di questi ultimi).

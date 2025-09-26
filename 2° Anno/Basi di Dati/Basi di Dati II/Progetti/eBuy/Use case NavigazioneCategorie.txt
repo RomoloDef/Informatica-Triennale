@@ -1,0 +1,6 @@
+Use case NavigazioneCategorie
+
+	sotto_categorie(c:Categoria) : Categoria [0..*]
+		pre: nessuna
+		post: 
+			result = { c'  |   sotto_super_categoria(c, c') }

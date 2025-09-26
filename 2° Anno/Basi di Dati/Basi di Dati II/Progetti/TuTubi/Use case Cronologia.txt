@@ -1,0 +1,45 @@
+Specifica use case Cronologia
+
+	cronologia(): Visualizzazione [0..*]
+		pre: nessuna
+		post:
+			Sia u:Utente l'oggetto che rappresenta l'attore che ha invocato l'operazione.
+
+			result è l'insieme dei vis:Visualizzazione tali che:
+				(u,vis):ut_vis.
+
+			Formalmente:
+
+			result = {  vis  | ut_vis(u, vis) }
+
+
+Sebbene i requisiti chiedano di restituire gli oggetti in ordine cronologico, in questo caso, è ragionevole pensare di delegare l'ordinamento al front-end, in quanto l'ordinamento degli oggetti di classe Visualizzazione restituiti non è concettualmente rilevante, e si può immaginare la possibilità per l'utente di riordinare (nel front-end) tale risultato.
+
+Se volessimo invece imporre un ordinamento, possiamo procedere come spiegato nel "Documento A.4.1 - Definire insiemi ordinati" presente nel materiale didattico. In questo caso, possiamo definire l'operazione cronologia() come segue:
+
+	cronologia(): (Visualizzazione, Intero > 0) [0..*]
+
+		pre: nessuna
+		post:
+			Sia u:Utente l'oggetto che rappresenta l'attore che ha invocato l'operazione.
+
+			result è l'insieme dei vis:Visualizzazione tali che:
+				(u,vis):ut_vis.
+
+			Formalmente:
+
+			V = {  vis  | ut_vis(u, vis) }
+
+			result = sorted[Visualizzazione, Visualizzazione[<=]] ( V )
+
+			dove usiamo [...] per indicare un pedice (si veda il documento citato per una spiegazione completa), e l'operazione:
+
+			Visualizzazione[<=](v1:Visualizzazione, v2:Visualizzazione): Booleano
+				pre: nessuna
+				post: result = true <--> (
+						EXISTS i1, i2 istante(v1, i1) and istante(v2, i2) and i1 <= i2
+					  ).
+
+
+
+Questo svolgimento potrebbe essere incompleto. E' infatti possibile che manchino le specifiche di ulteriori operazioni o di altri use-case, che si lasciano eventualmente per esercizio.

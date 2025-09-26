@@ -1,0 +1,25 @@
+Specifica classe Categoria
+
+categorie_discendenti() : Categoria [0..*]
+	pre: nessuna
+	post: result è l'insieme di tutte le categorie che discendono da this. Formalmente:
+
+		Detto:
+		
+			C = { c |  sotto_super_cat(this, c) }
+
+		l'insieme delle sottocategorie dirette di this, si ha:
+
+		result = C 			// sotto-categorie dirette di this
+				 unione 
+				 { c' |  categorie_discendendenti(c, c') and c:C }  
+				 	// tutte le categorie discenti di tutte le sotto-categorie dirette di this
+
+		// Da notare come la ricorsione termina sempre: se C è l'insieme vuoto, allora result è l'insieme vuoto.
+
+
+
+[V.Categoria.foresta]
+	ALL c   Categoria(c) -->  not categorie_discendenti(c, c).
+
+

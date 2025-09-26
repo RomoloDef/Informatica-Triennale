@@ -1,0 +1,25 @@
+Specifica use case Registrazione
+
+	nuovoUtente(nome:Stringa) : Utente
+		pre: 
+			non esiste u:Utente tale che u.nome = nome. Formalmente:
+
+			not EXISTS u  Utente(u) and nome(u, nome).
+			
+		post: 
+			viene creato e restituito result:Utente tale che:
+				result.nome = nome
+				result.iscrizione = adesso
+
+			Formalmente:
+
+			- Nuovi elem. del dominio di interpretazione: ALPHA
+			- Variazioni nell'interpretazione dei simboli di predicato:
+				- Utente(ALPHA)
+				- nome(ALPHA, nome)
+				- iscrizione(ALPHA, adesso)
+
+			- result = ALPHA
+
+
+Questo svolgimento potrebbe essere incompleto. E' infatti possibile che manchino le specifiche di ulteriori operazioni o di altri use-case, che si lasciano eventualmente per esercizio.				

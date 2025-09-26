@@ -1,0 +1,42 @@
+Passaggi per arrivare al lavoro da progettista su questa esercitazione:
+
+1. Eliminazione dei valori multivalori: Solo nella classe CLIENTE --> vedere UML
+
+2. Scelta e progettazione dei tipi di dato:
+
+- Stringa --> varchar
+
+- Data, DataOra, Durata --> TimeStamp
+
+- {pubblica, privata} --> CREATE TYPE Modalità AS ENUM {'pubblica', 'privata'}
+
+- Tag --> 
+	
+3. Ristrutturazione delle generalizzazioni: Non ci sono generalizzazioni
+
+4. Identificatori di classi: Vedi UML
+
+5. Vincoli Esterni: 
+
+FOR ALL u, V, Utente(u), Video(V) (Feedback(u,V)) -> EXISTS v, Visualizza(v) AND utente_vis(u,v) AND vis_video(v,V)
+
+FOR ALL c, Commento(c) -> EXIXTS u, c, v, V (ute_com(u,c) AND com_vid(c, V) AND Visualizza(v))
+
+Per ogni istanza di Feedback, il valore di Feedback deve essere compreso tra 0 e 5
+
+FOR ALL f, u, v, Utente(u), Video(v) Feedback(f, u, v) --> EXISTS V (Valore(f, u, v) > 0 AND Valore(f, u, v) < 5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

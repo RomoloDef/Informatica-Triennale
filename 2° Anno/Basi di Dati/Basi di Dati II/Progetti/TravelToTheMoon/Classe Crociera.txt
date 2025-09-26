@@ -1,0 +1,13 @@
+Specifica classe Crociera
+
+	fine(): Data
+		pre: nessuna
+		post:
+			Sia i:Itinerario t.c. (this,i):croc_itin.			
+			result = this.inizio + i.durata_g()
+
+
+Formalmente result soddisfatta la seguente formula:
+
+FOR ALL in, itin, dur inizio(this, in) AND itin(this, itin) AND durata_g(itin, dur) --> result = in + dur
+

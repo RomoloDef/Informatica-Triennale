@@ -1,0 +1,86 @@
+Specifica realizzativa dello Use-case GestionePrestazioni
+
+
+medici_idonei(s:Stringa): Set[Medico.*]
+	pre: nessuna
+
+	post: 
+		BEGIN TRANSACTION
+
+		Q = SELECT m.*
+			FROM Specializzazione spec LEFT OUTER JOIN Medico m
+				ON spec.nome = m.spec_prim				
+			WHERE spec.nome = s;
+
+		Se Q è vuoto:
+			error, s non è il nome di una specializzazione
+		
+		Se Q = (NULL, ..., NULL): 
+			// nessun medico ha s come spec. primaria
+			Q = SELECT m.*
+				FROM Medico m, med_spec ms
+				WHERE ms.medico = m.persona
+				  AND ms.spec = s;
+		COMMIT;	
+			// Usiamo una transazione ogni per evitare risultati inaspettati in caso di modifiche concorrenti al DB che dovessero avvenire tra le due query.				  
+		
+		Restituisci Q;
+
+
+aggiungiMedico(prest_id:integer, m:Codicefiscale)
+	algoritmo: 
+		BEGIN TRANSACTION;
+
+		Q = SELECT peseg.* 
+			FROM Prestazione p LEFT OUTER JOIN 
+						PrestazioneEseguita peseg
+			ON p.id = pseg.id
+			WHERE p.id = prest_id;
+
+		Se Q è vuoto:
+			errore, prest_id non identifica una prestazione
+		Se Q <> (NULL, ..., NULL):
+			errore: La prestazione prest_id è già stata eseguita
+
+		INSERT INTO med_prest(medico, prestazione) VALUES (m, prest_id);
+
+		COMMIT;
+
+
+	
+finalizzaPrestazione(prest_id:integer, i:timestamp)
+	// per esercizio
+
+
+registra_termine(prest_id:integer)
+	algoritmo:
+		BEGIN TRANSACTION;
+		SET CONSTRAINTS ALL DEFERRED;
+
+		Q = SELECT pfin.*, pfne.*
+			FROM Prestazione p 
+				 LEFT OUTER JOIN
+				 (
+					PrestazioneFinalizzataNonEseguita pfne 
+					JOIN 
+					PrestazioneFinalizzata pfin 
+					ON pfne.id = pfin.id
+				 )
+				 ON p.id = pfne.id
+			WHERE p.id = prest_id;
+
+		IF Q è vuoto:
+			errore, prest_id non identifica una prestazione;
+		IF Q = (NULL, ..., NULL):
+			errore, la prestazione prest_id non tra quelle finalizzate ma non ancora eseguite;
+
+		IF Q.inizio > NOW():
+			errore, prest_id non è ancora iniziata;
+
+		DELETE FROM PrestazioneFinalizzataNonEseguita WHERE
+			id = prest_id;
+
+		INSERT INTO PrestazioneEseguita(id, durata) VALUES
+			(prest_id, NOW() - Q.inizio);
+
+		COMMIT;

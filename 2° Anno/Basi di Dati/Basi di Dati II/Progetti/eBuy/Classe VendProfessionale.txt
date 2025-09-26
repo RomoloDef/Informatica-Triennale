@@ -1,0 +1,31 @@
+Classe VendProfessionale
+
+	popolarita() : Popolarita
+		pre: --
+		post: 
+
+			Sia
+			U = { u  |    Utente(u) and 
+							// u ha effettuato un bid per post di this in data >= "adesso - 12 mesi"
+							EXISTS b,a,i 
+								Asta(a) and Bid(b) and asta_bid(a,b) and 
+								venditore(a,this) and bidder(b, u) and istante(b, i) and 
+								i >= adesso - "12 mesi"
+				} 
+				unione 
+				{ u  |    Utente(u) and 
+				  			// u ha acquistato un postCS di this in data >= "adesso - 12 mesi"
+				  			EXISTS p, i
+				  				CompraloSubito(p) and venditore(p, this) and 
+				  				acquirente(p,u) and istante(p,u, i) and
+				  				i >= adesso - "12 mesi"
+				}
+
+
+			result è tale che:
+
+			|U| < 50 --> result = bassa
+			and
+			( |U| >= 50 and |U| <= 300 ) --> result = media
+			and
+			|U| > 300 --> result alta

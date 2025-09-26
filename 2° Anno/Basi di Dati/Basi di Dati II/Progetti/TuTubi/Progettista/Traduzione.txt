@@ -1,0 +1,51 @@
+Censura(__id__: Integer, argomento: varchar)
+
+
+Vid-cens(video: varchar, censura: varchar)
+	fk: video references Video(nomefile)
+	fk censura references Censura(id)
+
+
+Video(__nomefile__: varchar, nome: varchar, durata: TimeStamp, descrizione: varchar, categoria: varchar, utente: varchar)
+	v.inclusione: Video(nomefile) occorre in vid-tag(video)
+	fk: categoria references Categoria(nome)			// accorpamento
+	fk: utente references Utente(nome)
+
+
+Vid-tag(video: varchar, tag: Tag)
+	fk: nomefile references Video(nomefile)
+	fk: valore references Tag(valore)
+
+
+Tag(__valore__: Tag)
+	v.inclusione: Tag(valore) occorre in vid-tag(valore)
+
+Categoria(__nome__: varchar)
+
+
+Commento(__id__: Integer, dataOra: TimeStamp, contenuto: varchar, video: varchar, utente: varchar)
+	fk: video references Video(nomefile)								// accorpamento
+	fk: utente references Utente(nome)								// accorpamento
+
+
+Visualizza(__id__: Integer, momento: TimeStamp, video: varchar, utente: varchar)
+	fk: video references Video(nomefile)						// accorpamento
+	fk: utente references Utente(nome)						// accorpamento
+
+
+Feedback(__utente__ : varchar, __video__ : varchar, valore: Integer)
+	fk: utente references Utente(nome)
+	fk: video references Video(nomefile) 
+
+
+Utente(__nome__: varchar, dataiscrizione: TimeStamp)
+	
+
+Playlist(__nome__: varchar, dataCreazione: TimeStamp, modalita: Modalita, utente: varchar)
+	fk: utente references Utente(nome)							// accorpamento
+	
+
+Play-vid(__playlist__: varchar, __video__: varchar)
+	fk: playlist references Playlist(nome)
+	fk: video references Video(nome file)
+
