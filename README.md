@@ -73,7 +73,7 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
 - [Ingegneria del Software](#)
 - [Automi Calcolabilità e Complessità](#)
 - [Programmazione Web](#)
-- [Interazione Uomo Macchina](#)
+- [Interazione Uomo Macchina](3°%20Anno/Interazione%20Uomo%20Macchina)
 
     </td>
     <td>
