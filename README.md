@@ -70,9 +70,9 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
 
 **primo semestre**
 
-- [Ingegneria del Software](#)
-- [Automi Calcolabilità e Complessità](#)
-- [Programmazione Web](#)
+- [Ingegneria del Software](3°%20Anno/Ingegneria%20del%20Software/)
+- [Automi Calcolabilità e Complessità](3°%20Anno/Automi/)
+- [Programmazione Web](3°%20Anno/Programmazione%20per%20il%20Web/)
 - [Interazione Uomo Macchina](3°%20Anno/Interazione%20Uomo%20Macchina)
 
     </td>
