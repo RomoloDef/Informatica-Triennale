@@ -1,0 +1,78 @@
+openapi: '3.0.3'
+info:
+  title: Nasoni API
+  version: '1.0'
+servers:
+  - url: https://api.server.test/v1
+  
+paths:
+
+  /fountains:
+    post:
+      summary: Creazione di un nuovo nasone
+      description: Crea un nuovo nasone con i dati forniti
+      operationId: createFountain
+
+      requestBody:
+        description: Dati del nasone da creare senza ID
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fountain'
+
+      responses:
+        '201':
+          description: Nasone creato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fountain'
+
+components:
+  schemas:
+
+    FountainIDschema:
+      type: integer
+      format: int64
+      description: Id univoco dal server
+      readOnly: true
+      example: 12345
+
+    Fountain:
+      title: Fountain
+      type: object
+      required:
+        - state
+        - latitude
+        - longitude
+      properties:
+        id:
+          type: integer
+          $ref: '#/components/schemas/FountainIDschema'
+        state:
+          type: string
+          description: Lo stato del nasone
+          enum:
+            - good 
+            - faulty
+        latitude:
+          type: number
+          format: float
+          description: La latitudine del nasone
+        longitude:
+          type: number
+          format: float
+          description: La longitudine del nasone
+
+  parameters:
+    FountainId:
+      name: id
+      in: path
+      description: ID univoco della fontana (nasone) del percorso
+      required: true
+      schema:
+        $ref: '#/components/schemas/FountainID'
+
+
+

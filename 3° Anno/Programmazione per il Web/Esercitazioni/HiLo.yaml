@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: Hi-Lo Game
+  description: |
+    This API allows playing the hi-lo game and 
+    requesting the state of a game or the history of 
+    all the games.
+  version: 0.0.1
+
+paths:
+  /games:
+    post:
+      summary: Start a new game
+      description: |
+        Start a new game generating the secret number and 
+        return the created game ID.
+      responses:
+        "200":
+          description: New game created
+          content:
+            application/json:
+              schema:
+                type: integer
+
+    get:
+      summary: List all games
+      description: |
+        Obtain the list of all games, with the final result
+        (win/lose) and the number of guesses.
+      responses:
+        "200":
+          description: |
+            An array of objects, each containing
+            the game id, the final outcome, and
+            the number of guesses.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    outcome:
+                      type: string
+                      enum:
+                        - win
+                        - lose
+                    guesses:
+                      type: integer
+                      
+  /games/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: e.g., /games/1234
+        schema:
+          type: integer
+
+    put:
+      summary: Start or reset a game
+      description: |
+        Start a game with the given ID, generating the secret
+        number; or reset an existing game, re-generating 
+        the secret number and zeroing the guess counter.
+      responses:
+        "200":
+          description: An existing game was reset
+        "201":
+          description: A new game was created
+
+    post:
+      summary: Make a guess
+      description: |
+        Try to guess the secret number; returns "hi", "lo"
+        or "correct", plus the guess count.
+      parameters:
+        - name: guess
+          in: query
+          required: true
+          description: The guessed number
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+      responses:
+        "200":
+          description: Guess accepted, the result is in the content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  guess-count:
+                    type: integer
+                    minimum: 1
+                    maximum: 10
+                  guess-outcome:
+                    type: string
+                    enum:
+                      - hi
+                      - lo
+                      - correct
+        "403":
+          description: Game over
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  outcome:
+                    type: string
+                    enum:
+                      - win
+                      - lose
+                  guesses:
+                    type: integer
+        "404":
+          description: Game not found

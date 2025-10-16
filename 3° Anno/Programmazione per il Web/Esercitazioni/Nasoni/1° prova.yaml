@@ -1,0 +1,59 @@
+Openapi: '3.0.3'
+info:
+  title: Nasoni
+  description: |
+    Si tratta di un'api che ricerca i nasoni
+    nella città
+  version: 0.0.1
+
+components:
+  schemas:
+    Fountain:
+      title: Fountain
+      type: object
+      properties:
+        id:
+          type: integer
+          format: integer
+          readOnly: true
+          description: Identificativo del nasone
+        state:
+          type: string
+          description: Lo stato del nasone
+          enum:
+            - good 
+            - faulty
+        latitude:
+          type: number
+          format: float
+          description: La latitudine del nasone
+        longitude:
+          type: number
+          format: float
+          description: La longitudine del nasone
+
+    FountainID:
+      title: id
+      type: integer
+      properties:
+        id:
+          type: integer
+          format: integer
+          readOnly: true
+          description: Identificativo del nasone
+
+  parameters:
+    FountainId:
+      name: id
+      in: path
+      description: ID univoco della fontana (nasone) del percorso
+      required: true
+      schema:
+        $ref: '#/components/schemas/FountainID'
+
+        
+
+
+
+
+
