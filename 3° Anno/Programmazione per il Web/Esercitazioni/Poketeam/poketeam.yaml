@@ -16,6 +16,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/NewTeamRequest'
+
       responses:
         '201':
           description: Team creato con successo
@@ -26,6 +27,59 @@ paths:
         '400':
           description: Richiesta non valida
 
+  /teams/{team_id}:
+    get:
+      operationId: team_operations.get_team_by_id
+      summary: Recupera i dettagli di un team Pokémon esistente
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del team da recuperare
+
+      responses:
+        '200':
+          description: Dettagli del team recuperati con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '404':
+          description: Team non trovato
+
+  /teams/{team_id}/pokemons/{pokemon_name}:
+    get:
+      operationId: team_operations.get_pokemon_details 
+      summary: Recupera i dettagli arricchiti di un Pokémon in un team
+      
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del team
+
+        - name: pokemon_name
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Nome del Pokémon (es. 'pikachu')
+
+      responses:
+        '200':
+          description: Dettagli del Pokémon recuperati e arricchiti con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrichedPokemonDetails'
+        '404':
+          description: Team o Pokémon non trovato
+        '502':
+          description: Errore nella comunicazione con l'API esterna (PokéAPI)
 
 components:
   schemas:
@@ -45,13 +99,8 @@ components:
           example: Ash
         pokemon_names:
           type: array
-          description: Lista dei nomi Pokémon nel team (massimo 6)
-          maxItems: 6
           items:
-            type: string
-          example:
-            - bulbasaur
-            - eevee
+            $ref: '#/components/schemas/PokemonInstance'
 
     Team:
       type: object
@@ -70,3 +119,44 @@ components:
           example: 2
           type: integer
           description: Numero attuale di Pokémon nel team
+
+    PokemonInstance:
+      type: object
+      properties:
+          id:
+            type: integer
+            description: ID univoco dell'istanza del Pokémon
+            example: 5001
+          name:
+            type: string
+            description: Nome del Pokémon
+            example: pikachu
+          nickname:
+            type: string
+            description: Soprannome del Pokémon
+            example: Sparky 
+
+
+    EnrichedPokemonDetails:
+      type: object
+      description: Dettagli di un Pokémon arricchiti con dati esterni (PokéAPI)
+      properties:
+        team_id:
+          type: integer
+          description: ID del team a cui appartiene il Pokémon
+          example: 101
+        pokemon_name:
+          type: string
+          description: Nome del Pokémon
+          example: bulbasaur
+        # Dati aggiunti da PokéAPI
+        height:
+          type: number
+          description: Altezza del Pokémon in decimetri
+          example: 7
+        weight:
+          type: number
+          description: Peso del Pokémon in ettogrammi
+          example: 69
+
+

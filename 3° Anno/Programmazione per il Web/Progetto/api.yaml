@@ -1,0 +1,136 @@
+openapi: 3.0.0
+servers:
+  - url: "http://localhost:3000"
+info:
+  title: WASAText
+  description: una piattaforma di messaggistica che supporta chat individuali e di gruppo, accessibile tramite PC
+  version: 1.0.0
+
+paths:
+  # SEZIONE 1 - Gli Utenti
+  /users:
+    # Creazione e autenticazione utente
+    post:
+      tags:
+        - login
+      summary: Login utente
+      description: |-
+        Se l'utente non esiste, verrà creato,
+        e viene restituito un identificatore.
+        Se l'utente esiste, viene restituito l'identificatore dell'utente.
+      operationId: doLogin
+      requestBody:
+        description: dettagli utente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User' 
+              required:
+                - name
+      responses:
+        '201':
+          description: Login utente riuscito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    # Ottenimento di tutti gli utenti
+    get:
+      tags:
+        - login
+      summary: Ottieni tutti gli utenti
+      description: Restituisce la lista di tutti gli utenti registrati.
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Elenco utenti recuperato con successo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  # SEZIONE 1.1 - Utente specifico
+  /users/{user_id}:
+    get:
+      tags:
+        - login
+      summary: Ottieni i dettagli di un utente specifico
+      description: Restituisce i dettagli dell'utente identificato da user_id.
+      operationId: getUserById
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID dell'utente da recuperare
+      responses:
+        '200':
+          description: Dettagli utente recuperati con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Utente non trovato
+
+  # SEZIONE 1.2 - Impostazioni nome utente
+  /users/me:
+    put:
+      tags:
+        - login
+      summary: Imposta o aggiorna il nome utente
+      description: |-
+        Permette all'utente autenticato di impostare o modificare il proprio nome.
+        Restituisce l'oggetto utente aggiornato.
+      operationId: setMyUserName
+      requestBody:
+        description: Nuovo nome utente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Nome utente aggiornato con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  # SEZIONE 2 - Le Conversazioni (Chat)
+
+
+components:
+  schemas:
+    # Schema per l'utente
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "abcdef012345"
+        name:
+          type: string
+          example: "Maria"
+          minimum: 3
+          maximum: 16
+
+    # Schema per la chat
+    Chat:
+      type: object
+
+
+    
+
+    
+
+  
+
+
+
