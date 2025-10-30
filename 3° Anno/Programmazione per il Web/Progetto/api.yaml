@@ -104,10 +104,78 @@ paths:
                 $ref: '#/components/schemas/User'
 
   # SEZIONE 2 - Le Conversazioni (Chat)
+  /chats:
+
+  # Ottengo tutte le chat dell'utente autenticato
+    get:
+      tags:
+        - chats
+      summary: Ottieni tutte le chat dell'utente autenticato
+      description: Restituisce la lista di tutte le chat (individuali e di gruppo) dell'utente autenticato.
+      operationId: getMyConversations
+      responses:
+        '200':
+          description: Elenco chat recuperato con successo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chat'
+
+    # Creazione di una nuova chat individuale o di gruppo
+    post:
+      tags:
+        - chats
+      summary: Crea una nuova chat
+      description: |-
+        Permette di creare una nuova chat individuale o di gruppo.
+        Restituisce l'oggetto chat creato.
+      operationId: createConversation
+      requestBody:
+        description: Dettagli della nuova chat
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chat'
+      responses:
+        '201':
+          description: Chat creata con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+
+  # SEZIONE 2.1 - Chat specifica
+  /chats/{chat_id}:
+    get:
+      tags:
+        - chats
+      summary: Ottieni i dettagli di una chat specifica
+      description: Restituisce i dettagli della chat identificata da chat_id.
+      operationId: getConversation
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID della chat da recuperare
+      responses:
+        '200':
+          description: Dettagli chat recuperati con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+        '404':
+          description: Chat non trovata
 
 
 components:
   schemas:
+
     # Schema per l'utente
     User:
       type: object
@@ -121,9 +189,96 @@ components:
           minimum: 3
           maximum: 16
 
-    # Schema per la chat
+    # Schemi per la chat
+    # Inizio creando uno schema che funge da superclasse con proprietà comuni a tutte le chat
+
+    ChatBase:
+      type: object 
+      properties: 
+        id: 
+          type: string
+          example: "chat123456"
+        type:
+          description: Tipo di chat (individuale con un altro utente o di gruppo)
+          type: string
+          enum:
+            - individual
+            - group
+        participants:
+          type: array
+          items:
+            type: string
+          description: Elenco degli ID degli utenti partecipanti alla chat
+        created_at:
+          type: string
+          format: date-time
+          description: Data e ora di creazione della chat
+          example: "2025-10-30T14:48:00.000Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: Data e ora dell'ultimo aggiornamento della chat
+          example: "2025-10-30T15:00:00.000Z"
+        last_message:
+          type: string
+          format: date-time
+          description: Data e ora dell'ultimo messaggio inviato nella chat
+          example: "2025-10-30T15:00:00.000Z"
+          
+    # Passo alla prima sottoclasse: Chat individuale
+    IndividualChat:
+      allOf:
+        - $ref: '#/components/schemas/ChatBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - individual
+    
+    # Seconda sottoclasse: Chat di gruppo
+    GroupChat:
+      allOf:
+        - $ref: '#/components/schemas/ChatBase'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - group
+            group_name:
+              type: string
+              description: Nome della chat di gruppo
+              example: "Amici di Università"
+            description:
+              type: string
+              description: Descrizione della chat di gruppo
+              example: "Chat per organizzare gli eventi universitari"
+            admins:
+              type: array
+              items:
+                type: string
+                description: Elenco degli ID degli utenti amministratori della chat di gruppo
+            group_icon:
+              type: string
+              format: uri
+              description: URL dell'icona della chat di gruppo
+              example: "http://example.com/icons/group123.png"
+
+    # Infine lo schema generico: una chat può essere individuale o di gruppo
     Chat:
-      type: object
+      oneOf:
+        - $ref: '#/components/schemas/IndividualChat'
+        - $ref: '#/components/schemas/GroupChat'
+      discriminator:
+        propertyName: type
+        mapping:
+          individual: '#/components/schemas/IndividualChat'
+          group: '#/components/schemas/GroupChat'
+      description: Rappresenta una chat, che può essere individuale o di gruppo e questo schema verrà usato nelle risposte API.
+
+   
+      
 
 
     
