@@ -39,7 +39,7 @@ paths:
     # Ottenimento di tutti gli utenti
     get:
       tags:
-        - login
+        - utente
       summary: Ottieni tutti gli utenti
       description: Restituisce la lista di tutti gli utenti registrati.
       operationId: getAllUsers
@@ -57,7 +57,7 @@ paths:
   /users/{user_id}:
     get:
       tags:
-        - login
+        - utente
       summary: Ottieni i dettagli di un utente specifico
       description: Restituisce i dettagli dell'utente identificato da user_id.
       operationId: getUserById
@@ -79,10 +79,10 @@ paths:
           description: Utente non trovato
 
   # SEZIONE 1.2 - Impostazioni nome utente
-  /users/me:
+  /users/me/name:
     put:
       tags:
-        - login
+        - utente
       summary: Imposta o aggiorna il nome utente
       description: |-
         Permette all'utente autenticato di impostare o modificare il proprio nome.
@@ -102,10 +102,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '409':
+          description: Nome utente già esistente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NameAlreadyExistsError'
+
+  # SEZIONE 1.3 - Impostazioni foto profilo
+  /users/me/photo:
+    put:
+      tags:
+        - utente
+      summary: Imposta o aggiorna la foto profilo dell'utente
+      description: |-
+        Permette all'utente autenticato di impostare o modificare la propria foto profilo.
+        Restituisce l'oggetto utente aggiornato.
+      operationId: setMyPhoto
+      requestBody:
+        description: Nuova foto profilo
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                photo_url:
+                  type: string
+                  format: uri
+                  description: URL della nuova foto profilo
+      responses:
+        '200':
+          description: Foto profilo aggiornata con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Utente non trovato
 
   # SEZIONE 2 - Le Conversazioni (Chat)
   /chats:
-
   # Ottengo tutte le chat dell'utente autenticato
     get:
       tags:
@@ -172,6 +209,42 @@ paths:
         '404':
           description: Chat non trovata
 
+    put:
+      tags:
+        - groups
+      summary: Imposta il nome del gruppo  
+      description: |-
+        Permette di impostare o aggiornare il nome di una chat di gruppo.
+        Restituisce l'oggetto chat di gruppo aggiornato.
+      operationId: setGroupName
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID della chat di gruppo da aggiornare
+      requestBody:
+        description: Nuovo nome del gruppo
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group_name:
+                  type: string
+      responses:
+        '200':
+          description: Nome del gruppo aggiornato con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+        '404':
+          description: Chat di gruppo non trovata 
+
+# ------------------------------------------------------------------------------------------------------
 
 components:
   schemas:
@@ -276,6 +349,17 @@ components:
           individual: '#/components/schemas/IndividualChat'
           group: '#/components/schemas/GroupChat'
       description: Rappresenta una chat, che può essere individuale o di gruppo e questo schema verrà usato nelle risposte API.
+
+    # Creo uno schema per l'errore del nome già esistente
+    NameAlreadyExistsError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Il nome utente esiste già."
+        code:
+          type: integer
+          example: 409
 
    
       
