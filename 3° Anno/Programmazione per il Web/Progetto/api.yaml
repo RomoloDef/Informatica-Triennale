@@ -53,6 +53,31 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
 
+  # SEZIONE 1.0 - Ricerca utenti mediante username
+  /users/research:
+    get:
+      tags:
+        - utente
+      summary: Ricerca utenti per nome
+      description: Restituisce la lista di utenti il cui nome corrisponde al parametro di ricerca.
+      operationId: searchUsersByUserName
+      parameters:
+        - name: name
+          in: query
+          description: Nome utente da cercare (corrispondenza esatta)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Elenco utenti trovati
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
   # SEZIONE 1.1 - Utente specifico
   /users/{user_id}:
     get:
@@ -107,7 +132,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NameAlreadyExistsError'
+                $ref: '#/components/responses/Conflict'
 
   # SEZIONE 1.3 - Impostazioni foto profilo
   /users/me/photo:
@@ -244,6 +269,80 @@ paths:
         '404':
           description: Chat di gruppo non trovata 
 
+  # SEZIONE 2.2 - Aggiunta partecipanti ad una chat di gruppo
+  /chats/{chat_id}/participants:
+    post: 
+      tags:
+        - groups
+      summary: Aggiungi uno o pià membri al gruppo
+      description: |- 
+        Permette all'utente (solo se è definito admin) di aggiungere uno
+        o più utenti al gruppo 
+      operationId: addToGroup 
+      security: 
+        - bearerAuth: []
+      parameters:
+        - name: chat_id
+          in: path 
+          required: true 
+          schema:
+            type: string 
+          description: ID della chat di gruppo in cui l'utente vuole inserire i nuovi membri 
+      requestBody:
+        description: Elenco degli ID degli utenti da aggiungere 
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_ids:
+                  type: array
+                  items:
+                    type: string
+                  example: ["user123", "user456"]
+      responses:
+        '200':
+          description: Membri aggiunti con successo
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Chat'
+        '400':
+          description: Richiesta non valida (ad esempio, uno o più ID utente non esistono)
+        '403':
+          description: Operazione non autorizzata (l'utente non è admin del gruppo)
+        '404':
+          description: Chat di gruppo non trovata
+
+  # SEZIONE 2.3 - Utente lascia il gruppo di appartenenza
+  /chats/{chat_id}/participants/me:
+    delete:
+      tags:
+        - groups
+      summary: Lasciare il gruppo di appartenenza
+      description: |- 
+        Permette all'utente autenticato di lasciare il gruppo di appartenenza.
+      operationId: leaveGroup 
+      security: 
+        - bearerAuth: []
+      parameters:
+        - name: chat_id
+          in: path 
+          required: true 
+          schema:
+            type: string 
+          description: ID della chat di gruppo che l'utente vuole lasciare 
+      responses:
+        '200':
+          description: Uscita dal gruppo avvenuta con successo
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Chat'
+        '404':
+          description: Chat di gruppo non trovata
+    
 # ------------------------------------------------------------------------------------------------------
 
 components:
@@ -350,16 +449,64 @@ components:
           group: '#/components/schemas/GroupChat'
       description: Rappresenta una chat, che può essere individuale o di gruppo e questo schema verrà usato nelle risposte API.
 
-    # Creo uno schema per l'errore del nome già esistente
-    NameAlreadyExistsError:
+    # Creo uno schema per gli errori generici
+    Error:
       type: object
       properties:
+        code:
+          type: string
+          example: "NOT_FOUND"
         message:
           type: string
-          example: "Il nome utente esiste già."
-        code:
-          type: integer
-          example: 409
+          example: "La risorsa richiesta non è stata trovata."
+
+  # Riposte per gli errori
+  responses:
+    BadRequest:
+      description: Richiesta non valida (400 Bad Request)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          
+    Forbidden:
+      description: Accesso non autorizzato (403 Forbidden)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Risorsa non trovata (404 Not Found)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Conflict:
+      description: Conflitto nella richiesta (409 Conflict)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            nameConflict:
+              value:
+                code: "NAME_ALREADY_EXISTS"
+                message: "Il nome utente esiste già."
+
+    InternalServerError:
+      description: Errore interno del server (500 Internal Server Error)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+
+      
+
+
+  
 
    
       
