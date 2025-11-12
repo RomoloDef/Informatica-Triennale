@@ -6,6 +6,8 @@ info:
   description: una piattaforma di messaggistica che supporta chat individuali e di gruppo, accessibile tramite PC
   version: 1.0.0
 
+# ------------------------------- PATHS ---------------------------------- #
+
 paths:
   # SEZIONE 1 - Gli Utenti
   /users:
@@ -35,6 +37,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+          description: Richiesta non valida
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
 
     # Ottenimento di tutti gli utenti
     get:
@@ -52,22 +60,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+          description: Nessun utente trovato
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
 
   # SEZIONE 1.0 - Ricerca utenti mediante username
   /users/research:
     get:
       tags:
         - utente
-      summary: Ricerca utenti per nome
-      description: Restituisce la lista di utenti il cui nome corrisponde al parametro di ricerca.
+      summary: Ricerca utenti per username
+      description: Restituisce la lista di utenti il cui username corrisponde al parametro di ricerca.
       operationId: searchUsersByUserName
       parameters:
-        - name: name
-          in: query
-          description: Nome utente da cercare (corrispondenza esatta)
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/UserUsername'
+          description: Username dell'utente da cercare
       responses:
         '200':
           description: Elenco utenti trovati
@@ -77,6 +87,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+          description: Nessun utente trovato con l'username specificato
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
 
   # SEZIONE 1.1 - Utente specifico
   /users/{user_id}:
@@ -87,11 +103,7 @@ paths:
       description: Restituisce i dettagli dell'utente identificato da user_id.
       operationId: getUserById
       parameters:
-        - name: user_id
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/UserID'
           description: ID dell'utente da recuperare
       responses:
         '200':
@@ -101,7 +113,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         '404':
+          $ref: '#/components/responses/NotFound'
           description: Utente non trovato
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
 
   # SEZIONE 1.2 - Impostazioni nome utente
   /users/me/name:
@@ -128,11 +144,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         '409':
+          $ref: '#/components/responses/Conflict'
           description: Nome utente già esistente
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/Conflict'
+          
 
   # SEZIONE 1.3 - Impostazioni foto profilo
   /users/me/photo:
@@ -150,12 +164,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                photo_url:
-                  type: string
-                  format: uri
-                  description: URL della nuova foto profilo
+              $ref: '#/components/schemas/SetPhotoRequest'
       responses:
         '200':
           description: Foto profilo aggiornata con successo
@@ -164,14 +173,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         '404':
+          $ref: '#/components/responses/NotFound'
           description: Utente non trovato
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
 
   # SEZIONE 2 - Le Conversazioni (Chat)
   /chats:
   # Ottengo tutte le chat dell'utente autenticato
     get:
       tags:
-        - chats
+        - chat
       summary: Ottieni tutte le chat dell'utente autenticato
       description: Restituisce la lista di tutte le chat (individuali e di gruppo) dell'utente autenticato.
       operationId: getMyConversations
@@ -184,11 +197,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Chat'
+        '404':
+          $ref: '#/components/responses/NotFound'
+          description: Utente non trovato
+        '500': 
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
 
     # Creazione di una nuova chat individuale o di gruppo
     post:
       tags:
-        - chats
+        - chat
       summary: Crea una nuova chat
       description: |-
         Permette di creare una nuova chat individuale o di gruppo.
@@ -208,21 +227,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Chat'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+          description: Richiesta non valida
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
 
   # SEZIONE 2.1 - Chat specifica
   /chats/{chat_id}:
     get:
       tags:
-        - chats
+        - chat
       summary: Ottieni i dettagli di una chat specifica
       description: Restituisce i dettagli della chat identificata da chat_id.
       operationId: getConversation
       parameters:
-        - name: chat_id
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/ChatID'
           description: ID della chat da recuperare
       responses:
         '200':
@@ -232,22 +253,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/Chat'
         '404':
+          $ref: '#/components/responses/NotFound'
           description: Chat non trovata
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
 
     put:
       tags:
-        - groups
+        - gruppo
       summary: Imposta il nome del gruppo  
       description: |-
         Permette di impostare o aggiornare il nome di una chat di gruppo.
         Restituisce l'oggetto chat di gruppo aggiornato.
       operationId: setGroupName
       parameters:
-        - name: chat_id
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/ChatID'
           description: ID della chat di gruppo da aggiornare
       requestBody:
         description: Nuovo nome del gruppo
@@ -255,10 +276,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                group_name:
-                  type: string
+              $ref: '#/components/schemas/SetGroupNameRequest'
       responses:
         '200':
           description: Nome del gruppo aggiornato con successo
@@ -267,14 +285,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/Chat'
         '404':
+          $ref: '#/components/responses/NotFound'
           description: Chat di gruppo non trovata 
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
 
   # SEZIONE 2.2 - Aggiunta partecipanti ad una chat di gruppo
   /chats/{chat_id}/participants:
     post: 
       tags:
-        - groups
-      summary: Aggiungi uno o pià membri al gruppo
+        - gruppo
+      summary: Aggiungi uno o più membri al gruppo
       description: |- 
         Permette all'utente (solo se è definito admin) di aggiungere uno
         o più utenti al gruppo 
@@ -282,11 +304,7 @@ paths:
       security: 
         - bearerAuth: []
       parameters:
-        - name: chat_id
-          in: path 
-          required: true 
-          schema:
-            type: string 
+        - $ref: '#/components/parameters/ChatID'
           description: ID della chat di gruppo in cui l'utente vuole inserire i nuovi membri 
       requestBody:
         description: Elenco degli ID degli utenti da aggiungere 
@@ -294,13 +312,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                user_ids:
-                  type: array
-                  items:
-                    type: string
-                  example: ["user123", "user456"]
+              $ref: '#/components/schemas/AddParticipantsRequest'
       responses:
         '200':
           description: Membri aggiunti con successo
@@ -309,17 +321,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/Chat'
         '400':
+          $ref: '#/components/responses/BadRequest'
           description: Richiesta non valida (ad esempio, uno o più ID utente non esistono)
         '403':
+          $ref: '#/components/responses/Forbidden'
           description: Operazione non autorizzata (l'utente non è admin del gruppo)
         '404':
+          $ref: '#/components/responses/NotFound'
           description: Chat di gruppo non trovata
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
 
   # SEZIONE 2.3 - Utente lascia il gruppo di appartenenza
   /chats/{chat_id}/participants/me:
     delete:
       tags:
-        - groups
+        - gruppo
       summary: Lasciare il gruppo di appartenenza
       description: |- 
         Permette all'utente autenticato di lasciare il gruppo di appartenenza.
@@ -327,12 +345,8 @@ paths:
       security: 
         - bearerAuth: []
       parameters:
-        - name: chat_id
-          in: path 
-          required: true 
-          schema:
-            type: string 
-          description: ID della chat di gruppo che l'utente vuole lasciare 
+        - $ref: '#/components/parameters/ChatID'
+          description: ID della chat di gruppo da cui l'utente vuole uscire
       responses:
         '200':
           description: Uscita dal gruppo avvenuta con successo
@@ -341,11 +355,273 @@ paths:
               schema:
                 $ref: '#/components/schemas/Chat'
         '404':
+          $ref: '#/components/responses/NotFound'
           description: Chat di gruppo non trovata
-    
-# ------------------------------------------------------------------------------------------------------
+
+  # SEZIONE 3 (All'interno del path della conversazione) - I Messaggi, essi per costruzione, vivono all'interno di una Chat
+  /chats/{chat_id}/messages:
+    get:
+      tags:
+        - messaggi
+      summary: Ottieni tutti i messaggi di una chat ordinati in ordine cronologico decrescente
+      description: Restituisce la lista di tutti i messaggi appartenenti alla chat specificata, ordinati dal più recente al meno recente.
+      operationId: getMessages
+      parameters:
+        - $ref: '#/components/parameters/ChatID'
+          description: ID della chat di cui si vogliono ottenere i messaggi
+        - $ref: '#/components/parameters/Ordinamento'
+          description: Criterio di ordinamento dei messaggi (discendente)
+      responses:
+        '200':
+          description: Elenco messaggi recuperato con successo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '404':
+          $ref: '#/components/responses/NotFound'
+          description: Chat non trovata
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
+
+    post:
+      tags:
+        - messaggi
+      summary: Crea e invia un messaggio in chat 
+      description: |-
+        Permette di creare e inviare un nuovo messaggio all'interno della chat specificata.
+        Restituisce l'oggetto messaggio creato.
+      operationId: sendMessage
+      parameters:
+        - $ref: '#/components/parameters/ChatID'
+          description: ID della chat in cui inviare il messaggio
+      requestBody:
+        description: Dettagli del messaggio da inviare
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        '201':
+          description: Messaggio inviato con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+          description: Richiesta non valida
+        '404':
+          $ref: '#/components/responses/NotFound'
+          description: Chat non trovata
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
+
+  # SEZIONE 3.1 - Eliminazione di un messaggio specifico
+  /chats/{chat_id}/messages/{message_id}:
+    delete:
+      tags:
+        - messaggi
+      summary: Elimina un messaggio specifico dalla chat
+      description: |-
+        Permette di eliminare un proprio messaggio specifico all'interno della chat.
+      operationId: deleteMessage
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ChatID'
+          description: ID della chat da cui eliminare il messaggio
+        - $ref: '#/components/parameters/MessageID'
+          description: ID del messaggio da eliminare
+      responses:
+        '204':
+          description: Messaggio eliminato con successo
+        '404':
+          $ref: '#/components/responses/NotFound'
+          description: Messaggio o chat non trovati
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
+
+  # SEZIONE 3.2 - Aggiornamento stato di un messaggio specifico
+    patch: 
+      tags: 
+        - messaggi
+      summary: Aggiorna lo stato di un messaggio specifico
+      description: |-
+        Permette di aggiornare lo stato di un messaggio specifico all'interno della chat (da ricevuto a letto).
+      operationId: updateMessageStatus
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ChatID'
+          description: ID della chat contenente il messaggio
+        - $ref: '#/components/parameters/MessageID'
+          description: ID del messaggio di cui aggiornare lo stato
+      requestBody:
+        description: Nuovo stato del messaggio
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMessageStatusRequest'
+      responses:
+        '200':
+          description: Stato del messaggio aggiornato con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          $ref: '#/components/responses/NotFound'
+          description: Messaggio o chat non trovati
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
+
+
+  # SEZIONE 3.3 - Risposta ad un messaggio esistente
+  /chats/{chat_id}/messages/{message_id}/reply:
+    post:
+      tags:
+        - messaggi
+      summary: Rispondi a un messaggio esistente nella chat
+      description: |-
+        Permette di rispondere a un messaggio esistente all'interno della chat specificata.
+        Restituisce l'oggetto messaggio creato come risposta.
+      operationId: replyToMessage
+      parameters:
+        - $ref: '#/components/parameters/ChatID'
+          description: ID della chat in cui inviare la risposta
+        - $ref: '#/components/parameters/MessageID'
+          description: ID del messaggio a cui si sta rispondendo
+      requestBody:
+        description: Dettagli del messaggio di risposta da inviare
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        '201':
+          description: Risposta al messaggio inviata con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+          description: Richiesta non valida
+        '404':
+          $ref: '#/components/responses/NotFound'
+          description: Chat o messaggio non trovati
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
+
+
+  # SEZIONE 3.4 - Reazione ad un messaggio specifico
+  /chats/{chat_id}/messages/{message_id}/reaction: 
+    post: 
+      tags:
+        - reazioni 
+      summary: Inserimento di una reazione ad un messaggio
+      description: |-
+        Permette di inserire una reazione (o meglio una emoji) in un messaggio specifico 
+        all'interno della chat 
+      operationId: commentMessage
+      parameters:
+        - $ref: '#/components/parameters/ChatID'
+          description: ID della chat in cui si vuole reagire 
+        - $ref: '#/components/parameters/MessageID'
+          description: ID del messaggio a cui si vuole reagire con emoji 
+      responses:
+        '201':
+          description: Reazione inserita con successo 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reaction'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+          description: Richiesta non valida
+        '404':
+          $ref: '#/components/responses/NotFound'
+          description: Chat o messaggio non trovati
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
+
+    delete:
+      tags:
+        - reazioni 
+      summary: Rimozione di una reazione ad un messaggio
+      description: |-
+        Permette di rimuovere una reazione (o meglio una emoji) in un messaggio specifico 
+        all'interno della chat 
+      operationId: removeMessageReaction
+      parameters:
+        - $ref: '#/components/parameters/ChatID'
+          description: ID della chat in cui si vuole rimuovere la reazione 
+        - $ref: '#/components/parameters/MessageID'
+          description: ID del messaggio da cui si vuole rimuovere la reazione 
+      responses:
+        '204':
+          description: Reazione rimossa con successo
+        '404':
+          $ref: '#/components/responses/NotFound'
+          description: Chat o messaggio non trovati
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
+
+  # SEZIONE 3.5 - Inoltro di uno o più messaggi ad un'altra chat
+  /chats/{chat_id}/messages/{message_id}/forward:
+    post:
+      tags:
+        - messaggi
+      summary: Inoltra un messaggio a un'altra chat
+      description: |-
+        Permette di inoltrare un messaggio esistente verso una o più chat di destinazione.
+        Crea un nuovo messaggio per ciascuna chat di destinazione, con un riferimento al messaggio originale.
+      operationId: forwardMessage
+      parameters:
+        - $ref: '#/components/parameters/ChatID'
+        - $ref: '#/components/parameters/MessageID'
+      requestBody:
+        description: Elenco delle chat di destinazione per l'inoltro
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForwardMessageRequest'
+      responses:
+        '201':
+          description: Messaggio inoltrato con successo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '404':
+          $ref: '#/components/responses/NotFound'
+          description: Messaggio o chat non trovati
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+          description: Errore interno del server
+
+# ------------------------------- COMPONENTS ---------------------------------- #
 
 components:
+
+  # SCHEMAS
+
   schemas:
 
     # Schema per l'utente
@@ -449,6 +725,114 @@ components:
           group: '#/components/schemas/GroupChat'
       description: Rappresenta una chat, che può essere individuale o di gruppo e questo schema verrà usato nelle risposte API.
 
+    # Creo gli schemi per i messaggi
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "messaggio1"
+        chat_id:
+          type: string
+          example: "chat123456"
+        sender_id:
+          type: string
+          example: "utente789"
+        type:
+          description: Tipo di messaggio (testo, immagine, file, audio)
+          type: string
+          enum:
+            - text
+            - image
+            - file
+            - audio
+          example: text
+        content:
+          type: string
+          description: Testo del messaggio (se type = text)
+          example: "Ciao, come stai?"
+        media_url:
+          type: string
+          format: uri
+          description: URL del file multimediale (solo se type ≠ text)
+          example: "http://example.com/uploads/photo123.png"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-10-30T14:48:00.000Z"
+        status:
+          description: Stato del messaggio (inviato, consegnato, letto)
+          type: string
+          enum: 
+            - delivered
+            - read
+
+    # Creo uno schema per le reazioni ai messaggi (tramite emoji)
+    Reaction:
+      type: object 
+      properties:
+        id:
+          type: string
+          example: reaction1 
+        messagge_id:
+          type: string 
+          example: message1234
+        user_id: 
+          type: string 
+          example: user1
+        emoji_code:
+          type: string 
+          description: Codice dell'emoji usata come reazione
+          example: "👍"
+        created_at:
+          type: string 
+          format: date-time
+          example: "2025-10-30T14:48:00.000Z"
+
+    # Creo gli schemi per le richieste dei vari endpoint
+
+    SetPhotoRequest:
+      type: object
+      properties:
+        photo_url:
+          type: string
+          format: uri
+          description: URL della nuova foto profilo
+
+    SetGroupNameRequest:
+      type: object
+      properties:
+        group_name:
+          type: string
+
+    AddParticipantsRequest:
+      type: object
+      properties:
+        user_ids:
+          type: array
+          items:
+            type: string
+          example: ["user123", "user456"]
+
+    UpdateMessageStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - delivered
+            - read
+
+    ForwardMessageRequest:
+      type: object
+      properties:
+        target_chat_ids:
+          type: array
+          items:
+            type: string
+          description: ID delle chat di destinazione
+          example: ["chat789", "chat999"]
+
     # Creo uno schema per gli errori generici
     Error:
       type: object
@@ -460,7 +844,9 @@ components:
           type: string
           example: "La risorsa richiesta non è stata trovata."
 
-  # Riposte per gli errori
+  # RESPONSES
+
+  # Risposte per gli errori
   responses:
     BadRequest:
       description: Richiesta non valida (400 Bad Request)
@@ -502,11 +888,58 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
 
+  # PARAMETERS
+  parameters:
+    ChatID:
+      name: chat_id
+      in: path
+      description: ID univoco della chat.
+      required: true
+      schema:
+        type: string
 
-      
+    UserID: 
+      name: user_id
+      in: path
+      description: ID univoco dell'utente.
+      required: true
+      schema:
+        type: string
 
+    MessageID:
+      name: message_id
+      in: path
+      description: ID univoco del messaggio.
+      required: true
+      schema:
+        type: string
 
-  
+    UserUsername:
+      name: username
+      in: path
+      description: Username univoco dell'utente.
+      required: true
+      schema:
+        type: string
+
+    Ordinamento:
+      name: order
+      in: query
+      description: Criterio di ordinamento  (ascendente o discendente).
+      required: false
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+
+  # SECURITY SCHEMES
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 
    
       
