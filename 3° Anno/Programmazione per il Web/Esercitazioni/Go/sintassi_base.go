@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"unicode/utf8"
 )
 
 func main() {
@@ -38,6 +39,12 @@ func main() {
 	fmt.Println("funzione pow", pow(2, 3, 10))
 	result := pow(2, 10, 1000)
 	fmt.Printf("result: %.4f\n", result)
+
+	// Differenza di utilizzo tra len e runeCountInString
+	s := "Ciao mondo! 😊"
+	fmt.Println("Lunghezza con len:", len(s))
+	fmt.Println("Rune Count:", utf8.RuneCountInString(s))
+
 }
 
 func pow(x, n, lim float64) float64 {
