@@ -67,4 +67,10 @@ func main() {
 	fmt.Println("Re-slicing per estendere la slice fino alla capacità")
 	fmt.Println(s[:cap(s)][3])
 
+	// La funzione MAKE serve per allocare un array azzerato e restituire una slice che lo riferisce
+	fmt.Println("\nCreazione di una slice con make:")
+	s2 := make([]int, 5)
+	// se invece scrivo make([]int, 5, 10) la slice avrà lunghezza 5 e capacità 10
+	fmt.Println("Slice s2 creata con make:", s2)
+
 }

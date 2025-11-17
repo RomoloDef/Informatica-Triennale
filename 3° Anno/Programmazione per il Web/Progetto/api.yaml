@@ -77,7 +77,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   # SEZIONE 1.0 - Ricerca utenti mediante username
-  /users/research:
+  /users/search:
     get:
       tags:
         - utente
@@ -133,6 +133,7 @@ paths:
       description: |-
         Permette all'utente autenticato di impostare o modificare il proprio nome.
         Restituisce l'oggetto utente aggiornato.
+        Equivalente a `PATCH /users/me` con campo `username`.
       operationId: setMyUserName
       security:
         - bearerAuth: []
@@ -163,6 +164,7 @@ paths:
       description: |-
         Permette all'utente autenticato di impostare o modificare la propria foto profilo.
         Restituisce l'oggetto utente aggiornato.
+        Equivalente a `PATCH /users/me` con campo `photo_url`.
       operationId: setMyPhoto
       security:
         - bearerAuth: []
@@ -186,7 +188,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
   # SEZIONE 1.4 - Eliminazione account 
-  /users/me/: 
+  /users/me: 
     delete:
       tags:
         - utente
@@ -206,8 +208,10 @@ paths:
 
   # SEZIONE 2 - Le Conversazioni (Chat)
   /chats:
-  # Ottengo tutte le chat dell'utente autenticato
+  # Ottengo tutte le chat dell'utente autenticato (in ordine cronologico inverso)
     get:
+      parameters:
+        - $ref: '#/components/parameters/Ordinamento'
       tags:
         - chat
       summary: Ottieni tutte le chat dell'utente autenticato
@@ -453,8 +457,6 @@ paths:
         Permette di creare e inviare un nuovo messaggio all'interno della chat specificata.
         Restituisce l'oggetto messaggio creato.
       operationId: sendMessage
-      parameters:
-        - $ref: '#/components/parameters/ChatID'
       security:
         - bearerAuth: []
       requestBody:
@@ -603,7 +605,7 @@ paths:
       description: |-
         Permette di rimuovere una reazione (o meglio una emoji) in un messaggio specifico 
         all'interno della chat 
-      operationId: removeMessageReaction
+      operationId: uncommentMessage
       security:
         - bearerAuth: []
       responses:
@@ -714,10 +716,8 @@ components:
           description: Data e ora dell'ultimo aggiornamento della chat
           example: "2025-10-30T15:00:00.000Z"
         last_message:
-          type: string
-          format: date-time
-          description: Data e ora dell'ultimo messaggio inviato nella chat
-          example: "2025-10-30T15:00:00.000Z"
+          $ref: '#/components/schemas/LastMessagePreview'
+          description: Anteprima dell'ultimo messaggio della chat
           
     # Passo alla prima sottoclasse: Chat individuale
     IndividualChat:
@@ -833,6 +833,35 @@ components:
             - delivered
             - read
 
+    # Creo uno schema per gestire gli snippet di messaggi 
+    LastMessagePreview:
+      type: object
+      description: Anteprima dell'ultimo messaggio della chat
+      properties:
+        type:
+          type: string
+          enum: [text, image, file, audio]
+          description: Tipo di messaggio
+        text:
+          type: string
+          description: Anteprima testuale (solo se type = text)
+          example: "Ciao, come stai?"
+        thumbnail_url:
+          type: string
+          format: uri
+          description: Miniatura dell'immagine (solo se type = image)
+          example: "http://example.com/thumbs/photo123.png"
+        icon:
+          type: string
+          description: Icona unicode per media non testuali
+          example: "📷"
+        timestamp:
+          type: string
+          format: date-time
+          description: Data e ora dell’ultimo messaggio
+          example: "2025-10-30T15:00:00.000Z"
+
+
     # Creo uno schema per le reazioni ai messaggi (tramite emoji)
     Reaction:
       type: object 
@@ -843,7 +872,7 @@ components:
           maxLength: 64
           example: reaction1
           description: Identificatore univoco della reazione
-        messagge_id:
+        message_id:
           type: string
           minLength: 6
           maxLength: 64 
@@ -871,6 +900,7 @@ components:
 
     SetPhotoRequest:
       type: object
+      description: Richiesta per impostare o aggiornare la foto profilo
       properties:
         photo_url:
           type: string
@@ -879,6 +909,7 @@ components:
 
     SetGroupNameRequest:
       type: object
+      description: Richiesta per impostare o aggiornare il nome della chat di gruppo
       properties:
         group_name:
           type: string
@@ -889,6 +920,7 @@ components:
 
     AddParticipantsRequest:
       type: object
+      description: Richiesta per aggiungere membri a una chat di gruppo
       properties:
         user_ids:
           type: array
@@ -901,6 +933,7 @@ components:
 
     UpdateMessageStatusRequest:
       type: object
+      description: Richiesta per aggiornare lo stato di un messaggio
       properties:
         status:
           type: string
@@ -911,6 +944,7 @@ components:
 
     ForwardMessageRequest:
       type: object
+      description: Richiesta per inoltrare un messaggio a una o più chat
       properties:
         target_chat_ids:
           type: array
@@ -920,6 +954,7 @@ components:
           example: ["chat789", "chat999"]
           minItems: 1
           maxItems: 20
+
 
     # Creo uno schema per gli errori generici
     Error:
@@ -937,6 +972,7 @@ components:
           maxLength: 64
           example: "La risorsa richiesta non è stata trovata."
           description: Descrizione dettagliata dell'errore
+      description: Rappresenta un errore generico restituito dalle API
 
   # RESPONSES
 
