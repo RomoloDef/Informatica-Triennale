@@ -73,4 +73,35 @@ func main() {
 	// se invece scrivo make([]int, 5, 10) la slice avrà lunghezza 5 e capacità 10
 	fmt.Println("Slice s2 creata con make:", s2)
 
+	// MAPPE
+	fmt.Println("\nParliamo di mappe in Go:")
+	m := make(map[string]int) // mappa che associa stringhe a interi
+	m["Alice"] = 25
+	m["Bob"] = 30
+	fmt.Println("Mappa m:", m)
+
+	// Accesso a un elemento della mappa
+	etàAlice := m["Alice"]
+	fmt.Println("Età di Alice:", etàAlice)
+
+	// Verifica dell'esistenza di una chiave - verifica della presenza dell'età di "Charlie"
+	etàCharlie, esiste := m["Charlie"]
+	if !esiste {
+		fmt.Println("Charlie non esiste nella mappa")
+	} else {
+		fmt.Println("Età di Charlie:", etàCharlie)
+	}
+
+	// LETTERALI MAPPA
+	fmt.Println("\nLetterali mappa in Go:")
+	type Vertex struct {
+		lat, long float64
+	}
+	var mappa = map[string]Vertex{
+		"Bell Labs":  {40.68433, -74.39967},
+		"Google":     {37.42202, -122.08408},
+		"Università": {42.3601, -71.0942},
+	}
+	fmt.Println("Mappa di Vertex:", mappa)
+
 }

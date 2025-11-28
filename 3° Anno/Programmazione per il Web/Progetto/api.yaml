@@ -13,7 +13,7 @@ tags:
   - name: chat
     description: Creazione e gestione delle chat individuali e di gruppo
   - name: gruppo
-    description: Operazioni specifiche sui gruppi (aggiunta/rimozione membri)
+    description: Operazioni specifiche sui gruppi
   - name: messaggi
     description: Invio, ricezione e gestione dei messaggi
   - name: reazioni
@@ -40,7 +40,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User' 
+              $ref: '#/components/schemas/LoginUserRequest' 
       responses:
         '201':
           description: Login utente riuscito
@@ -103,7 +103,12 @@ paths:
   # SEZIONE 1.1 - Utente specifico
   /users/{user_id}:
     parameters:
-        - $ref: '#/components/parameters/UserID'
+        - name: user_id
+          in: path
+          description: ID univoco dell'utente.
+          required: true
+          schema:
+            type: string
     get:
       tags:
         - utente
@@ -133,7 +138,6 @@ paths:
       description: |-
         Permette all'utente autenticato di impostare o modificare il proprio nome.
         Restituisce l'oggetto utente aggiornato.
-        Equivalente a `PATCH /users/me` con campo `username`.
       operationId: setMyUserName
       security:
         - bearerAuth: []
@@ -143,7 +147,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/SetNameRequest'
       responses:
         '200':
           description: Nome utente aggiornato con successo
@@ -164,7 +168,6 @@ paths:
       description: |-
         Permette all'utente autenticato di impostare o modificare la propria foto profilo.
         Restituisce l'oggetto utente aggiornato.
-        Equivalente a `PATCH /users/me` con campo `photo_url`.
       operationId: setMyPhoto
       security:
         - bearerAuth: []
@@ -186,7 +189,29 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-
+    
+    delete: 
+      tags:
+        - utente
+      summary: Rimuovi la foto profilo dell'utente
+      description: |-
+        Permette all'utente autenticato di rimuovere la propria foto profilo.
+        Restituisce l'oggetto utente aggiornato.
+      operationId: deleteMyPhoto
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Foto profilo rimossa con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+ 
   # SEZIONE 1.4 - Eliminazione account 
   /users/me: 
     delete:
@@ -250,7 +275,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Chat'
+              $ref: '#/components/schemas/CreateChatRequest'
       responses:
         '201':
           description: Chat creata con successo
@@ -266,7 +291,12 @@ paths:
   # SEZIONE 2.1 - Chat specifica
   /chats/{chat_id}:
     parameters:
-        - $ref: '#/components/parameters/ChatID'
+      - name: chat_id
+        in: path
+        description: ID univoco della chat.
+        required: true
+        schema:
+            type: string
     get:
       tags:
         - chat
@@ -290,13 +320,11 @@ paths:
     put:
       tags:
         - gruppo
-      summary: Imposta il nome del gruppo  
+      summary: Imposta o aggiorna il nome del gruppo  
       description: |-
         Permette di impostare o aggiornare il nome di una chat di gruppo.
         Restituisce l'oggetto chat di gruppo aggiornato.
       operationId: setGroupName
-      parameters:
-        - $ref: '#/components/parameters/ChatID'
       security:
         - bearerAuth: []
       requestBody:
@@ -334,11 +362,44 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  
+  # SEZIONE 2.2 - Impostare o aggiornare la foto del gruppo
+  /chats/{chat_id}/photo:
+    put:
+      tags:
+        - gruppo
+      summary: Imposta o aggiorna la foto del gruppo
+      operationId: setGroupPhoto
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Nuova foto del gruppo
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetGroupPhotoRequest'
+      responses:
+        '200':
+          description: Foto aggiornata con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   # SEZIONE 2.2 - Aggiunta partecipanti ad una chat di gruppo
   /chats/{chat_id}/participants:
     parameters:
-        - $ref: '#/components/parameters/ChatID'
+        - name: chat_id 
+          in: path
+          description: ID univoco della chat.
+          required: true
+          schema:
+            type: string
     post: 
       tags:
         - gruppo
@@ -375,7 +436,12 @@ paths:
   # SEZIONE 2.3 - Utente lascia il gruppo di appartenenza
   /chats/{chat_id}/participants/me:
     parameters:
-        - $ref: '#/components/parameters/ChatID'
+        - name: chat_id
+          in: path
+          description: ID univoco della chat.
+          required: true
+          schema:
+            type: string
     delete:
       tags:
         - gruppo
@@ -398,8 +464,18 @@ paths:
   # SEZIONE 2.4 - Rimozione di un membro dal gruppo da parte di un admin
   /chats/{chat_id}/participants/{user_id}:
     parameters:
-      - $ref: '#/components/parameters/ChatID'
-      - $ref: '#/components/parameters/UserID'
+      - name: chat_id
+        in: path
+        description: ID univoco della chat.
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: path
+        description: ID univoco dell'utente.
+        required: true
+        schema:
+          type: string
     delete:
       tags:
         - gruppo
@@ -425,14 +501,20 @@ paths:
   # SEZIONE 3 (All'interno del path della conversazione) - I Messaggi, essi per costruzione, vivono all'interno di una Chat
   /chats/{chat_id}/messages:
     parameters:
-        - $ref: '#/components/parameters/ChatID'
-        - $ref: '#/components/parameters/Ordinamento'
+        - name: chat_id
+          in: path
+          description: ID univoco della chat.
+          required: true
+          schema:
+              type: string
     get:
       tags:
         - messaggi
       summary: Ottieni tutti i messaggi di una chat ordinati in ordine cronologico decrescente
       description: Restituisce la lista di tutti i messaggi appartenenti alla chat specificata, ordinati dal più recente al meno recente.
       operationId: getMessages
+      parameters:
+        - $ref: '#/components/parameters/Ordinamento'
       security:
         - bearerAuth: []
       responses:
@@ -465,7 +547,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Message'
+              $ref: '#/components/schemas/CreateMessageRequest'
       responses:
         '201':
           description: Messaggio inviato con successo
@@ -483,8 +565,18 @@ paths:
   # SEZIONE 3.1 - Eliminazione di un messaggio specifico
   /chats/{chat_id}/messages/{message_id}:
     parameters:
-        - $ref: '#/components/parameters/ChatID'
-        - $ref: '#/components/parameters/MessageID'
+        - name: chat_id
+          in: path
+          description: ID univoco della chat.
+          required: true
+          schema:
+            type: string
+        - name: message_id
+          in: path
+          description: ID univoco del messaggio.
+          required: true
+          schema:
+            type: string
     delete:
       tags:
         - messaggi
@@ -535,8 +627,18 @@ paths:
   # SEZIONE 3.3 - Risposta ad un messaggio esistente
   /chats/{chat_id}/messages/{message_id}/reply:
     parameters:
-        - $ref: '#/components/parameters/ChatID'
-        - $ref: '#/components/parameters/MessageID'
+        - name: chat_id
+          in: path
+          description: ID univoco della chat.
+          required: true
+          schema:
+            type: string
+        - name: message_id
+          in: path
+          description: ID univoco del messaggio.
+          required: true
+          schema:
+            type: string
     post:
       tags:
         - messaggi
@@ -553,7 +655,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Message'
+              $ref: '#/components/schemas/CreateMessageRequest'
       responses:
         '201':
           description: Risposta al messaggio inviata con successo
@@ -572,8 +674,18 @@ paths:
   # SEZIONE 3.4 - Reazione ad un messaggio specifico
   /chats/{chat_id}/messages/{message_id}/reaction: 
     parameters:
-        - $ref: '#/components/parameters/ChatID'
-        - $ref: '#/components/parameters/MessageID'
+        - name: chat_id
+          in: path
+          description: ID univoco della chat.
+          required: true
+          schema:
+            type: string
+        - name: message_id
+          in: path
+          description: ID univoco del messaggio.
+          required: true
+          schema:
+            type: string
     post: 
       tags:
         - reazioni 
@@ -584,6 +696,13 @@ paths:
       operationId: commentMessage
       security:
         - bearerAuth: []
+      requestBody:
+        description: Dettagli della reazione da inserire
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReactionRequest'
       responses:
         '201':
           description: Reazione inserita con successo 
@@ -619,8 +738,18 @@ paths:
   # SEZIONE 3.5 - Inoltro di uno o più messaggi ad un'altra chat
   /chats/{chat_id}/messages/{message_id}/forward:
     parameters:
-        - $ref: '#/components/parameters/ChatID'
-        - $ref: '#/components/parameters/MessageID'
+        - name: chat_id
+          in: path
+          description: ID univoco della chat.
+          required: true
+          schema:
+            type: string
+        - name: message_id
+          in: path
+          description: ID univoco del messaggio.
+          required: true
+          schema:
+            type: string
     post:
       tags:
         - messaggi
@@ -657,34 +786,59 @@ paths:
 components:
 
   # SCHEMAS
+  # Servono sia per le richieste che per le risposte
 
   schemas:
 
-    # Schema per l'utente
+    # Schemi per l'utente
     User:
       type: object
+      description: Rappresenta un utente nella piattaforma WASAText
+      required:
+        - name
       properties:
         id:
           type: string
           minLength: 6
           maxLength: 64
-          pattern: '^[a-zA-Z0-9]+$'
+          pattern: '^[a-zA-Z0-9_-]{6,64}$'
           example: "abcdef012345"
           description: Identificatore univoco dell'utente
         name:
           type: string
+          pattern: '^(?=.{3,16}$)(?![_.-])(?!.*[_.-]{2})[a-zA-Z0-9._-]+(?<![_.-])$'
           example: "Maria"
           minLength: 3
           maxLength: 16
           description: Nome utente univoco
+
+    LoginUserRequest:
+      type: object
+      description: Dati necessari per il login o la creazione di un nuovo utente
       required:
         - name
+      properties:
+        name:
+          type: string
+          pattern: '^(?=.{3,16}$)(?![_.-])(?!.*[_.-]{2})[a-zA-Z0-9._-]+(?<![_.-])$'
+          example: "Maria"
+          minLength: 3
+          maxLength: 16
+          description: Nome utente univoco
+
 
     # Schemi per la chat
     # Inizio creando uno schema che funge da superclasse con proprietà comuni a tutte le chat
 
     ChatBase:
       type: object 
+      description: Schema base per le chat, con proprietà comuni a tutte le chat
+      required: 
+        - id
+        - type
+        - participants
+        - created_at
+        - updated_at
       properties: 
         id: 
           type: string
@@ -692,6 +846,7 @@ components:
           maxLength: 64
           example: "chat123456"
           description: Identificatore univoco della chat
+          pattern: '^[a-zA-Z0-9_-]{6,64}$'
         type:
           description: Tipo di chat (individuale con un altro utente o di gruppo)
           type: string
@@ -702,6 +857,7 @@ components:
           type: array
           items:
             type: string
+            pattern: '^[a-zA-Z0-9_-]{6,64}$'
           description: Elenco degli ID degli utenti partecipanti alla chat
           minItems: 2
           maxItems: 256
@@ -716,14 +872,16 @@ components:
           description: Data e ora dell'ultimo aggiornamento della chat
           example: "2025-10-30T15:00:00.000Z"
         last_message:
-          $ref: '#/components/schemas/LastMessagePreview'
           description: Anteprima dell'ultimo messaggio della chat
+          allOf:
+            - $ref: '#/components/schemas/LastMessagePreview'
           
     # Passo alla prima sottoclasse: Chat individuale
     IndividualChat:
       allOf:
         - $ref: '#/components/schemas/ChatBase'
         - type: object
+          description: Schema per le chat individuali
           properties:
             type:
               type: string
@@ -736,6 +894,13 @@ components:
       allOf:
         - $ref: '#/components/schemas/ChatBase'
         - type: object
+          description: Schema per le chat di gruppo
+          required: 
+            - type
+            - admins
+            - participants
+            - created_at
+            - updated_at
           properties:
             type:
               type: string
@@ -747,17 +912,21 @@ components:
               minLength: 1
               maxLength: 50
               description: Nome della chat di gruppo
+              pattern: '^[\w\s]{1,50}$'
               example: "Amici di Università"
             description:
               type: string
               minLength: 1
               maxLength: 255
               description: Descrizione della chat di gruppo
+              pattern: '^[\w\s.,!?-]{1,255}$'
               example: "Chat per organizzare gli eventi universitari"
             admins:
               type: array
+              description: Elenco degli amministratori della chat di gruppo
               items:
                 type: string
+                pattern: '^[a-zA-Z0-9_-]{6,64}$'
                 description: Elenco degli ID degli utenti amministratori della chat di gruppo
               minItems: 1
               maxItems: 10
@@ -767,8 +936,9 @@ components:
               description: URL dell'icona della chat di gruppo
               example: "http://example.com/icons/group123.png"
 
-    # Infine lo schema generico: una chat può essere individuale o di gruppo
+    # lo schema generico: una chat può essere individuale o di gruppo
     Chat:
+      description: Rappresenta una chat (individuale o di gruppo)
       oneOf:
         - $ref: '#/components/schemas/IndividualChat'
         - $ref: '#/components/schemas/GroupChat'
@@ -777,28 +947,112 @@ components:
         mapping:
           individual: '#/components/schemas/IndividualChat'
           group: '#/components/schemas/GroupChat'
-      description: Rappresenta una chat, che può essere individuale o di gruppo e questo schema verrà usato nelle risposte API.
+
+
+    # La parte di Input per la creazione di una chat
+    CreateIndividualChatRequest:
+      type: object
+      description: Rappresenta la richiesta di creazione di una chat individuale
+      required:
+        - type
+        - participants
+      properties:
+        type:
+          type: string
+          enum:
+            - individual
+          description: Tipo di chat individuale
+        participants:
+          type: array
+          items:
+            type: string
+            pattern: '^[a-zA-Z0-9_-]{6,64}$'
+          minItems: 2
+          maxItems: 2 
+          description: Elenco degli ID degli utenti partecipanti alla chat (deve contenere esattamente 2 utenti)
+
+    CreateGroupChatRequest:
+      type: object
+      description: Rappresenta la richiesta di creazione di una chat di gruppo
+      required:
+        - type
+        - participants
+        - group_name
+      properties:
+        type:
+          type: string
+          enum:
+            - group
+          description: Tipo di chat di gruppo
+        participants:
+          type: array
+          items:
+            type: string
+            pattern: '^[a-zA-Z0-9_-]{6,64}$'
+          minItems: 3
+          maxItems: 256
+          description: Elenco degli ID degli utenti partecipanti alla chat (minimo 3)
+        group_name:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Nome della chat di gruppo
+          pattern: '^[\w\s]{1,50}$'
+          example: "Amici di Università"
+        description:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Descrizione della chat di gruppo
+          pattern: '^[\w\s.,!?-]{1,255}$'
+          example: "Chat per organizzare gli eventi universitari"
+        group_icon:
+          type: string
+          format: uri
+          description: URL dell'icona della chat di gruppo
+
+    CreateChatRequest:
+      description: Rappresenta la richiesta di creazione di una nuova chat (individuale o di gruppo)
+      oneOf:
+        - $ref: '#/components/schemas/CreateIndividualChatRequest'
+        - $ref: '#/components/schemas/CreateGroupChatRequest'
+      discriminator:
+        propertyName: type
+        mapping:
+          individual: '#/components/schemas/CreateIndividualChatRequest'
+          group: '#/components/schemas/CreateGroupChatRequest'
 
     # Creo gli schemi per i messaggi
     Message:
       type: object
+      description: Rappresenta un messaggio all'interno di una chat
+      required:
+        - id
+        - chat_id
+        - sender_id
+        - type
+        - timestamp
+        - status
       properties:
         id:
           type: string
           minLength: 6
           maxLength: 64
+          pattern: '^[a-zA-Z0-9_-]{6,64}$'
           example: "messaggio1"
           description: Identificatore univoco del messaggio
         chat_id:
           type: string
           minLength: 6
           maxLength: 64
+          pattern: '^[a-zA-Z0-9_-]{6,64}$'
           example: "chat123456"
           description: Identificatore univoco della chat
         sender_id:
           type: string
           minLength: 6
           maxLength: 64
+          pattern: '^[a-zA-Z0-9_-]{6,64}$'
           example: "utente789"
           description: Identificatore univoco dell'utente che ha inviato il messaggio
         type:
@@ -815,6 +1069,7 @@ components:
           minLength: 1
           maxLength: 1000
           description: Testo del messaggio (se type = text)
+          pattern: '^[\s\S]{1,1000}$'
           example: "Ciao, come stai?"
         media_url:
           type: string
@@ -837,6 +1092,9 @@ components:
     LastMessagePreview:
       type: object
       description: Anteprima dell'ultimo messaggio della chat
+      required:
+        - type
+        - timestamp
       properties:
         type:
           type: string
@@ -845,43 +1103,98 @@ components:
         text:
           type: string
           description: Anteprima testuale (solo se type = text)
+          pattern: '^[\s\S]{1,500}$'
           example: "Ciao, come stai?"
+          minLength: 1
+          maxLength: 500
         thumbnail_url:
           type: string
           format: uri
           description: Miniatura dell'immagine (solo se type = image)
           example: "http://example.com/thumbs/photo123.png"
+          minLength: 1
+          maxLength: 500
         icon:
           type: string
           description: Icona unicode per media non testuali
+          pattern: '^[\u0000-\uFFFF]{1,4}$'
           example: "📷"
+          minLength: 1
+          maxLength: 4
         timestamp:
           type: string
           format: date-time
           description: Data e ora dell’ultimo messaggio
           example: "2025-10-30T15:00:00.000Z"
 
+    # Creo lo schema di input per per la creazione di un messaggio e per la risposta ad un messaggio
+    # (stesso schema di Message senza id, chat_id, sender_id e timestamp)
+    CreateMessageRequest:
+      type: object
+      description: Rappresenta la richiesta di creazione di un nuovo messaggio
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+            - image
+            - file
+            - audio
+          description: Tipo di messaggio
+        content:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          pattern: '^[\s\S]{1,1000}$'
+          example: "Ciao, come stai?"
+          description: Testo del messaggio (se type = text)
+        media_url:
+          type: string
+          format: uri
+          minLength: 1
+          maxLength: 500
+          description: URL del file multimediale (solo se type ≠ text)
+          example: "http://example.com/uploads/photo123.png"
+        reply_to_message_id:
+          type: string
+          minLength: 6
+          maxLength: 64
+          description: Identificatore del messaggio a cui si sta rispondendo (opzionale)
+          pattern: '^[a-zA-Z0-9_-]{6,64}$'
+          example: "messaggio5678"
 
     # Creo uno schema per le reazioni ai messaggi (tramite emoji)
     Reaction:
       type: object 
+      description: Rappresenta una reazione a un messaggio tramite emoji
+      required:
+        - id
+        - message_id
+        - user_id
+        - emoji_code
+        - created_at
       properties:
         id:
           type: string
           minLength: 6
           maxLength: 64
+          pattern: '^[a-zA-Z0-9_-]{6,64}$'
           example: reaction1
           description: Identificatore univoco della reazione
         message_id:
           type: string
           minLength: 6
           maxLength: 64 
+          pattern: '^[a-zA-Z0-9_-]{6,64}$'
           example: message1234
           description: Identificatore del messaggio a cui è associata la reazione
         user_id: 
           type: string
           minLength: 6
-          maxLength: 64 
+          maxLength: 64
+          pattern: '^[a-zA-Z0-9_-]{6,64}$'
           example: user1
           description: Identificatore dell'utente che ha inserito la reazione
         emoji_code:
@@ -889,26 +1202,60 @@ components:
           minLength: 1
           maxLength: 4 
           description: Codice dell'emoji usata come reazione
-          example: "👍"
+          pattern: '^[\u0000-\uFFFF]{1,4}$'
+          example: "👍🏻"
         created_at:
           type: string 
           format: date-time
           example: "2025-10-30T14:48:00.000Z"
           description: Data e ora di creazione della reazione
 
+    # Serve anche uno schema di input per le reazioni
+    CreateReactionRequest:
+      type: object
+      description: Rappresenta la richiesta di creazione di una reazione a un messaggio tramite emoji
+      required:
+        - emoji_code
+      properties:
+        emoji_code:
+          type: string
+          minLength: 1
+          maxLength: 4
+          pattern: '^[\u0000-\uFFFF]{1,4}$'
+          example: "👍🏻"
+          description: Codice dell'emoji usata come reazione
+
     # Creo gli schemi per le richieste dei vari endpoint
+    SetNameRequest:
+      type: object
+      description: Richiesta per impostare o aggiornare il nome utente
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 16
+          description: Nuovo nome utente
+          pattern: '^(?=.{3,16}$)(?![_.-])(?!.*[_.-]{2})[a-zA-Z0-9._-]+(?<![_.-])$'
+          example: "NuovoNomeUtente"
 
     SetPhotoRequest:
       type: object
+      required:
+        - photo_url
       description: Richiesta per impostare o aggiornare la foto profilo
       properties:
         photo_url:
           type: string
           format: uri
           description: URL della nuova foto profilo
+          example: "http://example.com/photos/newphoto.png"
+          minLength: 1
+          maxLength: 500
 
     SetGroupNameRequest:
       type: object
+      required:
+        - group_name
       description: Richiesta per impostare o aggiornare il nome della chat di gruppo
       properties:
         group_name:
@@ -916,7 +1263,23 @@ components:
           minLength: 1
           maxLength: 50
           description: Nuovo nome della chat di gruppo
+          pattern: '^[\w\s]{1,50}$'
           example: "Nuovo Nome Gruppo"
+
+    SetGroupPhotoRequest:
+      type: object
+      required:
+        - group_icon
+      description: Richiesta per impostare o aggiornare la foto della chat di gruppo
+      properties:
+        group_icon:
+          type: string
+          format: uri
+          description: URL della nuova foto della chat di gruppo
+          example: "http://example.com/icons/newgroupicon.png"
+          minLength: 1
+          maxLength: 500
+
 
     AddParticipantsRequest:
       type: object
@@ -926,9 +1289,12 @@ components:
           type: array
           items:
             type: string
+            pattern: '^[a-zA-Z0-9_-]{6,64}$'
           example: ["user123", "user456"]
           minItems: 1
           maxItems: 50
+          minLength: 0
+          maxLength: 64
           description: Elenco degli ID degli utenti da aggiungere al gruppo
 
     UpdateMessageStatusRequest:
@@ -944,35 +1310,39 @@ components:
 
     ForwardMessageRequest:
       type: object
+      required:
+        - target_chat_ids
       description: Richiesta per inoltrare un messaggio a una o più chat
       properties:
         target_chat_ids:
           type: array
           items:
             type: string
+            pattern: '^[a-zA-Z0-9_-]{6,64}$'
           description: ID delle chat di destinazione
           example: ["chat789", "chat999"]
           minItems: 1
           maxItems: 20
 
-
     # Creo uno schema per gli errori generici
     Error:
       type: object
+      description: Rappresenta un errore generico restituito dalle API
       properties:
         code:
           type: string
           minLength: 3
           maxLength: 64
+          pattern: '^[A-Z_]{3,64}$'
           example: "NOT_FOUND"
           description: Codice dell'errore
         message:
           type: string
           minLength: 3
           maxLength: 64
+          pattern: '^[\s\S]{3,64}$'
           example: "La risorsa richiesta non è stata trovata."
           description: Descrizione dettagliata dell'errore
-      description: Rappresenta un errore generico restituito dalle API
 
   # RESPONSES
 
@@ -1005,11 +1375,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          examples:
-            nameConflict:
-              value:
-                code: "NAME_ALREADY_EXISTS"
-                message: "Il nome utente esiste già."
 
     InternalServerError:
       description: Errore interno del server (500 Internal Server Error)
@@ -1070,16 +1435,4 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
-   
-      
-
-
-    
-
-    
-
-  
-
-
 
