@@ -80,7 +80,9 @@ Repository contenente appunti ed esercizi per ciascun corso affrontato nei 3 ann
 
 **secondo semestre**
 
-- [Sicurezza](#)
+- [Sicurezza](3°%20Anno/Sicurezza/)
+- [Organizzazione e Gestione per lo Start-Up Aziendale](3°%20Anno/Organizzazione%20e%20Gestione%20per%20lo%20Start-Up%20Aziendale/)
+- [AI Lab](3°%20Anno/AI%20lab/)
 
     </td>
   </tr>
