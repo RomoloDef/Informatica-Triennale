@@ -1,0 +1,132 @@
+openapi: 3.0.0
+servers:
+  - url: "http://localhost:3000"
+info:
+  title: Hi-Lo Game
+  description: |
+    This API allows playing hi-lo game
+    and requesting the state of a game or the history
+    of all the games
+  version: 0.0.1
+paths:
+  /games:
+    post:
+      summary: start a new game
+      description: |
+        Start a new game generating the secret number 
+        and return the created game id
+      responses:
+        "200":
+          description: new game created
+          content:
+            application/json:
+              schema:
+                type: integer
+    get:
+      summary: list all games
+      description: |
+        Obtain the list of all games, with the final result (win/lose) 
+        and the number of guesses
+      responses:
+        "200":
+          description: |
+            An array of objects, each one containing the game id, 
+            the final outcome, and the number of guesses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/final-result"
+  /games/{id}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: this is the game id
+      schema:
+        type: integer
+        description: e.g., /games/1234
+    put:
+      summary: start or reset a game
+      description: | 
+        Start a game with given id, generating the secret number; 
+        or reset an existing game, re-generating the secret number 
+        and zeroing the guesses counter
+      responses:
+        "200": 
+           description: An existing game is reset
+        "201":
+           description: A new game is created
+    post:
+      summary: make a guess
+      description: |
+        Try to guess the secret number; return hi, lo, or correct, 
+        plus the guess count.
+      parameters:
+        - name: guess
+          in: query
+          required: true
+          description: the guess
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+      responses:
+        "200":
+          description: Guess accepted, the result is in the the content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/guess-result"
+        "403":
+          description: game over
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/final-result"
+        "404":
+          description: game not found
+    get:
+      summary: list guesses
+      description: |
+        Return a list of all guesses in reverse chronological order, 
+        including the responses received (hi/lo/correct)
+      responses:
+        "200":
+          description: Request accepted, all guesses listed in content
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/guess-result"
+
+components:
+  schemas:
+    guess-result:
+      type: object
+      properties:
+        guess-count:
+          type: integer
+          minimum: 1
+          maximum: 10
+        guess-outcome:
+          type: string
+          enum:
+          - hi
+          - lo
+          - correct
+    final-result:
+      type: object
+      properties:
+        id:
+          type: integer
+        outcome: 
+          type: string
+          enum:
+          - win
+          - lose
+        guesses:
+          type: integer
+            
