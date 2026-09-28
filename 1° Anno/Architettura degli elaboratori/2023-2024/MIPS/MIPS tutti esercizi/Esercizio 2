@@ -1,0 +1,18 @@
+# scrivere un programma che dati due numerin (word) che indicano spazio e tempo, calcolare la velocità in $t0
+
+.text 
+.globl main
+
+main:
+
+	lw $t1, spazio	# carico lo spazio
+	lw $t2, tempo	# carico il tempo
+	
+	div $t0, $t1, $t2	# $t0 = spazio/tempo
+	
+	li $v0,10
+	syscall
+
+.data
+spazio: .word 5
+tempo: .word 5

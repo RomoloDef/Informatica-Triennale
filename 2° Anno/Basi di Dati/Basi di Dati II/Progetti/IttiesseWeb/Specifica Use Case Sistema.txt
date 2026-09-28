@@ -1,0 +1,30 @@
+Specifica Use Case Sistema
+
+- Dato un corso, il sistema deve calcolare l'edizione che ha avuto il numero minore di studenti che hanno raggiunto i requisiti per sostenere l'esame di stato finale. Uno studente
+  non può accedere all'esame di stato se (1) non ha accumolato il numero totale di crediti necessari (2) non ha terminato il tirocinio
+
+calcolaEdizioneMinima(c: Corso): Edizione[0..*]
+
+pre:
+
+    EXIST s Studente(S)
+
+post:
+
+    StudentiConCrediti = { s | EXIST stu_isc(s, i) AND Iscrizione(i) AND ed_isc(i, e) AND Edizione(e) AND crediti_per_esame(e, c) AND Modulo(m) AND eroga(e, m) AND Blocco(b) AND 
+    
+                            fa_parte(m, b) AND ottenimento_crediti(b, cred) AND cred >= c}
+
+    StudentiCheHannoTerminatoTirocinio = { s | EXIST effettua(s, t) AND Tirocinio(t) AND fine(f, t) }
+
+    StudentiConRequisiti = { s | s ∈ StudentiConCrediti AND s ∈ StudentiCheHannoTerminatoTirocinio }
+
+    Minimo = Min(|StudentiConRequisiti|)
+
+    result = { e | EXIST s, i (Studente(s) AND Iscrizione(i) AND stu_isc(s, i) AND ed_isc(i, e) AND s ∈ Minimo )}
+
+
+
+
+        
+

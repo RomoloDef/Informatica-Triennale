@@ -1,0 +1,49 @@
+TipologiaCucina(__id__ : serial, nome: varchar, cucina: serial)
+    fk: cucina references to Cucina(id)
+
+Cucina(__id__ : serial, nome: varchar)
+    v.inclusione: Cucina(id) occorre in rist-cuc(cucina)
+
+rist_cuc(__ristorante__ : varchar, __cucina__: serial)
+    fk: ristorante references to Ristorante(partita_iva)
+    fk: cucina references to Cucina(id)
+
+Ristorante(nome: varchar, __partita_iva__ : varchar, indirizzo: Indirizzo, città: varchar)
+    fk: città references to Città(nome)
+    v.inclusione: Ristorante(partita_iva) occorre in rist-cuc(cucina)
+
+Città(__nome__ : varchar, nazione: varchar)
+    fk: nazione references to Nazione(nome)
+
+Nazione(__nome__ : varchar)
+
+rist_disp(__ristorante__ : varchar, __disponibilità__ : tsrange)
+    fk: ristorante references to Ristorante(partita_iva)
+    fk: disponibilità references to Disponibilità(valore)
+
+Disponibilità(__valore__ : tsrange)
+
+Promozione(__id__ : serial, massimo: Int_gz_not_null, periodo_validità: Periodo, sconto: Real_gz_not_null, ristorante: varchar, prenotazione: serial)
+    fk: ristorante references to Ristorante(partita_iva)
+    fk: prenotazione references to Prenotazione(id)
+
+Prenotazione(__id__ : serial, giorno: TimeStamp, ora: TimeStamp, numero_commensali: Int_gz_not_null, ristorante: varchar, clinete: varchar)
+    fk: ristorante references to Ristorante(partita_iva)
+    fk: cliente references to Cliente(varchar)
+
+Cliente(nome: varchar, __email__ : varchar)
+
+EventoPrenotazione(__prenotazione__ : serial, __istante__: TimeStamp, stato)
+	fk: (prenotazione) references Prenotazione(id) -- accorpa ev_pren
+	fk: (stato) references StatoPrenotazione(nome) -- accorpa stato_raggiunto
+
+StatoPrenotazione(__nome__: varchar, pendente:boolean)
+	
+transizione(__da__:varchar, __a__:varchar)
+	fk: da references StatoPrenotazione(nome)
+	fk: a references StatoPrenotazione(nome)
+
+
+
+
+

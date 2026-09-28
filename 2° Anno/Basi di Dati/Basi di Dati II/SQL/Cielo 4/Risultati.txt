@@ -1,0 +1,111 @@
+1.
+WITH durata_media AS (
+SELECT AVG(durataMinuti) AS Media
+FROM Volo
+)
+
+SELECT Volo.codice, Volo.comp, Volo.durataminuti
+FROM Volo, durata_media
+WHERE volo.durataminuti > durata_media.Media
+
+2.
+WITH citta_due_aeroporti AS(
+SELECT la.citta
+FROM luogoaeroporto la
+GROUP BY (la.citta)
+HAVING COUNT(la.aeroporto) > 1
+)
+
+SELECT DISTINCT la.citta
+FROM citta_due_aeroporti cda, LuogoAeroporto la, ArrPart ap
+WHERE la.citta = cda.citta
+AND (ap.partenza = la.aeroporto OR ap.arrivo = la.aeroporto)
+AND ap.comp = 'Apitalia'
+
+3.
+WITH media_totale AS (
+    SELECT AVG(durataMinuti) AS media_generale
+    FROM Volo
+),
+
+media_compagnie AS (
+    SELECT comp, AVG(durataMinuti) AS media_per_compagnia
+    FROM Volo
+    GROUP BY comp
+)
+
+SELECT comp
+FROM media_compagnie, media_totale
+WHERE media_per_compagnia > media_generale;
+
+4.
+WITH voli_con_due_nazioni AS (
+  SELECT ap.partenza, la.nazione
+  FROM ArrPart ap, LuogoAeroporto la
+  WHERE ap.arrivo = la.aeroporto
+)
+SELECT partenza
+FROM voli_con_due_nazioni
+GROUP BY partenza
+HAVING COUNT(DISTINCT nazione) >= 2
+
+5. 
+WITH citta_unico_aeroporto AS (
+	SELECT DISTINCT la.citta
+	FROM luogoaeroporto la
+	GROUP BY (la.citta)
+	HAVING COUNT(la.aeroporto) = 1
+)
+
+SELECT DISTINCT v.codice, v.comp, ap.arrivo, ap.partenza
+FROM Volo v, arrpart ap, luogoaeroporto l, citta_unico_aeroporto cit, aeroporto a
+WHERE l.citta = cit.citta
+AND v.codice = ap.codice
+AND a.codice = l.aeroporto
+AND (ap.partenza = a.codice)
+
+6. 
+WITH voli_diretti_JFK AS (
+	SELECT ap.arrivo, ap.codice
+	FROM arrpart ap
+	WHERE ap.partenza = 'JFK'
+),
+
+voli_indiretti_JFK AS (
+	SELECT DISTINCT ap2.arrivo, ap2.codice
+	FROM ArrPart ap1, ArrPart ap2
+	WHERE ap1.partenza = 'JFK'
+ 	AND ap1.arrivo = ap2.partenza
+)
+
+SELECT DISTINCT ap.arrivo
+FROM arrpart ap, voli_diretti_JFK vd , voli_indiretti_JFK vi
+WHERE (ap.codice = vd.codice OR ap.codice = vi.codice)
+
+7.
+WITH voli_diretti AS (
+  SELECT ap.arrivo
+  FROM ArrPart ap
+  WHERE ap.partenza IN (
+    SELECT la.aeroporto
+    FROM LuogoAeroporto la
+    WHERE la.citta = 'Roma'
+  )
+),
+voli_indiretti AS (
+  SELECT ap2.arrivo
+  FROM ArrPart ap1, ArrPart ap2
+  WHERE ap1.partenza IN (
+    SELECT la.aeroporto
+    FROM LuogoAeroporto la
+    WHERE la.citta = 'Roma'
+  )
+  AND ap1.arrivo = ap2.partenza
+)
+SELECT DISTINCT l.citta
+FROM LuogoAeroporto l
+WHERE l.aeroporto IN (
+  SELECT arrivo FROM voli_diretti
+  UNION
+  SELECT arrivo FROM voli_indiretti
+);

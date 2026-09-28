@@ -1,0 +1,13 @@
+Specifica Use Case Lista
+
+- consulta_spettacoli(t: Tipologia, g: Genere, o: DataOra): Spettacolo[0..*]
+
+pre:
+
+    EXIST genereSpett(g, s) AND tipologiaSpett(t, s)
+
+post:
+
+    result = { s | EXIST genereSpett(g, s) AND tipologiaSpett(t, s) AND EXIST o (orario(o, s))}
+
+    

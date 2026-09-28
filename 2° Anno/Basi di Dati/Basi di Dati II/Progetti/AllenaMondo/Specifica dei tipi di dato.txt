@@ -1,0 +1,9 @@
+Specifica dei tipi di dato
+
+- genere: {maschio, femmina}
+
+- Categoria: {più chilometri, piu allenamenti}
+
+- Lat: Radianti
+
+- Long: Radianti

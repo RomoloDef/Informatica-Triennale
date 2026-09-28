@@ -1,0 +1,27 @@
+.data
+array: .word 22, 33, 44, 55, 66
+numero_elementi: .word 5
+
+.text
+.globl main
+
+main:
+	
+	la $t0, array			# indirizzo base dell'array
+	lw $t1, numero_elementi
+	li $t2, 0			# indice
+	
+loop:
+	mul $t3, $t2, 4			# spiazzamento quindi indice * dimensione
+	add $t3, $t0, $t3		# addizioniamo lo spiazzamento alla posizione ovvero l'indirizzo base
+	
+	lw $t4,($t3)		# nella pratica questo è come se fosse array[i]
+	mul $t5, $t4, 2
+	move $a0, $t5
+	li $v0, 1
+	syscall
+	addu $t2, $t2, 1	# incremento l'indice
+	blt $t2, $t1, loop
+	
+	li $v0, 10
+	syscall

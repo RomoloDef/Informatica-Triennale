@@ -1,0 +1,12 @@
+Specifica classe Tirocinio
+
+- fine(): DataOra 
+
+pre:
+
+post:
+
+    algoritmo:
+
+    SELECT (inizio + durata) as result
+    FROM Tirocino t

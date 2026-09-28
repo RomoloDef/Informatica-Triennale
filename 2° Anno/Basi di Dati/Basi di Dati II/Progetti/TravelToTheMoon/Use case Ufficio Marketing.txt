@@ -1,0 +1,57 @@
+Specifica Use Case Ufficio Marketing
+
+- etàMedia(i: dataOra, f: dataOra): Reale >= 0
+
+pre: 
+
+    FOR ALL c (Crociera(c) AND inizio(c, i) AND fine(c, f)) --> i < f
+
+    AND
+
+    EXIST p, cl (Prenotazione(p) AND Cliente(cl) AND cl_pren(p, cl) AND pren_cr(p, c))
+
+post:
+
+    result è la somma dell'età dei clienti (che hanno prenotato una crociera con una destinazione esotica) diviso per il numero di tali istanze
+
+    E = { e | EXIST Cliente(c) AND Prenotazione(p) AND Crociera(cr) AND età(c, e) AND Itinerario(i) AND Destinazione(d) AND Continente(cont) AND inizio(cr, i) AND fine(cr, f)
+    
+              cl_pren(c, p) AND pre_cr(p, cr) AND riguardante(cr, i) AND (arrivo(i, d) OR partenza(i, d)) AND trovatasi(d, cont) AND esotico(cont, 'True')}
+
+    result = SUM(E) / |E|
+
+
+- percentualeDestinazioni(i: dataOra, f: dataOra): Reale >= 0
+
+pre:
+
+    EXIST arrivo(i, d) OR (itin_di(i, di) AND dest_di(di, d))
+
+    AND
+
+    EXIST Crociera(c) AND riguardante(c, i)
+
+    AND 
+
+    FOR ALL c (Crociera(c) AND inizio(c, i) AND fine(c, f)) --> i < f
+
+post:
+
+    CL = { c | Crociera(c) AND LunaDiMiele(c) AND EXIST i, d (Itinerario(i) AND riguardante(c, i) AND Destinazione(d) AND arrivo(i, d))}
+
+    CF = { c | Crociera(c) AND PerFamiglia(c) AND EXIST i, d (Itinerario(i) AND riguardante(c, i) AND Destinazione(d) AND arrivo(i, d))}
+
+    D = { d | Destinazione(d) AND EXIST i, c (Crociera(c) AND Itinerario(i) AND riguardante(c, d) AND arrivo(i, d))}
+
+    DG = { d ∈ D | SUM(CL) >= 10 OR SUM(CF) >= 15 }
+
+    result = ( |DG| / |D| ) * 100
+
+
+
+
+
+
+
+
+

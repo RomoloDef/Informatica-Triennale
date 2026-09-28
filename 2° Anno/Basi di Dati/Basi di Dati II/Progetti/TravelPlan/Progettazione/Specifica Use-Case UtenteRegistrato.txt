@@ -1,0 +1,44 @@
+Specifica Use-case UtenteRegistrato
+
+- creaViaggio(n: Stringa, nm: Stringa, nM: Stringa, att: Attività[0..*]):
+
+pre:
+        FOR ALL v, x, y (Viaggio(v) AND numero_minimo(x, v) AND numero_massimo(y, v) --> y > x)
+
+        CHECK (nm > NM);
+
+post:
+        algoritmo:
+
+        INSERT INTO Viaggio(nome, numero_minimo, numero_massimo, attivita) VALUES (PAR_1, PAR_2, PAR_3, PAR_4);
+
+        sostituendo al posto di PAR_n i parametri dell'operazione
+
+
+- trovareViaggi(att: Attività, destinazione: Luogo, intervallo_tempo: Durata): Viaggio[0..*]
+
+pre: nessuna
+
+post:
+        algoritmo:
+
+        Esegui la query e memorizza il risultato in Q:
+
+        SELECT Viaggio.*
+        FROM Viaggio, possiede, att_luo, attivita
+        WHERE possiede.viaggio = attivita.id 
+        AND attivita.id = destinazione.id
+        AND attivita.durata = 'intervallo_tempo'
+
+        dove destinazione e intervallo_tempo sono sostituiti con i parametri dell'operazione
+
+        se il risultato della query non esiste genera errore
+
+        END
+
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+Specifica classe Sfida
+
+- sport_presenti(): Sport[0..*]
+
+pre:
+
+post:
+
+    algoritmo:
+
+    SELECT p.sport
+    FROM presente p, Sfida s 
+    WHERE p.sfida = s.id
+
+    esegui questa query e memorizzane il risultato in Q 

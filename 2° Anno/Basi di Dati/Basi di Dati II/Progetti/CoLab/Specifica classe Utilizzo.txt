@@ -1,0 +1,14 @@
+Specifica classe UtilizzoConcluso
+
+- fine(): DataOra
+
+pre:
+
+post:
+    
+    FOR ALL u, ia, dur (Utilizzo(u) AND istante_inizio(u, ia) AND durata_minuti(this, dur)) --> result = ia + dur
+
+[V.UtilizzoConcluso.inizio.fine]
+
+FOR ALL u, ia, if (Utilizzo(u) AND UtilizzoConcluso(u) AND istante_inizio(u, ia) AND fine(u, if)) ---> ia < if
+

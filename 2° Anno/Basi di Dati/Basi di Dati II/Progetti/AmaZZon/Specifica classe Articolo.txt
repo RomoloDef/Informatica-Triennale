@@ -1,0 +1,13 @@
+Specifica classe Articolo 
+
+- scheda_tecnica():
+
+pre: 
+
+    EXIST o (Offerta(o) AND relativa_a(o, this))
+
+post:
+
+    result = { c, n, m , nm, cat, tag | EXIST o, c, n, m, nm, cat, t (Offerta(o) AND nome(o, n) AND marca(o, m) 
+    
+               AND numero_modello(o, nm) AND categoria(c, o) AND tag(o, tag) AND relativa_a(o, this) AND nome(this, n)) }

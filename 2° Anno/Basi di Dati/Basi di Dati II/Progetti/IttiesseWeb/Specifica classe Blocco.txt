@@ -1,0 +1,20 @@
+Specifica classe Blocco
+
+- è_sostenibile(): Booleano 
+
+pre: nessuna
+
+post: 
+
+    result = 'True' <-> FOR ALL s, b1, b2 (Studente(s) AND Blocco(b1) AND Esame(s, this) AND propedeuticità(b1, this)) --> superato(s, b1, 'True')
+
+
+- ottenimento_crediti(): Intero > 0
+
+pre: EXIST s, sup (Studente(s) AND Esame(s, this) AND superato(e, s, sup, 'True'))
+
+post: 
+
+    result = SUM { c | EXIST s, sup, c (Studente(s) AND Esame(s, this) AND superato(e, s, sup, 'True') AND crediti_ottenuti(this, c)) }
+
+    

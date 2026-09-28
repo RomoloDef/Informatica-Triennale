@@ -1,0 +1,24 @@
+# Scrivere un programma in linguaggio assemblativo MARS che, definiti due numeri (word) in memoria spazio e tempo, che fanno riferimento ad un punto
+# mobile nello spazio determina: La velocità del punto che si muove in modo rettilineo uniforme (risultato un $t0)
+
+.text
+.globl main
+
+main:
+	lw $t1, spazio # aggiungo il valore di spazio in $t1
+	lw $t2, tempo # aggiungo il valore di tempo in $t2
+	div $t0, $t1, $t2 # faccio la divisione spazio/tenmpo e il risultato in $t0
+	
+# termine del programma
+li $v0, 1
+move $a0, $t0
+syscall
+
+li $v0, 10
+syscall
+	
+	
+
+.data
+spazio:.word 20
+tempo:.word 10

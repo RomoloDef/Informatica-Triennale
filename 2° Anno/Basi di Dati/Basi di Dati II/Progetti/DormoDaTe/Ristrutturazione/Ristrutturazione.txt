@@ -1,0 +1,85 @@
+Nazione(__nome__ : varchar)
+
+Citta(__nome__ : varchar, nazione: varchar)
+
+	fk: nazione references to Nazione(nome)
+
+Utente(__id__ : serial, nome: stringa, cognome: stringa,
+	 età: Int_gz_not_null, sesso: Sesso, città: varchar, utentehost: serial,
+	 utenteviaggiatore : serial)
+
+	fk: città references to Città(nome)
+	fk: utentehost references to UtenteHost(id)
+	fk: utenteviaggiatore references to UtenteViaggiatore(id)
+
+UtenteHost(__id__ : serial, valutazione: serial, casaospitante)
+
+	fk: valutazione references to Valutazione(id)
+	fk: casaospitante references to CasaOspitante(id)
+
+UtenteViaggiatore(__id__ : serial, valutazione: serial)
+
+	fk: valutazione references to Valutazione(id)
+	v.inclusione: UtenteViaggiatore(id) occorre in effettua(utenteviaggiatore)
+
+Valutazione(__id__: serial, votazione: int_zer_cinq)
+
+effettua(__utenteviaggiatore__ : serial, __prenotazione__ : serial)
+
+	fk: utenteviaggiatore references to UtenteViaggiatore(id)
+	fk: prenotazione references to Prenotazione(id)
+
+Prenotazione(__id__: serial, data_inizio: TimeStamo, dat_fine: TimeStamp, istante: TimeStamp
+	     prenotazionerif: serial, prenotazioneacc: serial)
+
+	v.inclusione: Prenotazione(id) occorre in effettua(prenotazione)
+	fk: prenotazionerif references to PrenotazioneRif(id)
+	fk: prenotazioneacc references to PrenotazioneAcc(id)
+	check: data_inzio <= data_fine
+
+PrenotazioneRif(__id__ : serial)
+
+PrenotazioneAcc(__id__ : serial)
+
+	v.inclusione: PrenotazioneAcc(id) occorre in prenA-pl(prenotazioneacc)
+	
+
+prenA-pl(__prenotazioneacc__ : serial, __postoletto__ : varchar)
+
+	fk: prenotazioneacc references to PrenotazioneAcc(id)
+	fk: postoletto references to PostoLetto(descrizione)
+
+PostoLetto(__descrizione__ : varchar, stanza: varchar, tipologiaposto: varchar)
+
+	v.inclusione: PostoLetto(descrizione) occorre in prenA-pl(postoletto)
+	v.inclusione: PostoLetto(descrizione) occorre in cas-post(postoletto)
+	fk: stanza references to Stanza(nome)
+	fk: tipologiaposto references to TipologiaPosto(nome)
+	
+Stanza(__nome__ : varchar)
+
+TipologiaPosto(__nome__ : varchar)
+
+cas-post(__casaospitante__ : serial, __postoletto__ : varchar)
+
+	fk: casaospitante references to CasaOspitante(id)
+	fk: postoletto references to PostoLetto(descrizione)
+	
+
+CasaOspitante(__id__ : serial, distanza_centro:  Int_gz_not_null, distanza_stazione:  Int_gz_not_null
+	      numero_adulti:  Int_gz_not_null, numero_bambini:  Inte_gz_not_null, non_disponibile: Periodo,
+	      città: varchar)
+
+	v.inclusione: CasaOspitante(id) occorre in cas-post(casaospitante)
+	fk: città references to Città(nome)
+
+
+
+
+		
+	      
+
+
+
+
+

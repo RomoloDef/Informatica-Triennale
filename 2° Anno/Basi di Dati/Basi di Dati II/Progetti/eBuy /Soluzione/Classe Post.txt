@@ -1,0 +1,6 @@
+Specifica classe Post
+
+<<abstract>> prezzoCorrente(): Denaro
+
+
+<<abstract>> acquirente(): Utente

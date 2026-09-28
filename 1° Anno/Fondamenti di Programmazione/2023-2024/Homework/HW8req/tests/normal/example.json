@@ -1,0 +1,6 @@
+{
+    "encrypted_text":  "astronaut-flying-cyrcus",
+    "pharaohs_cypher": {"tuar": "me", "cniy": "op", "sorta": "tur", "fult": "at", "rycg": "nc"},
+    "expected":        [ "tmeopcus", "metopcus", "ameopcus", "atmepcus" ],
+    "time":            0.1
+}

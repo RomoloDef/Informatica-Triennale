@@ -1,0 +1,73 @@
+Use case Prenotazione
+
+- faiPrenotazione(c: Cliente, r: Ristorante, giorno: Data, ora: Ora, numero_commensali: Int_gz_not_null):
+
+pre:
+
+        NOT indisponibile(r, Periodo(giorno_p, giorno_p))
+
+        FOR ALL p, i (Promozione(p) AND id(p, i)) -->
+
+            EXISTS promo (Promozione(promo) AND id(promo) = id_promo AND ristorante(promo) = r)
+
+            AND
+
+            EXIST giorno_p (giorno(giorno_p, this)) AND interseca (p, gionro_p, true)
+
+            AND
+
+            result = ((SUM(p) = { numero_commensali(p) | Prenotazione(p) AND (Promozione(pr) = id_promo) AND giorno(pr) = giorno_p}) + numero_commensali) <= massimo(promo)
+
+post:
+        Modifica del livello estensionale dei dati
+        Variazioni del dominio di interpretazione: PREN, EV
+
+        Variazioni ennuple di predicato:
+        - Prenotazione(PREN)
+        - giorno(PREN, oggi)
+        - ora(PREN, adesso)
+        - pren_rist(PREN, r)
+        - EventoPrenotazione(EV)
+        - ev_pren(EV, PREN)
+        - istante(EV)
+        
+        Sia PENDENTE tale che: StatoPrenotazione(PENDENTE) e pendente(PENDENTE, true)
+
+        stato_raggiunto(EV, PENDENTE)
+
+
+- annullaPrenotazione(): 
+
+pre:
+        
+        EXIST c, p (Cliente(c) AND Prenotazione(p) AND cl_pren(c, p))
+
+post:
+        Modifica del livello estensionale dei dati
+        Variazioni del dominio di interpretazione: PREN
+
+        Variazioni ennuple di predicato:
+        - PRENOTAZIONE(PREN)
+        - giorno(PREN, oggi)
+        - ora(PREN, adesso)
+        - pren_rist(PREN, r)
+        - EventoPrenotazione(EV)
+        - ev_pren(EV, PREN)
+        - istante(EV)
+
+        Sia PENDENTE tale che: StatoPrenotazione(PENDENTE) e pendente(PENDENTE, true) 
+
+        e sia ANNULLATA tale che: da(PENDENTE) e a(ANNULLATA)
+
+        stato_raggiunto(EV, ANNULLATA)
+
+
+- ricerca(x: Città, c: .... , s: Reale, d: DataOra): Ristorante[0..*]
+
+pre:
+
+
+
+post:
+
+

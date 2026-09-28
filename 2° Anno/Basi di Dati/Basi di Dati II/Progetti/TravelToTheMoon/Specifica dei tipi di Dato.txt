@@ -1,0 +1,12 @@
+Specifica dei tipi di Dato 
+
+1. Indirizzo:
+    via: Stringa
+    civico: Stringa secondo standard
+
+2. Codice: Stringa secondo standard 
+
+3. Fascia:
+    da: DataOra 
+    a: DataOra 
+

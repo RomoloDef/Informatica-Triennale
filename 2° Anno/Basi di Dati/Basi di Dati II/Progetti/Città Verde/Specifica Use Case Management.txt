@@ -1,0 +1,24 @@
+Specifica Use case Management
+
+operazione ausiliaria:
+
+- IntervalloSovrapposto(i: Intervallo, inizio: DataOra, fine: DataOra): Booleano
+
+pre: nessuna
+
+post:
+
+    result = True <-> EXIST di, d data_inizio(i, da) AND durata_attesa(i, d) AND da <= fine AND (da + d) >= inizio
+
+- calcolaAreaVerdeSensibile(inizio: DataOra, fine: DataOra): AreaSensibile[0..*]
+
+pre: nessuna
+
+post: 
+
+    result = { a | EXIST AreaVerde(a) AND AreaSensibile(a) AND NOT EXIST i (Intervallo(i) AND IntervalloSovrapposto(i, inizio, fine) AND operata(a, i))}
+
+    
+
+
+    

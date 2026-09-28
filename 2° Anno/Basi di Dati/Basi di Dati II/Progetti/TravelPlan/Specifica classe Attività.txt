@@ -1,0 +1,12 @@
+Specifica classe Attività
+
+- numero_participanti(): Intero > 0
+
+pre: nessuna
+
+post:
+
+        Q = { u | FOR ALL u, v, a (Utente(u) AND Viaggio(v) AND Attività(a) AND ut_part(u, v) AND possiede(v, a))} 
+
+        result = Q
+

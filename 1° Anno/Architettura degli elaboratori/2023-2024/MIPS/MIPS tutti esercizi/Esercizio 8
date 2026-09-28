@@ -1,0 +1,32 @@
+# Scrivere un programma in linguaggio assemblativo che letti tre numeri in memoria stampa su videoterminale la sequenza di tre numeri in ordine 
+# monotono crescente
+
+.text
+.globl main
+
+main:
+
+	lw $t0, a	# carico a
+	lw $t1, b	# carico b
+	lw $t3, c	# carico c
+	
+	blt $t2, $t3, PRIMO	# se b è minore di c si passa ad una prima condizione
+	j fine
+	
+PRIMO:
+	li $v0, 4
+	la $a0, uscita
+	syscall
+
+fine:
+
+	li $v0,10
+	syscall
+
+	
+
+.data
+a: .word 10
+b: .word 7
+c: .word 9
+uscita: .ascii "7 9 10"

@@ -1,0 +1,64 @@
+Specifica Use Case Management
+
+operazione ausiliaria: 
+
+- numGiorni(m: Mese): Intero > 0
+
+pre: nessuna
+
+post: 
+
+    FOR ALL m (Mese(m)) ->
+    ( (m = Aprile AND m = Giugno AND m = Settembre AND m = Novembre) -> result = 30 ) AND
+    ( m = Febbraio -> numGiorni(m) = 28 ) AND
+    ( NOT(m = Aprile AND m = Giugno AND m = Settembre AND m = Novembre AND m = Febbraio) -> result = 31 )
+
+
+- calcolaMediaGiornaliera(f: fasciaOraria, m: Mese): Reale >= 0
+
+pre: nessuna
+
+post:
+
+    Sia N = { u | Utente(u) AND EXIST a, us, p (Abbonamento(a) AND usufruisce(a, u, us) AND Postazione(p) AND us_postazione(us, p))}
+
+    result = N / numGiorni(m)
+
+operazione ausiliaria: 
+
+- contiene(o: Ora): Booleano
+
+pre: nessuna
+
+post:
+
+    result = TRUE <-> EXIST x, y (da(this, x) AND a(this, y)) AND x <= o AND o <= y
+
+    
+- calcolaServiziUtilizzati(periodo: fasciaOraria k: Intero): Servizio[0..*]
+
+pre: 
+
+    k > 0
+
+post:
+
+    Sia U = { u | Utente(u) AND EXIST a (Accesso(a) AND esegue(u, a) AND contiene(periodo, istante_accesso(a), True)) }
+
+    Sia S = { s | Servizio(s) AND EXIST u ∈ U, us (Utilizzo(us) AND ut_serv(us, s) AND acc_ut(us, u)) }
+
+    FOR ALL s ∈ S, sia
+    Q = SUM { q | EXIST us (Utilizzo(us) AND ut_serv(us, s) AND acc_ut(us, u) AND quantità(us) = q AND u ∈ U) }
+
+
+
+
+    
+
+    
+
+
+
+
+
+    

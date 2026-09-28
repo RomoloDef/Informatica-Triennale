@@ -1,0 +1,22 @@
+Specifica classe Prenotazione
+
+- stato(i: DataOra): StatoPrenotazione
+
+pre:
+
+post: 
+        E = { e, i |  ev_pren(e, this) and istante(e, i) and i <= x}.
+
+		result è tale che:
+			EXISTS y   (result, y) in argmax  [ i ] -->  (e,i) in E
+
+
+[V.Prenotazione.non.due.clienti.stessa.pren]
+
+FOR ALL p, c1, c2 (Prenotazione(p) AND Cliente(c1) AND Cliente(c2) AND cli-pren(c1, p) AND cli-pren(c2, p) AND c1 != c2)
+
+[V.Prenotazione.non.due.giorni.stessa.pren]
+
+FOR ALL p, g1, g2 (Prenotazione(p) AND giorno(g1, p) AND giorno(g2, p) AND g1 != g2)
+
+

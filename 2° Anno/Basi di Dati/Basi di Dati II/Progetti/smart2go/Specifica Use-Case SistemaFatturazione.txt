@@ -1,0 +1,23 @@
+Specifica Use-Case SistemaFatturazione
+
+- trovaSocieta(): Societa[0..*]
+
+pre:
+
+post:
+
+    result = { s | FOR ALL s, c, a (Società(s) AND Convenzioni(c) AND ConvenzioniEcompatibili(c) 
+               AND AutoEcompatibile(a) AND stipula(s, c) AND ConvAutoEcompatibile(a, c)) }
+
+
+- ricercaSocieta(s: Societa): Societa[0..*]
+
+pre:
+
+post: 
+
+    result = { s | FOR ALL s, c, a, ca, n, t1, t2 (Noleggio(n) AND Societa(s) AND Convenzioni(c) AND Auto(a) AND Categoria(ca)
+               AND CategoriaAuto(a, ca) AND nol_aut(a, n) AND nol_conv(n, c) AND stipula(c, s) AND tasso_sconto(c, t1)
+               AND tasso_sconto(c, t2) AND t1 != t2)}
+
+

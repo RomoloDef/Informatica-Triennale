@@ -1,0 +1,35 @@
+Specifica Use-Case UfficioSinistri
+
+- calcolaClasseRischio(s: Socio): Intero >= 0
+
+pre:
+
+        EXISTS Socio(s) AND Noleggio(n) AND sol_nol(s,n)
+
+post: 
+
+        n = { SUM(s') + SUM(s'') | FOR ALL Socio(s) AND Noleggio(n) AND SinistriSenzaControparte(s') AND SinistriControparte(s'') AND
+                         soc_nol(s, n ) AND sin_nol(n, s') AND sin_nol(n, s'') AND Quando(x) AND Ultimi3Anni(x, Ora)}
+
+        // Ultimi3Anni simbolo di predicato di semantica di mondo reale
+
+        result = 0 <-> n = 0
+
+        OR 
+
+        result = n <-> 0 < n < 10
+
+        OR
+
+        result = 10 <-> n >= 10
+
+- ricercaUltimoGuidatore(a: Auto, istante: DataOra): Socio
+
+pre: nessuna
+
+post:
+
+    result = { s | FOR ALL Socio(s) AND Noleggio(n) AND soc_nol(s, n) AND Auto(a) AND istante_iniziale(n, istante) AND nol_aut(n, a)}
+
+
+

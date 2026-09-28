@@ -1,0 +1,30 @@
+Specifica dei tipi di dato ristrutturati
+
+DBMS: postgreSQL
+
+CREATE DOMAIN IntegerGZ AS Integer 
+	CHECK (value > 0 AND value IS NOT NULL);
+
+CREATE TYPE Coordinate AS (latitudine varchar, longitudine varchar);
+
+CREATE TYPE Specie AS (nome_scientifico varchar, nome_comune varchar);
+
+CREATE DOMAIN CodiceFiscale AS varchar
+	CHECK (value ~ '^[A-Z0-9]{3,20}(-[A-Z0-9]{1,10})*$');
+
+CREATE TYPE Rischio AS ENUM ('trascurabile', 'basso', 'medio', 'alto');
+
+CREATE TYPE Causa AS ENUM ('completamento del ciclo di vita', 'sostituzione', 'cedimento', 'rischio alto', 'necessità di costruzione');
+
+CREATE TYPE Tipologia AS ENUM ('strumento leggero', 'veicolo', 'veicolo speciale');
+
+CREATE TYPE TipologiaAtt AS ENUM ('piantumazione', 'monitoraggio', 'potatura', 'abbattimento', 'sfalcio', 'cura sanitaria');
+
+CREATE TYPE Gravità AS ENUM ('bassa', 'media', 'alta', 'mortale');
+
+CREATE TYPE TipoIntervento AS ENUM ('Intervento', 'InterventoCompletato');
+
+CREATE TYPE TipoSquadra AS ENUM ('Squadra', 'SquadraSciolta');
+
+CREATE TYPE TipoOperatore AS ENUM ('Operatore', 'OperatoreFinito');
+

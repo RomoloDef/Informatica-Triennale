@@ -1,0 +1,66 @@
+Si vuole progettare e realizzare xFit, un sistema informatico per la gestione di un centro sportivo
+
+1. Persona
+	1.1 nome: Stringa
+	1.2 cognome: Stringa
+	1.3 data_nascita: Data
+	1.4 codice_fiscale: CodiceFiscale {id}
+	
+2. Personale Amministrativo
+	2.1 dipendenti (vedi requisito 4)
+
+3. Cliente
+	3.1 tipologia di abbonamento (vedi requisito 7)
+	3.2 codice: Intero {id}
+
+		3.0.1 ClienteNuovo
+	
+4. Dipendente
+	4.1 tipologia di contratto (vedi requisito 5)
+	4.2 livello contrattuale: Intero > 0
+	4.3 ruolo (vedi requisito)
+	4.4 contratti passati
+
+5. Contratto
+	5.0 inizio: DataOra
+		5.1 ContrattoTempoDeterminato
+			5.1.2 fine: DataOra
+
+		5.2 ContrattoTempoIndeterminato
+
+6. Istruttore
+	6.1 contratto (solo tempo determinato) (vedi requisito 5.1)
+	6.2 attività sportive (vedi requisito 9)
+
+7. Abbonamento
+	7.1 Trimestrale
+	7.2 Semestrale
+	7.3 Annuale
+
+8. Area
+	8.1 nome: Stringa
+	8.2 capienza: Intero (numero massimo di clienti)
+	8.3 attività sportive (vedi requisito 9)
+
+	8.1.0 AreaComune
+		
+
+9. Attività Sportive
+	9.1 orario: DataOra
+
+10. Varco:
+	10.1 insieme di aree: (vedi requisito 8)
+
+
+	
+
+
+	
+	
+
+
+
+
+
+	
+	

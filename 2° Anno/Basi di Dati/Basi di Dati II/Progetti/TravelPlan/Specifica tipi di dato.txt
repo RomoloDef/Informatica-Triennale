@@ -1,0 +1,18 @@
+Specifica dei tipi di dato  
+
+- Email: [a-z, A-Z, 0-9] + @ + [a-z, A-Z, 0-9] + . + [a-z, A-Z] {2,4}
+
+- Indirizzo: 
+    via: Stringa
+    civico: Stringa
+
+- Durata:
+    da: DataOra
+    a: DataOra
+
+- Mese: {Gennaio, Febbraio, Marzo, Aprile, Maggio, Giugno, Luglio, Agosto, Settembre, Ottobre, Novembre, Dicembre}
+
+[V.durata.a.maggiore.da]
+
+FOR ALL d, x, y (Durata(d) AND da(d, x) AND a(d,y)) --> x <= y
+

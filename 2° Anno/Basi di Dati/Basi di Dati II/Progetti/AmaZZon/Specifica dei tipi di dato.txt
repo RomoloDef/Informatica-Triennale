@@ -1,0 +1,17 @@
+Specifica dei tipi di dato
+
+- Mail: Stringa secondo standard
+
+- Telefono: Stringa secondo standard
+
+- Indirizzo:
+    via: Stringa 
+    civico: Stringa secondo standard
+
+- Durata:
+    da: DataOra 
+    a: DataOra
+
+- NumeroCarta: Stringa secondo standard 
+
+- Codice: Stringa secondo standard

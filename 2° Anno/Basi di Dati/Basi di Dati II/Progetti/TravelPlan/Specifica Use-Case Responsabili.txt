@@ -1,0 +1,9 @@
+Specifica Use-case Responsabili
+
+calcoloViaggiMesi(cit: Citta, mese: Mese): Viaggio[0..*]
+
+pre: nessuna
+
+post: 
+
+        Q = { v | Viaggio(v) AND via_att(v,att) AND att_luo(att, luo) AND }

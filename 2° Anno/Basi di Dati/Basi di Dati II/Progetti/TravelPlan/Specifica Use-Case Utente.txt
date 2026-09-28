@@ -1,0 +1,16 @@
+Specifica Use-Case Utente
+
+- registrazione(nome: Stringa, cognome: Stringa, email: Email, data_iscrizione: Data, città: Città): 
+
+pre: nessuna
+
+post:
+    Side Effect
+        Nuovo elemento del dominio di interpretazione: ALPHA
+
+        Utente(ALPHA)
+        nome(nome, ALPHA)
+        cognome(cognome, ALPHA)
+        email(email, ALPHA)
+        data_iscrizione(data_iscrizione, ALPHA)
+        città_appartenenza(ALPHA, città)

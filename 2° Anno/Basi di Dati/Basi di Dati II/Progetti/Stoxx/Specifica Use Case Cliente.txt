@@ -1,0 +1,3 @@
+Specifica UseCase Cliente
+
+- investimento(c: Cliente, imp_inv: Reale > 0,  ): 

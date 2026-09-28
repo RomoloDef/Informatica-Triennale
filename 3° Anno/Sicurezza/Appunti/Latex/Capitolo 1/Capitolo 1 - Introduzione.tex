@@ -1,0 +1,124 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{tabularx}
+\usepackage{geometry}
+\usepackage{amsmath}
+\geometry{a4paper, margin=1in}
+
+\title{Capitolo 1 - Inizio}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Definizioni e Obiettivi della Sicurezza (CIA Triad)}
+La sicurezza informatica viene definita dal NIST (NISTIR 7298) come l'insieme delle misure e dei controlli volti a garantire la riservatezza, l'integrità e la disponibilità degli asset di un sistema informativo. Questi asset includono hardware, software, firmware e le informazioni stesse. Questi tre concetti fondamentali formano la cosiddetta Triade CIA:
+
+\begin{itemize}
+    \item \textbf{Confidenzialità (Confidentiality):} Si divide in riservatezza dei dati (le informazioni non devono essere divulgate a soggetti non autorizzati) e privacy (il controllo degli individui su quali informazioni che li riguardano possono essere raccolte e a chi possono essere rivelate). Una perdita di confidenzialità consiste nella divulgazione non autorizzata di dati.
+    \item \textbf{Integrità (Integrity):} Include l'integrità dei dati (informazioni e programmi vengono modificati solo in modo autorizzato) e l'integrità del sistema (il sistema svolge le sue funzioni senza manipolazioni non autorizzate, accidentali o deliberate). Una perdita di integrità si traduce nella modifica o distruzione non autorizzata di informazioni.
+    \item \textbf{Disponibilità (Availability):} Assicura che i sistemi e i servizi funzionino prontamente e che l'accesso alle informazioni sia garantito in modo affidabile agli utenti autorizzati. Una perdita di disponibilità comporta l'interruzione dell'accesso o dell'uso delle risorse.
+\end{itemize}
+
+Oltre alla triade classica, si considerano spesso altri due concetti cardine: l'\textbf{Autenticità}, ovvero la capacità di verificare che un utente o un messaggio siano chi dicono di essere e che la sorgente sia fidata, e la \textbf{Responsabilità (Accountability)}, che richiede che le azioni di un'entità siano tracciate in modo univoco per permettere analisi forensi e risalire ai responsabili in caso di violazioni.
+
+\section{Le tipologie di rischio e di impatto}
+Se vengono a mancare delle caratteristiche delle triade CIA o direttamente tutta la triade, si può incappare in impatti su organizzazioni o individui di diversa portata:
+
+\subsection*{Basso}
+In questo scenario, la perdita di sicurezza ha ripercussioni limitate sulle operazioni o sugli asset dell'organizzazione. Nello specifico, si verifica un degrado delle capacità operative tale per cui le funzioni primarie possono ancora essere svolte, ma con un'efficacia notevolmente ridotta. I danni ai beni aziendali, le perdite finanziarie e gli eventuali danni alle persone sono considerati di lieve entità.
+
+\subsection*{Medio}
+In caso di impatto moderato, la compromissione della sicurezza causa un degrado significativo delle capacità operative. Sebbene l'organizzazione riesca ancora a svolgere le sue funzioni principali, la loro efficacia risulta compromessa in modo rilevante. Questo livello comporta danni consistenti ai beni materiali o immateriali e perdite finanziarie significative. Per quanto riguarda le persone, possono verificarsi danni rilevanti, ma che non includono il pericolo di vita o lesioni gravi e permanenti.
+
+\subsection*{Alto}
+Questo è lo scenario più critico, in cui la perdita di sicurezza causa un degrado grave o la perdita totale delle capacità operative, rendendo l'organizzazione incapace di svolgere una o più delle sue funzioni primarie. Si registrano danni enormi ai beni aziendali e perdite finanziarie major. L'impatto sugli individui è classificato come grave o catastrofico, con il rischio concreto di perdita della vita o lesioni gravissime che mettono a repentaglio la salute.
+
+\section{Modello per la sicurezza informatica}
+Il seguente modello mostra la relazione tra le varie caratteristiche del modello tra cui le risorse del sistema (o asset) e tutto quello che ne concerne:
+
+\subsection*{Asset}
+Le risorse di un sistema informatico possono essere categorizzate come segue:
+\begin{itemize}
+    \item \textbf{Hardware:} include i sistemi informatici e altri dispositivi per l'elaborazione, l'archiviazione e la comunicazione dei dati.
+    \item \textbf{Software:} include il sistema operativo, le utility di sistema e le applicazioni.
+    \item \textbf{Dati:} include file e database, così come i dati relativi alla sicurezza, quali i file di password.
+    \item \textbf{Strutture e reti di comunicazione:} link di comunicazione delle local e delle wide area network, bridge, router e così via.
+\end{itemize}
+
+\section{Vulnerabilità dell'asset}
+\begin{itemize}
+    \item \textbf{Minaccia (Threat):} Qualsiasi circostanza o evento che ha il potenziale di influire negativamente sulle operazioni aziendali (inclusa la missione, l'immagine o la reputazione), sui beni dell'organizzazione o sulle persone. Ciò può avvenire tramite l'accesso non autorizzato, la distruzione, la divulgazione o la modifica di informazioni e l'interruzione del servizio (denial of service).
+    \item \textbf{Avversario (Threat Agent):} Un individuo, gruppo, organizzazione o governo che mette in atto (o ha l'intento di farlo) attività dannose verso il sistema.
+    \item \textbf{Attacco (Attack):} Qualsiasi tipo di attività malevola che tenta di raccogliere, interrompere, negare, degradare o distruggere le risorse del sistema informativo o le informazioni stesse.
+    \item \textbf{Contromisura (Countermeasure):} Un dispositivo o una tecnica che ha l'obiettivo di ridurre l'efficacia operativa di attività avversarie o indesiderate. Serve a prevenire spionaggio, sabotaggio, furto o accessi non autorizzati a informazioni sensibili.
+    \item \textbf{Rischio (Risk):} Rappresenta la misura in cui un'entità è minacciata da un potenziale evento. È tipicamente una funzione di due fattori: l'impatto negativo che deriverebbe dall'evento e la probabilità che tale evento si verifichi.
+    \begin{equation*}
+        R = P \times D
+    \end{equation*}
+    \item \textbf{Security Policy:} Un insieme di criteri per l'erogazione dei servizi di sicurezza. Definisce e vincola le attività di un centro di elaborazione dati al fine di mantenere una condizione di sicurezza per sistemi e dati.
+\end{itemize}
+
+\section{Vulnerabilità, minacce e attacchi}
+Generalmente distinguiamo i tre macro tipi di vulnerabilità in base a come è in quel momento il sistema:
+\begin{itemize}
+    \item \textbf{Il sistema può essere corrotto:} opera in modo errato o dà risposte sbagliate (es. modifica impropria dei dati).
+    \item \textbf{Il sistema può avere una falla:} accesso non autorizzato alle informazioni attraverso la rete.
+    \item \textbf{Il sistema può diventare non disponibile o molto lento:} l'uso del sistema o della rete diventa impossibile o infattibile.
+\end{itemize}
+A questi tipi di vulnerabilità corrispondono i concetti di integrità, confidenzialità e disponibilità.
+
+\section{Minacce e Risorse}
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\textwidth}{|X|X|}
+\hline
+\textbf{Conseguenza della minaccia} & \textbf{Azione minatoria (attacco)} \\ \hline
+\textbf{Divulgazione non autorizzata:} Accesso a dati per i quali l'entità non è autorizzata. & \textbf{Esposizione:} Dati rivelati direttamente.\\ \textbf{Intercettazione:} Accesso ai dati in transito.\\ \textbf{Inferenza:} Accesso indiretto basato su caratteristiche delle comunicazioni.\\ \textbf{Intrusione:} Accesso aggirando le protezioni. \\ \hline
+\textbf{Inganno:} Ricezione di dati falsi creduti veri. & \textbf{Mascheramento:} Spacciarsi per un'entità autorizzata.\\ \textbf{Falsificazione:} Dati falsi che ingannano.\\ \textbf{Ripudio:} Negare falsamente la responsabilità. \\ \hline
+\textbf{Interruzione:} Impedire il corretto funzionamento dei servizi. & \textbf{Interdizione:} Disabilitare componenti.\\ \textbf{Corruzione:} Alterare funzioni o dati.\\ \textbf{Ostruzione:} Ostacolare il funzionamento. \\ \hline
+\textbf{Usurpazione:} Controllo non autorizzato di servizi o funzioni. & \textbf{Appropriazione indebita:} Controllo logico o fisico.\\ \textbf{Uso improprio:} Esecuzione di funzioni dannose. \\ \hline
+\end{tabularx}
+\end{table}
+
+\section{Classificazione degli Attacchi}
+\begin{enumerate}
+    \item \textbf{Attivo vs Passivo:}
+    \begin{itemize}
+        \item \textbf{Attivo:} Tentativo di alterare risorse o influenzare il funzionamento (es. replay, mascheramento, modifica messaggi, DoS).
+        \item \textbf{Passivo:} Tentativo di apprendere informazioni senza influire sulle risorse (es. lettura contenuto, analisi del traffico).
+    \end{itemize}
+    \item \textbf{Interno vs Esterno:}
+    \begin{itemize}
+        \item \textbf{Interno:} Lanciato da un "insider" autorizzato ad accedere ma che usa le risorse in modo non autorizzato.
+        \item \textbf{Esterno:} Lanciato da un "outsider" (criminali, terroristi, governi ostili) fuori dal perimetro di sicurezza.
+    \end{itemize}
+\end{enumerate}
+
+\section{Contromisure e Principi di Design}
+Secondo lo standard FIPS 200, le contromisure si dividono in:
+\begin{itemize}
+    \item \textbf{Tecniche:} Controllo accessi, autenticazione, protezione comunicazioni, integrità.
+    \item \textbf{Funzionali:} Formazione, audit, manutenzione, sicurezza del personale, pianificazione.
+    \item \textbf{Ibride:} Gestione configurazione, risposta agli incidenti, protezione dei media.
+\end{itemize}
+
+\subsection*{Principi Fondamentali di Design}
+\begin{itemize}
+    \item \textbf{Economia dei meccanismi:} Design semplice e piccolo.
+    \item \textbf{Fail-safe defaults:} Accesso negato di default.
+    \item \textbf{Mediazione completa:} Ogni accesso deve essere controllato.
+    \item \textbf{Open Design:} Il meccanismo non deve essere segreto.
+    \item \textbf{Minimo privilegio:} Solo i privilegi necessari per il compito.
+    \item \textbf{Difesa in profondità (Layering):} Barriere multiple sovrapposte.
+\end{itemize}
+
+\section{Superfici e Alberi di Attacco}
+L'\textbf{Attack Surface} è l'insieme delle vulnerabilità raggiungibili (Rete, Software, Umana). Gli \textbf{Alberi di Attacco} sono strutture gerarchiche dove la radice è l'obiettivo e i nodi sono i sotto-obiettivi collegati da porte logiche AND/OR.
+
+\end{document}

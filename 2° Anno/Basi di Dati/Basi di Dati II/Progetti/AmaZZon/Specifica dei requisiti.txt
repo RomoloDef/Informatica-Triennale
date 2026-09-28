@@ -1,0 +1,61 @@
+Specifica dei requisiti
+
+1. Negozio 
+    1.1 nome: Stringa 
+    1.2 indirizzo: Indirizzo 
+    1.3 email: Mail 
+    1.4 numero: Telefono 
+    1.5 Pubblicazione: ???
+
+2. Offerta (Mettere in vendita)
+    2.1 articolo_in_offerta: (Vedi req ???)
+    2.2 marca: Stringa
+    2.3 numero_modello: Intero > 0
+    2.4 categoria: Stringa 
+    2.5 tag: Stringa [0..*]
+    2.6 prezzo: Reale > 0
+    2.7 istante_inizio: DataOra 
+    2.8 fine: Operazione (calcolabile tramite il dato durata)
+
+3. Articolo 
+    3.1 nome: Stringa
+    3.2 descrizione: Stringa
+    3.3 id: Codice
+    3.4 scheda_tecnica: Operazione
+
+4. SpeseSpedizione
+    4.1 articolo_spedito: (vedi req 3)
+    4.2 paese_spedizione: ???
+    4.3 numero_pezzi_acquistati: Intero > 0
+    4.4 costo_per_singolo_pezzo: Operazione
+    4.5 costo_ridotto: Operazione
+
+5. Vetrina
+    5.1 articoli_presenti: Operazione 
+
+6. BuonoRegalo 
+    5.1 utente_acquistatore: (vedi req ???)
+    5.2 importo: Reale > 0
+    5.3 validità: Periodo 
+
+7. CartaDiCredito:
+    5.1 nome_titolare: Stringa
+    5.2 numero: Stringa secondo standard 
+    5.3 data_scadenza: Data 
+
+8. UtentePrivato
+
+9. UtentePrivatoRegistrato
+    9.1 nome_utente: Stringa 
+    9.2 istante_registrazione: DataOra 
+
+10. AcquistoArticolo
+    10.1 numero_di_articoli: Intero > 0
+    10.2 pezzi_per_articolo: Intero >= 0
+    10.3 importo_totale: Operazione
+
+11. Wishlist 
+    11.1 utente_registrato_proprietario: (vedi req 9)
+    11.2 nome: Stringa 
+    11.3 insieme_di_articoli: Operazione
+

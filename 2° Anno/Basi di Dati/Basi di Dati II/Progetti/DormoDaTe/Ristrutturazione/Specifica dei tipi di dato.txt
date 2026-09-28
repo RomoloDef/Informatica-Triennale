@@ -1,0 +1,22 @@
+Specifica dei tipo di dato
+
+Stringa --> varchar
+
+Data, DataOra --> TimeStamp
+
+Sesso --> CREATE DOMAIN Sesso AS ENUM {maschio, femmina, altro}
+
+Intero > 0 --> CREATE TYPE Int_gz_not_null (value IS NOT NULL and value > 0)
+
+Intero >= 0 --> CREATE TYPE Inte_gz_null (value IS NOT NULL and value >= 0)
+
+(0..5) --> CREATE TYPE Int_zer_cinq (value IS NOT NULL and value >= 0 and value <= 5)
+
+Periodo --> CREATE TYPE __Periodo__ (da DataOra a DataOra)
+
+	    CREATE DOMAIN Periodo AS __Periodo__
+		CHECK (value.a >= value.da);
+
+
+
+

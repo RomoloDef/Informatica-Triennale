@@ -1,0 +1,10 @@
+[V.prezzi.posto]
+
+FOR ALL p, po, p1, p2, i, r (Prenotazione(p) AND Posto(po) AND intero(p, po) AND ridotto(p, po) 
+AND prezzo(i, p1) AND prezzo(r, p2) AND Intero(i) AND Ridotto(r) --> p2 < p1)
+
+[V.prenotazione.prima.di.spettacolo]
+
+FOR ALL pren, post, s, spet, o, i (Prenotazione(pren) AND Posto(post) AND pren_post(pren, post) AND Sala(s) AND Spettacolo(spet) AND
+trovatosi(post, s) AND visto_in(s, spet) AND istante_prenotazione(i, pren) AND orario(spet, o) --> i <= o)
+

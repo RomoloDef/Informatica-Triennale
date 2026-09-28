@@ -1,0 +1,29 @@
+# Scrivere un programma in linguaggio assemblativo MIPS/MARS che calcola la distanza tra due punti
+
+.text
+.globl main
+
+main:
+	lwc1 $f0, x1	# carico il valore di x1
+	lwc1 $f1, y1	# carico il valore di y1
+	lwc1 $f2, x2	# carico il valore di x2
+	lwc1 $f3, y2	# craico il valore di y2
+	
+	sub.s $f4, $f0, $f2	# x1-x2
+	sub.s $f5, $f1, $f3	# y1-y2
+	
+	mul.s $f4, $f4, $f4	# (x1-x2)^2
+	mul.s $f5, $f5, $f5	# (y1-y2)^2
+	add.s $f6, $f5, $f4	# somma
+	
+	sqrt.s $f7, $f6		# radice quadrata
+	
+	li $v0,10
+	syscall
+	
+
+.data
+x1: .float 1.0
+y1: .float 1.0
+x2: .float 2.0
+y2: .float 2.0

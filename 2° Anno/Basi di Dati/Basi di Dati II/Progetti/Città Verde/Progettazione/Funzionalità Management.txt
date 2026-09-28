@@ -1,0 +1,35 @@
+Specifica Use case Management
+
+operazione ausiliaria:
+
+- IntervalloSovrapposto(i: Intervallo, inizio: DataOra, fine: DataOra): Booleano
+
+pre: nessuna
+
+post:
+
+    result = True <-> EXIST di, d data_inizio(i, da) AND durata_attesa(i, d) AND da <= fine AND (da + d) >= inizio
+
+- calcolaAreaVerdeSensibile(inizio: DataOra, fine: DataOra): AreaSensibile[0..*]
+
+pre: nessuna
+
+post: 
+
+    algoritmo:
+    
+    SELECT *
+    FROM AreaVerde a, AreaSensibile as, Intervallo i
+    WHERE a.id = as.area_verde
+    AND NOT EXIST (
+        SELECT *
+        FROM Intervento i, AreaVerde a
+        WHERE i.area_verde = a.id 
+        AND IntervalloSovrapposto(i, inizio, fine)
+    );
+
+    esegui questa query e memorizzane il risultato in Q
+    
+
+
+    

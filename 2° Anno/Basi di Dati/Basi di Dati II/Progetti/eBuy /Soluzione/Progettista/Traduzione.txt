@@ -1,0 +1,103 @@
+CondizioniUsato(__nome__ : varchar)
+
+Usato(id: serial, condizioniusato: varchar, __post__: varchar)
+	altra chiave: id
+	fk: condizioniusato references to CondizioniUsato(nome)
+	fk: post references to Post(descrizione)
+
+Nuovo(id: serial, garanziaanni: Int_gz_mag_due, __post_ : varchar)
+	altra chiave: id
+	fk: post references to Post(descrizione)
+
+
+Valuta(__nome__ : varchar)
+
+Categoria(__nome__ : varchar)
+
+Post(__descrizione__ : varchar, prezzoBase : Denaro, garanziaAnni: Int_gz_not_null, 
+     istante: Timestamo, voto: int_tra_due_cinque, tipo: TipoPost, valuta: varchar, categoria: 	   varchar, utente: serial)
+	fk: valuta references to Valuta(nome)
+	fk: categoria references to Categoria(nome)
+	fk: utente references to Utente(id)
+	ennupla: (tipo is 'PostConFeedback') = (voto is not null)
+
+Asta(__post__ : varchar, rialzo: Denaro, scadenza: Timestamp, id: serial)
+	altra chiave: id
+	fk: post references to Post(descrizione)
+
+Bid(__istante__ : TimeStamp, asta: varchar, privato: id)
+	fk: asta references to Asta(post)
+	fk: privato references to Privato(id)
+
+CompraloSubito(__post__ : varchar, id: serial)
+	altra chiave: id
+	fk: post references to Post(descrizione)
+
+acquirente(__compralosubito__ : serial, privato: serial, istante: TimeStamp)
+	fk: compralosubito references to CompraloSubito(id)
+	fk: privato references to Privato(id)
+
+Privato(id : serial, __utente__: serial)
+	altra chiave: id
+	fk: utente references to Utente(id)
+
+Utente(__id__ : serial)
+
+VendProfessionale(id: serial, __utente__: serial)
+	altra chiave: id
+	fk: utente references to Utente(id)
+
+
+Trigger:
+
+-- Progetto del Trigger [V.Post.gen.disj]
+
+-- NOT EXIST p, n, u (Post(p) AND Nuovo(n) AND Usato(u) AND post-us(p, u) AND post-n(p, n))
+
+Operazioni da Intercettare: 
+
+INSERT(new) in Post
+UPDATE(old, new) in Post
+
+Quando intercettarle: AFTER
+
+Funzione(old, new)
+isError = EXIST (
+SELECT *
+FROM nuovo as n, usato as u
+WHERE n.post = new.post
+AND u.post = new.post
+)
+
+If isError = TRUE
+	raise Exception "INSERT/UPDATE viola il vincolo"
+Else:
+	return new
+
+-- Progetto dei trigger [V.Post.gen.compl]
+
+-- FOR ALL p Post(p) -> ((EXIST u post-us(p, u)) OR (EXIST n post-n(p, n))
+
+quando deve scattare: subito dopo INSERT(new) in post
+
+controllo da effettuare: new.descrizione deve occorrere in Nuovo(post) o Usato(post):
+
+If: 
+(NOT EXISTS (SELECT post FROM Usato WHERE post = new.descrizione
+UNION SELECT post FROM Nuovo WHERE post = new.descrizione):
+	raise Exception
+
+else:
+	return new
+
+
+Da continuare sul resto ma il ragionamento è lo stesso basta solo cambiare i valori
+
+
+
+
+
+
+
+	
+

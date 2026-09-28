@@ -1,0 +1,63 @@
+1. 
+
+SELECT comp.nome, SUM(v.durataminuti) * 1.0 / COUNT(*) AS durata_media
+FROM Compagnia comp, volo v, luogoaeroporto la, arrpart ap, aeroporto a
+WHERE comp.nome = v.comp
+AND v.codice = ap.codice
+AND a.codice = ap.partenza
+AND a.codice = la.aeroporto
+AND la.nazione = 'Italy'
+GROUP BY comp.nome
+
+2. 
+
+WITH media_totale AS (
+    -- Calcola la durata media di tutti i voli.
+    SELECT AVG(durataMinuti) AS media_generale
+    FROM Volo
+),
+
+WITH media_compagnie AS (
+    -- Calcola la durata media per ogni compagnia.
+    SELECT comp, AVG(durataMinuti) AS media_per_compagnia
+    FROM Volo
+    GROUP BY comp
+)
+-- Seleziona le compagnie la cui durata media è maggiore della media totale.
+SELECT comp, media_per_compagnia
+FROM media_compagnie, media_totale
+WHERE media_per_compagnia > media_generale;
+
+3. 
+
+
+4. 
+
+WITH DurataMediaItalia AS (
+  SELECT AVG(T1.durataMinuti) AS media_generale_italia
+  FROM Volo AS T1, ArrPart AS T2, Aeroporto AS T3, LuogoAeroporto AS T4
+  WHERE T1.codice = T2.codice
+    AND T2.partenza = T3.codice
+    AND T3.codice = T4.aeroporto
+    AND T4.nazione = 'Italy'
+),
+
+DurataMediaCompagniaItalia AS (
+  SELECT T1.comp, AVG(T1.durataMinuti) AS media_per_compagnia
+  FROM Volo AS T1, ArrPart AS T2, Aeroporto AS T3, LuogoAeroporto AS T4
+  WHERE T1.codice = T2.codice
+    AND T2.partenza = T3.codice
+    AND T3.codice = T4.aeroporto
+    AND T4.nazione = 'Italy'
+  GROUP BY T1.comp
+)
+
+SELECT T1.comp, T1.media_per_compagnia
+FROM DurataMediaCompagniaItalia AS T1, DurataMediaItalia AS T2
+WHERE T1.media_per_compagnia < T2.media_generale_italia;
+
+5. 
+
+
+
+

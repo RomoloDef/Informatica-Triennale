@@ -1,0 +1,52 @@
+Funzionalità Prenotazione
+
+- posti_disponibili(s:Sala): Intero 
+
+pre:
+
+post:
+
+    algoritmo:
+
+    WITH prenotati AS (
+    SELECT t.sala, COUNT(*) AS posti_prenotati
+    FROM pren_post pr, trovatosi t
+    WHERE pr.fila = t.fila
+      AND pr.colonna = t.colonna
+    GROUP BY t.sala
+    )
+
+    SELECT s.id,
+        s.capienza - (
+            SELECT COUNT(*)
+            FROM pren_post pr, trovatosi t
+            WHERE pr.fila = t.fila
+                AND pr.colonna = t.colonna
+                AND t.sala = s.id
+        ) AS posti_disponibili
+    FROM Sala s;
+
+
+- Prenotazione(u: utente, s: Sala, posti: Intero > 0, o: DataOra): Prenotazione
+
+pre:
+
+    SELECT s.id
+    FROM Sala s, Prenotazione p
+    WHERE s.id = :sala_id
+    AND (
+            s.capienza - (
+                SELECT COUNT(*)
+                FROM pren_post pr, trovatosi t
+                WHERE pr.fila = t.fila
+                AND pr.colonna = t.colonna
+                AND t.sala = s.id
+            )
+        ) >= :p.numero_posti
+
+post:
+
+    INSERT INTO Prenotazione('...', '...'. '...')
+
+
+

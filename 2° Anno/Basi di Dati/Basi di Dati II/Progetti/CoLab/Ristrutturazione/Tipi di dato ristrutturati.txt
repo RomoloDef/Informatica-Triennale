@@ -1,0 +1,40 @@
+Tipi di dato 
+
+DBMS: postgreSQL
+
+- Stringa --> varchar
+
+- Data, DataOra --> timestamp
+
+- Indirizzo --> CREATE TYPE Indirizzo AS (
+                    via varchar(200), civico varchar(200)
+                )
+
+- Email --> CREATE DOMAIN Email AS varchar
+	            CHECK (VALUE ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+
+- IVA --> CREATE DOMAIN IVA AS varchar
+            CHECK (VALUE ~ '^\d{11}$')
+
+- Mese --> CREATE TYPE Mese AS ENUM ('Gennaio', 'Febbrario', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Otttobre', 'Novembre', 'Dicembre')
+
+- Periodo --> CREATE TYPE Periodo AS (
+                da timestamp, a timestamp
+            )
+
+- FasciaOraria --> CREATE TYPE FasciaOraria AS (
+                da time, a time
+            )
+
+- Intero > 0 --> CREATE DOMAIN IntegerGZ AS Integer
+                    CHECK (value is not null AND value > 0);
+
+- Reale > 0 --> CREATE DOMAIN RealGZ AS Real
+                    CHECK (value is not null AND value > 0);
+
+- TipoAccesso --> CREATE TYPE TipoAccesso AS ENUM ('Accesso' , 'AccessoConcluso')
+
+- TipoUtilizzo --> CREATE TYPE TipoUtilizzo AS ENUM ('Utilizzo' , 'UtilizzoConcluso')
+
+
+

@@ -1,0 +1,39 @@
+# calcola la somma e la media di un vettore di 10 elementi contenente numeri casuali tra 0 e 999
+
+.data
+vettore: .space 40
+numeroelementi: .word 10
+
+.text
+.globl main
+
+main:
+	li $t0, 0		# indice
+	lw $t1, numeroelementi	# numero di elementi
+	li $v0, 42
+	li $a1, 999
+	syscall
+	move $t2, $a0		# numero da inserire nel vettore
+	xor $t4, $t4, $t4	# contatore da dividere per media
+	li $t5, 0		# inizializzazione della somma
+	
+ciclo:
+	beq $t0, $t1, fine
+	mul $t3, $t0, 4
+	sw $t2, vettore($t3)
+	add $t5, $t5, $t2
+	addi $t4, $t4, 1
+	div $t6, $t5, $t2
+	addi $t0, $t0, 1
+	blt $t0, $t1, ciclo
+	
+fine:
+	move $a0, $t5
+	li $v0, 1
+	syscall
+	move $a0, $t6
+	li $v0, 1
+	syscall
+	li $v0, 10
+	syscall
+	

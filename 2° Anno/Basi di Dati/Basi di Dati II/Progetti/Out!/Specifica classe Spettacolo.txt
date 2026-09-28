@@ -1,0 +1,13 @@
+Specifica classe Spettacolo
+
+- artisti_performanti(): Intero >= 0
+
+pre:
+
+post:
+
+    A = { a | EXIST s (Spettacolo(s) AND performante(a, s))}
+
+    result = | A |
+
+    

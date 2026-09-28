@@ -1,0 +1,13 @@
+Specifica classe Modulo
+
+- docenti(): Docente[0..*]
+
+pre: nessuna 
+
+post:
+
+    algoritmo:
+
+    SELECT d.*
+    FROM Docente d, Modulo m
+    WHERE d.persona = m.docente

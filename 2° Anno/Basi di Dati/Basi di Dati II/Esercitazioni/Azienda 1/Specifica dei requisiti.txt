@@ -1,0 +1,21 @@
+Specifica dei requisiti
+
+1. Impiegato
+    1.1 nome: Stringa
+    1.2 cognome: Stringa
+    1.3 data_nascita: Data 
+    1.4 stipendio: Reale > 0
+    1.5 dipartimento: (vedi req 2)
+
+2. Dipartimento 
+    2.1 nome: Stringa 
+    2.2 numero_telefono: Telefono
+    2.3 data_afferenza: Data 
+
+3. Direttore
+    3.1 (vedi req 1)
+
+4. Progetto
+    4.1 nome: Stringa 
+    4.2 budget: Reale > 0
+

@@ -1,0 +1,8 @@
+Specifica dei tipo di dato
+
+
+Periodo:
+	da: DataOra	
+	a: dataOra
+
+Sesso: {maschio, femmina, altro}

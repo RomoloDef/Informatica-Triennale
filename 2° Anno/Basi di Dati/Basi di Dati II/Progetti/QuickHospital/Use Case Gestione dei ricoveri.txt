@@ -1,0 +1,61 @@
+Use Case Gestione dei ricoveri
+
+1. Registrazione del ricovero di un paziente
+
+ricovera(paziente: Paziente, d: DataOra): Ricovero
+
+Pre:
+	deve esistere un posto letto libero
+
+Post:
+
+	viene creato il link (p, pl) di associazione "ricovero" con valore d per l'attributo
+
+	"data"
+
+Formalmente:
+	
+Pre:
+	
+
+
+Post:
+
+	
+
+	
+
+2. Registrazione della dimissione di un paziente
+
+dismetti(paziente: Paziente, data: DataOra):
+
+Pre:
+	
+	- la differenza tra il numero di associazioni di stanza e posto letto e i posti deve essere 0 (il posto
+
+	è effettivamente libero)
+	
+
+Post:
+	viene creato il link (p, pl) di associazione "dimissione" con valore d per l'attributo
+
+	"data"
+
+
+Formalmente:
+
+Pre:
+
+
+Post:
+
+
+	
+
+
+
+
+
+
+
+

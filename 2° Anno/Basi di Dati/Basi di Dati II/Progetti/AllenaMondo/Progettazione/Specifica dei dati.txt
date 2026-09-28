@@ -1,0 +1,36 @@
+Specifica dei dati 
+
+DBMS: postgreSQL 
+
+- Stringa: varchar 
+
+- DataOra, Data: timestamp
+
+- LAT, LONG: real 
+
+- Intero > 0:   
+
+    CREATE DOMAIN IntegerGZ AS Integer
+        CHECK(value IS NOT NULL AND value > 0);
+
+- (1..5):
+
+    CREATE DOMAIN Integer1_5 As Integer 
+        CHECK(value IS NOT NULL AND value >= 1 AND value <= 5);
+
+- Genere: 
+
+    CREATE TYPE Genere AS Enum
+        ('maschio', 'femmina');
+
+- Categoria:
+
+    CREATE TYPE Categoria AS Enum 
+        ('piu chilometri', 'piu allenamenti');
+
+- Durata:
+
+    CREATE Type Durata AS (
+        inizio timestamp,
+        fine timestamp
+    );

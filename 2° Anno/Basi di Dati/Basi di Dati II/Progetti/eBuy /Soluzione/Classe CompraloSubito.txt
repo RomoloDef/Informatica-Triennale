@@ -1,0 +1,15 @@
+Specifica classe CompraloSubito
+
+prezzoCorrente(): Denaro
+	pre: nessuna
+	post: 
+		result è this.prezzoBase.
+
+		Formalmente, result soddisfa la seguente formula:
+
+			prezzoBase(this, result).
+
+
+
+
+

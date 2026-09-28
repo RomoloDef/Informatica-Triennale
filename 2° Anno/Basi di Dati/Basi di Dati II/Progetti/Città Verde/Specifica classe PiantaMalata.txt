@@ -1,0 +1,11 @@
+Specifica classe PiantaMalata
+
+- storicoMalattie(): Intero
+
+pre: nessuna 
+
+post:
+
+    result = { mal | EXIST em EpisodioMalattia(em) AND successo(mal, em) AND episodio(em, p) }
+
+    

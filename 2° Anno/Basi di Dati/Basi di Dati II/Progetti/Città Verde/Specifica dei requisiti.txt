@@ -1,0 +1,81 @@
+Specifica dei requisiti
+
+1. SoggettoVerde
+    1.1 data_piantumazione: Data 
+    1.2 posizione_geografica: Coordinate
+    1.3 specie: Specie
+    1.4 categoria_rischio: {trascurabile, basso, medio, alto}
+    1.5 dimensioni_fisiche: 
+        1.5.1 nome: Stringa
+        1.5.2 unità_misura: Stringa
+
+    1.6 ValoreDimensione --> Association Class
+        1.6.1 valore: Real
+
+2. AreaVerde 
+    2.1 denominazione: Stringa
+
+    2.2 AreaFruibile
+        2.2.1 nome: Stringa
+        
+        2.2.2 AreaSensibile
+
+    2.3 AreaNonFruibile
+        2.3.1 nome: Stringa
+
+3. PiantaRimossa
+    3.1 data_rimozione: data
+    3.2 causa: {completamento del ciclo di vita, sostituzione, cedimento, rischio alto, necessità di costruzione}
+
+4. Operatore
+    4.1 nome: Stringa
+    4.2 cognome: Stringa 
+    4.3 data_inizio_servizio: Data
+    4.4 data_fine_servizio: Data --> un'altra classe di Operatore
+    4.5 codice_fiscale: CodiceFiscale 
+
+5. Squadra
+    5.1 codice_identificativo: Stringa 
+    5.2 data_formazione: Data 
+    5.3 data_scioglimento: Data --> un'altra classe di Squadra
+    5.4 membri: Intero > 0
+    5.5 capo: Operatore
+
+6. Attrezzatura
+    6.1 nome: Stringa 
+    6.2 tipologia: {'strumento leggero' , 'veicolo' , 'veicolo speciale'}
+
+7. Intervento
+    7.1 squadra_intervenuta: (vedi req 5)
+    7.2 area_verde: (vedi req 2)
+    7.3 data_inizio: DataOra 
+    7.4 durata_attesa: Durata 
+    7.5 tipologia_attività: {piantumazione, monitoraggio, potatura, abbattimento, sfalcio, cura sanitaria}
+    7.6 priorità: Intero (0..10)
+    7.7 piante: (vedi req 1)
+    7.8 attrezzatura: (vedi req 6)
+    7.9 minimo_operatori: Intero > 0
+    7.10 istante_acquisizione: DataOra 
+
+8. InterventoCompletato
+    8.1 istante_completamento: DataOra
+
+9. Malattia
+    9.1 nome_scientifico: Stringa
+    9.2 nome_volgare: Stringa
+    9.3 gravità: {bassa, media, alta, mortale}
+
+10. PiantaMalata
+    10.1 storico_malattie()
+
+11. EpisodioMalattia
+    11.1 data_scoperta: dataOra
+    11.2 risoluzione: Booleano
+
+12. PiantaMalataCurata
+    12.1 intervento: DataOra
+    12.2 guarigione: Stringa
+
+
+
+

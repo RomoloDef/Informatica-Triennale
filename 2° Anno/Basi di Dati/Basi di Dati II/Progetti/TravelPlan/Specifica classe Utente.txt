@@ -1,0 +1,31 @@
+Specifica classe Utente
+
+- calcolaPunteggio(u: Utente, p: Intero): Intero
+
+pre: EXIST Utente(u)
+
+post: 
+        
+        F = { f | EXIST v, u (Viaggio(v) AND Utente(u) AND Feedback(f, v) AND ut_org(u, v))}
+
+        N = | F |
+
+        S = SUM     { n | EXIST f ((f ∈ F) AND voto(f,n))}
+            (n > 0)
+
+        A = | { f ∈ F | EXIST n (voto(f,n) AND n>= 4) } |
+
+        result = (
+
+            ((N = 0 OR (S/N) <= 3) -> p = 0)
+
+            AND
+
+            ((N > 0 OR (S/N) > 3) -> p = 0.1 * A)
+
+        )
+
+        
+        
+
+            

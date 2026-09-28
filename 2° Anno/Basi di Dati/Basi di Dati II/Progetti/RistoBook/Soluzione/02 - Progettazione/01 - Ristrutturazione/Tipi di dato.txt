@@ -1,0 +1,92 @@
+CREATE DOMAIN Stringa AS VARCHAR;
+
+CREATE DOMAIN Email AS Stringa 
+	CHECK (value ~ '...');
+
+CREATE DOMAIN IntegerGZ AS Integer
+	CHECK (value > 0);
+
+CREATE DOMAIN PartitaIVA AS Stringa 
+	CHECK (value ~ '...'); -- standard internazionale
+
+
+CREATE TYPE __Indirizzo__ AS (
+	via Stringa,
+	civico Stringa
+);
+
+CREATE DOMAIN Indirizzo AS __Indirizzo__
+	CHECK ( (value).via IS NOT NULL and (value).civico IS NOT NULL
+			and (value).civico ~ '...')
+;
+
+
+
+CREATE DOMAIN Sconto AS NUMERIC(..., ...) 
+	CHECK (value > 0 and value <= 1);
+
+
+CREATE TYPE __FasciaOraria__ AS (
+	da TIME,
+	a TIME
+);
+
+CREATE DOMAIN FasciaOraria AS __FasciaOraria__ 
+	CHECK ( (value).da is not null 
+	  and (value).a is not null and (value).a >= (value).da );
+
+
+CREATE FUNCTION FasciaOraria_contiene_time(f FasciaOraria, o TIME): 
+	//	result = true <--> EXISTS x,y
+	//				da(this,x) and a(this,y) and x <= o and o <= y
+	RETURN o BETWEEN f.da and f.a; -- da finalizzare in pgplsql
+
+
+CREATE TYPE __Periodo__ AS (
+	da Date,
+	a Date
+);
+
+CREATE DOMAIN Periodo as __Periodo__ 
+	CHECK ((value).da is not null and (value).a is not null 
+	  and (value).a >= (value).da );
+
+-- Nota: PostgreSQL ha la possibilità di definire RANGE TYPES, che gestiscono i vincoli come "a >= da".  Sebbene supporti nativamente range di timestamp (tsrange), non offre il tipo "range di date". Allo scopo si può usare tsrange (con opportuni accorgimenti) oppure creare un proprio RANGE TYPE (basta definire il tipo base, DATE in questo caso, e alcune altre informazioni di supporto). Si veda la documentazione di PostgreSQL sui RANGE TYPES.
+
+
+
+CREATE TYPE __PeriodoStrutturato__ AS (
+	per Periodo,
+	g_sett BIT(7), -- BitString lunga 7
+	orario FasciaOraria ARRAY -- piccolo abuso, ma le fasce sovrapposte non ci creano problemi
+);
+
+CREATE DOMAIN PeriodoStrutturato AS __PeriodoStrutturato__ 
+	CHECK ( (value).per is not null and 
+			(value).g_sett is not null and (value).orario is not null);
+
+
+-- Data una bitstring per PeriodoStrutturato.g_sett ed una posizione, 
+-- restituisce TRUE | FALSE
+-- Questo è il prezzo da pagare per aver scelto di codificare i giorni della settimana di validità di una promozione tramite una BitString! (PostgreSQL non ha una funzione del tipo di dato che permette il look-up di un bit data la sua posizione).
+
+CREATE FUNCTION PeriodoStrutturato_dow_get(bs bit(7), pos integer) RETURNS BOOLEAN AS $$
+DECLARE
+	result boolean := FALSE;
+BEGIN	
+	result = ( substring( bs from pos for 1 ) = '1' )
+	return result;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION PeriodoStrutturato_contiene(d DATE) RETURNS BOOLEAN AS...
+	Da implementare per esercizio
+
+Implementare similmente le altre operazioni del tipo di dato isolate in fase di analisi.
+
+
+
+CREATE TYPE StatoPrenotazione AS ENUM 
+	('pendente', 'annullata', 'accettata', 'rifiutata', 'completata', 'nonutilizzata');
+
+

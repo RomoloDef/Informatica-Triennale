@@ -1,0 +1,39 @@
+Specifica dei requisiti TravelPlan
+
+1. Utente:
+    1.1 nome: Stringa
+    1.2 cognome: Stringa
+    1.3 indirizzo_email : Email 
+    1.4 città_provenienza: (vedi req)
+    1.5 data_iscrizione: Data
+    1.6 viaggi --> come organizzatore o come partecipante
+
+2. Viaggio:
+    2.1 nome: Stringa
+    2.2 numero_minimo: Intero > 0
+    2.3 numero_massimo: Intero > 0
+
+3. Attività:
+    3.1 nome: Stringa
+    3.2 istante_inizio: DataOra
+    3.3 durata: Durata 
+    3.4 prezzo: Reale > 0
+    3.5 luogo: (vedi req 4)
+    3.6 biglietti/prenotazioni: Stringa
+    3.7 numero_participanti: operazione
+
+4. Luogo:
+    4.1 indirizzo: Indirizzo
+    4.2 città 
+    4.3 regione
+    4.4 nazione
+
+5. Spostamenti: --> sottoclasse Attività
+    5.1 luogo_p: (vedi req 4)
+    5.2 luogo_a: (vedi req 4)
+
+6. Pernottamenti: --> sottoclasse Attività
+
+7. Feedback:
+    7.1 punteggio: (1...5)
+

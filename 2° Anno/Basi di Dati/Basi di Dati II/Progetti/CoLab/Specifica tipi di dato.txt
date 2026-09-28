@@ -1,0 +1,32 @@
+Specifica dei tipi di dato 
+
+- Indirizzo:
+    via: Stringa
+    civico: Stringa 
+
+- Email: Stringa ~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+
+- IVA: Stringa ~ ^\d{11}$
+
+- Mese: {Gennaio, Febbrario, Marzo, Aprile, maggio, Giugno, Luglio, Agosto, Settembre, Otttobre, Novembre, Dicembre}
+
+- Periodo: {
+    da: DataOra
+    a: DataOra
+}
+
+[V.Periodo.da.a]
+
+FOR ALL p, x, y Periodo(p) AND da(p, x) AND a(p, y) --> y >= x
+
+- fasciaOraria: {
+    da: Ora
+    a: Ora
+}
+
+[V.FasciaOraria.da.a]
+
+FOR ALL p, x, y Periodo(p) AND da(p, x) AND a(p, y) --> y >= x
+
+
+

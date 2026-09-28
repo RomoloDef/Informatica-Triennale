@@ -1,0 +1,7 @@
+Use Case UtenteHost
+
+creaCasaOspitante()
+
+	INSERT INTO CasaOspitante(id, distanza_centro, distanza_stazione, numero_adulti,
+	numero_bambini, non_disponibile)
+	VALUES ('...', ...)

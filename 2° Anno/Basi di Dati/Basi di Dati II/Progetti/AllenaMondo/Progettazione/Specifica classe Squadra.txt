@@ -1,0 +1,15 @@
+Specifica classe Squadra 
+
+- componenti(): Sportivo[0..*]
+
+pre:
+
+post:
+
+    algoritmo:
+
+    SELECT i.sportivo
+    FROM iscritto_alla i, squadra s
+    WHERE i.squadra = s.nome
+
+    esegui la query e memorizzane il risultato in Q

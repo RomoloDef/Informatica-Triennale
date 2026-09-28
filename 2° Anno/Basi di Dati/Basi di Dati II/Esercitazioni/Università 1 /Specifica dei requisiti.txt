@@ -1,0 +1,30 @@
+Specifica dei Requisiti
+
+1. Studente
+    1.1 nome: Stringa
+    1.2 codice_fiscale: Codice {id1}
+    1.3 numero_matricola: Stringa {id2}
+    1.4 data_nascita: Data 
+    1.5 luogo_nascita: ???
+    1.6 corso_laurea: (vedi req 3)
+    1.7 insegnamenti_superati: (vedi req 5)
+
+2. Professore
+    2.1 nome: Stringa
+    2.2 data_nascita: Data 
+    2.3 codice_fiscale: Codice {id1}
+    2.4 luogo_nascita: ???
+    2.5 insegnamenti_erogati: (vedi req 5)
+
+3. Corso
+    nome: Stringa
+    facoltà: (vedi req 4)
+
+4. Facoltà
+    nome: Stringa 
+
+5. Insegnamento:
+    codice: Stringa
+    nome: Stringa
+    ore_lezione: Intero > 0
+    corsi_di_laurea: (vedi req 3)

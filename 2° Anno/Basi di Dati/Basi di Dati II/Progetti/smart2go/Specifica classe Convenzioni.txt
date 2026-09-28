@@ -1,0 +1,14 @@
+[V.convenzioni.noleggio]
+
+FOR ALL c1, c2, n (Convenzioni(c1) AND Convenzioni(c2) AND Noleggio(n) AND nol_conv(n, c1) AND nol_conv(n, c2) AND c1 != c2)
+
+- sconto_applicato(): Reale > 0
+
+pre: 
+
+post:
+
+    FOR ALL n, c, ts, t (Noleggio(n) AND Convenzioni(c) AND nol_conv(n, c) AND calcola_tariffa(n, t) AND prezzo_sconto(c, ts)) 
+
+    --> result = t * ts
+

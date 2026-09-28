@@ -1,0 +1,17 @@
+Specifica dei tipi di dato:
+
+- IVA: Stringa secondo standard
+
+- Durata: 
+    da: Intero 
+    a: Intero 
+
+- Mail: Stringa secondo standard
+
+- Codice: Stringa secondo standard
+
+- Periodo:
+    da: DataOra
+    a: DataOra 
+
+    

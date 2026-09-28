@@ -1,0 +1,92 @@
+Riassunto su tutti gli argomenti di SQL utilizzando per capirli le QUERY assegnate.
+
+1. Quali sono i Professori (sia Associati che Ordinari) il cui cognome comincia con la lettera ‘V’? - Accademia 4
+
+SELECT p.nome, p.cognome
+FROM Persona p
+WHERE p.cognome LIKE 'V%'
+
+2. Quali sono i cognomi distinti di tutti gli strutturati? - Accademia 4
+
+SELECT DISTINCT p.cognome
+FROM Persona p
+
+3. Quali sono il nome, il cognome e la posizione dei Ricercatori che hanno più di un impegno per didattica? - Accademia 5
+
+SELECT DISTINCT p.nome, p.cognome, p.posizione
+FROM persona p, attivitanonprogettuale anp1, attivitanonprogettuale anp2
+WHERE p.id = anp1.persona
+AND p.id = anp2.persona
+AND anp1.tipo = 'Didattica'
+AND anp2.tipo = 'Didattica'
+AND anp1.id <> anp2.id
+
+4. Quali sono il nome e il cognome degli strutturati che nello stesso giorno sono assenti e hanno attività progettuali? - Accademia 5
+
+SELECT p.nome, p.cognome
+FROM Persona p, Attivitaprogetto ap, Assenza a
+WHERE p.id = ap.persona
+AND p.id = a.persona
+AND ap.giorno = a.giorno
+
+5. Qual è la media, il massimo e il minimo delle ore delle attività relative al progetto ‘Pegasus’ ? - Accademia 6 
+
+SELECT avg(oredurata), min(oredurata), max(oredurata)
+FROM Attivitaprogetto ap, Progetto p
+WHERE p.nome = 'Pegasus'
+AND ap.progetto = p.id 
+
+6. Quanti sono gli strutturati con stipendio ≥ 40000? - Accademia 6
+
+SELECT COUNT (DISTINCT stipendio)
+FROM Persona p
+WHERE p.stipendio >= 40000
+
+7. Quali sono i progetti la cui durata è superiore alla media delle durate di tutti i progetti? Restituire nome dei progetti e loro durata in giorni. - Accademia 7
+
+SELECT p.nome, (p.fine-p.inizio) as durata_giorni
+FROM Progetto p
+WHERE (p.fine-p.inizio) > (
+	SELECT avg(p.fine - p.inizio) as durata
+	FROM Progetto p
+)
+
+8. Quali sono i progetti terminati in data odierna che hanno avuto attività di tipo “Dimostrazione”? Restituire nome di ogni progetto e il numero complessivo delle ore dedicate a tali attività nel progetto. - Accademia 7
+
+SELECT distinct progetto.nome, sum(attivitaprogetto.oredurata) as ore_dimostrazione
+FROM progetto, attivitaprogetto
+WHERE progetto.id = attivitaprogetto.progetto
+AND progetto.fine < CURRENT_DATE
+AND attivitaprogetto.tipo = 'Dimostrazione'
+GROUP BY progetto.nome
+
+9. Quali sono le persone (id, nome e cognome) che non hanno mai partecipato ad alcun progetto durante la durata del progetto “Pegasus”? - Accademia 8
+
+SELECT DISTINCT p.id, p.nome, p.cognome
+FROM Persona p
+WHERE (id, nome, cognome) NOT IN (
+	SELECT p.id, p.nome, p.cognome
+	FROM Persona p, Progetto pr, Attivitaprogetto ap
+	WHERE ap.persona = p.id
+	AND pr.nome = 'Pegasus'
+	AND ap.giorno BETWEEN pr.inizio AND pr.fine
+)
+
+ORDER BY p.id
+
+10. Quali sono i progetti con un budget inferiore alla media, ma con un numero complessivo di ore dedicate alle attività di ricerca sopra la media? - Accademia 8
+
+SELECT DISTINCT distinct prj.id, prj.nome 
+FROM progetto as prj, attivitaprogetto as ap
+WHERE prj.id = ap.progetto
+AND prj.budget < (SELECT avg(prj.budget) FROM progetto as prj)
+AND ap.oredurata > (SELECT avg(ap.oredurata) FROM attivitaprogetto AS ap where tipo = 'Ricerca e Sviluppo')
+ORDER BY id asc
+
+	
+
+
+
+
+
+

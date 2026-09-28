@@ -1,0 +1,65 @@
+Specifica Use Case Sistema
+
+- Dato un corso, il sistema deve calcolare l'edizione che ha avuto il numero minore di studenti che hanno raggiunto i requisiti per sostenere l'esame di stato finale. Uno studente
+  non può accedere all'esame di stato se (1) non ha accumolato il numero totale di crediti necessari (2) non ha terminato il tirocinio
+
+calcolaEdizioneMinima(c: Corso): Edizione[0..*]
+
+pre:
+
+    EXIST s Studente(S)
+
+post:
+
+    Algoritmo:
+
+    WITH StudentiConCrediti (
+        SELECT s.*
+        FROM Studente s, Iscrizione i, Edizione e, Modulo m, Blocco b
+        WHERE s.persona = stu_isc.studente 
+        AND i.id = stu.isc.iscrizione 
+        AND e.iscrizione = iscrizione.id 
+        AND m.edizione = e.anno 
+        AND m.blocco = b.id
+        AND (b.ottenimento_crediti > e.crediti_per_esame)
+    ),
+
+    StudentiCheHannoTerminatoTirocinio (
+        SELECT s.persona, e.anno AS edizione
+        FROM Studente s, Tirocinio t, stu_isc si, Iscrizione i, Edizione e
+        WHERE s.tirocinio_effettuato = t.id
+        AND si.studente = s.persona
+        AND i.id = si.iscrizione
+        AND e.iscrizione = i.id
+        AND t.data_fine > t.data_inizio
+    ),
+
+    StudentiConRequisiti (
+        SELECT s.persona, edizione
+        FROM StudentiCheHannoTerminatoTirocinio
+        INTESERCT
+        SELECT s.persona, edizione
+        FROM StudentiConCrediti
+    ),
+
+    CardinalitaPerEdizione AS (
+        SELECT edizione, COUNT(*) AS num_studenti
+        FROM StudentiConRequisiti
+        GROUP BY edizione
+    ),
+
+    MinCardinalita AS (
+        SELECT MIN(num_studenti) AS minimo
+        FROM CardinalitaPerEdizione
+    )
+
+    SELECT cpe.edizione
+    FROM CardinalitaPerEdizione cpe
+    JOIN MinCardinalita mc 
+    ON cpe.num_studenti = mc.minimo;
+
+    
+    esegui questa query e salvane il risultato in Q
+
+
+

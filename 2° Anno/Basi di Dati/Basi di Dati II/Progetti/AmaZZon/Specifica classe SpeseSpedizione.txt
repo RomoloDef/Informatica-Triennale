@@ -1,0 +1,29 @@
+Specifica classe SpeseSpedizione
+
+[V.SpeseSpedizione.costo]
+
+FOR ALL s (SpeseSpedizione) --> EXIST c costo(c, s) <-> EXIST n, naz (numero_pezzi_acquistati(n, s) AND Nazione(naz) AND verso(s, naz) AND n = 1 )
+
+- costo_ridotto(): Reale > 0
+
+pre:
+
+post:
+
+    FOR ALL a, s, n (Articolo(a) AND SpeseSpedizione(s) AND art_spes(a, s) AND numero_pezzi_acquistati(n, s)) -->
+
+    result = 4.99 <-> n >= 2 AND n <= 4
+
+    AND 
+
+    result = 3.99 <-> n >= 5 AND n <= 9
+
+    AND 
+
+    result = 2.99 <-> n >= 10 AND n <= 99
+
+    AND
+
+    result = 0 <-> n >= 100
+
+

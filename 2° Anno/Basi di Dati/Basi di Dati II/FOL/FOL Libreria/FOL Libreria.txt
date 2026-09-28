@@ -1,0 +1,34 @@
+Modellare, mediante formule in logica del primo ordine, le seguenti affermazioni,
+dopo aver progettato opportuni insiemi di simboli di predicato e/o funzione:
+
+1. Ogni libro ha almeno un autore.
+
+F = {Libro/1, Autore/1, possedere/2}
+
+FOR ALL l (Libro(l)) --> EXIST a (Autore(a) AND possedere(l, a))
+
+2. Non ci sono libri che hanno più di tre co-autori.
+
+F = {Libro/1, Co-Autore/1, partecipa/2}
+
+NOT EXIST l, c1, c2, c3, c4 (Libro(l) AND Co-Autore(c1) AND Co-Autore(c2) AND Co-Autore(c3) 
+AND Co-Autore(c4) AND partecipa(l, c1) AND partecipa(l, c2) AND partecipa(l, c3) AND partecipa(l, c4) AND c1 != c2 != c3 != c4)
+
+3. Ogni utente può prendere in prestito un numero illimitato di libri, ma solo uno per ogni titolo.
+
+F = {Utente/1, Libro/1, prestito/2, Copia/1, copia_libro/2}
+
+FOR ALL u, l, c1, c2 (Utente(u) AND Libro(l) AND prestito(l, p) AND Copia(c1) AND Copia(c2) AND copia_libro(l, c1) AND copia_libro(l, c2) --> c1 = c2)
+
+4. C'è almeno un libro che non è disponibile per il prestito.
+
+F = {Libro/1, Prestito/1, non_disponibile/2}
+
+FOR ALL p (Prestito(p)) --> EXIST l (Libro(l) AND non_disponibile(l, p))
+
+5. Ogni utente è registrato in una e una sola biblioteca. - Non ci sono due biblioteche in cui è registrato lo stesso utente
+
+F = {Utente/1, Biblioteca/1, registrazione/2}
+
+NOT EXIST b1, b2, u (Utente(u) AND Biblioteca(b1) AND Biblioteca(b2) AND registrazione(u, b1) AND registrazione(u, b2) AND b1 != b2)
+

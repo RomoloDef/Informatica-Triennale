@@ -1,0 +1,97 @@
+Ulteriori vincoli esterni
+
+dovuti all'atto di ristrutturazione
+
+[V.Cliente.disj]
+
+NOT EXIST c, i, p (Cliente(c) AND Persona(p) AND Impresa(p) AND is_Persona(c, p) AND is_Impresa(c, i))
+
+[V.Cliente.compl]
+
+FOR ALL c Cliente(c) --> (EXIST p AND is_Persona(c, p)) OR (EXIST i is_Impresa(c,i))
+
+Trigger 1. - disgiunzione
+
+Operazione da intercettare: Inserimento o Modifica in Persona e Impresa 
+
+Quando intercettarle: BEFORE
+
+Funzione:
+
+    - sia iError = FALSE
+
+    - sia new l'ennupla che si sta inserendo
+
+    - se si sta inserendo o modificando una ennupla in Persona allora:
+
+    - iError := EXIST (SELECT * FROM Persona WHERE Persona.id = new.persona)
+
+    - altrimento se lo si fa in Impresa allora:
+
+    - iError := EXIST (SELECT * FROM Impresa WHERE Impresa.id = new.impresa)
+
+    - se iError = TRUE allora blocca l'operazione
+
+    - altrimenti successo
+
+Trigger 2 - completezza
+
+Operazione da intercettare: Inserimento in Cliente 
+
+Quando intercettarle: AFTER 
+
+Funzione:
+
+    - sia iError = FALSE
+
+    - sia new l'ennupla che si sta inserendo
+
+    - se si sta inserendo una ennupla in Cliente allora:
+
+    - iError := NOT EXIST (SELECT Cliente FROM Persona WHERE persona.id = Cliente.persona UNION SELECT Cliente FROM Impresa WHERE impresa.id = Cliente.impresa)
+
+    - se iError = TRUE allora blocca l'operazione
+
+    - altrimenti successo
+
+Trigger 3 - completezza
+
+Operazione da intercettare: Rimozione in Persona o Impresa 
+
+Quando intercettarle: AFTER 
+
+Funzione:
+
+    - sia iError = FALSE
+
+    - sia new l'ennupla che si sta inserendo
+
+    - se si sta rimuovendo una ennupla in Persona o Impresa allora:
+
+    - iError :=  EXIST (SELECT * 
+    
+                        FROM (Cliente LEFT OUTER JOIN Persona ON cliente.id = cliente.persona)
+                        
+                        LEFT OUTER JOIN Impresa ON cliente.id = cliente.impresa
+                        
+                        WHERE cliente.id = old.cliente 
+                        
+                        AND (cliente.persona IS NOT NULL) AND (impresa.persona IS NOT NULL)
+                        
+                        )
+
+    - se iError = TRUE allora blocca l'operazione
+
+    - altrimenti successo
+
+[V.Accesso.Fusione]
+
+FOR ALL a (Accesso(a)) --> (tipo('AccessoConcluso') <-> EXIST d durata_minuti(a, d))
+
+[V.Utilizzo.Fusione]
+
+Stessa cosa dell'accesso
+                              
+
+
+

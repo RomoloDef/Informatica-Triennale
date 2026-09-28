@@ -1,0 +1,61 @@
+Specifica Use-Case UfficioSinistri
+
+- calcolaClasseRischio(s: Socio): Intero >= 0
+
+CREATE OR REPLACE FUNCTION calcolaClasseRischio(socio_id varchar)
+RETURNS integer AS $$
+DECLARE
+    total_sinistri INTEGER := 0;
+BEGIN
+    -- Conta sinistri SENZA controparte
+    SELECT COUNT(*)
+    INTO total_sinistri
+    FROM Sinistri s
+    JOIN SinistriSenzaControparte ssc ON s.id = ssc.sinistro
+    JOIN Noleggio n ON s.noleggio = n.id
+    JOIN effettua e ON n.id = e.noleggio
+    WHERE e.socio = socio_id
+      AND s.quando >= NOW() - INTERVAL '3 years';
+
+    -- Aggiunge sinistri CON controparte
+    SELECT total_sinistri + COUNT(*)
+    INTO total_sinistri
+    FROM Sinistri s
+    JOIN SinistriConControparte scp ON s.id = scp.sinistro
+    JOIN Noleggio n ON s.noleggio = n.id
+    JOIN effettua e ON n.id = e.noleggio
+    WHERE e.socio = socio_id
+      AND s.quando >= NOW() - INTERVAL '3 years';
+
+    -- Calcolo classe di rischio
+    IF total_sinistri = 0 THEN
+        RETURN 0;
+    ELSIF total_sinistri < 10 THEN
+        RETURN total_sinistri;
+    ELSE
+        RETURN 10;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+- ricercaUltimoGuidatore(a: Auto, istante: DataOra): Socio
+
+pre: nessuna
+
+post:
+
+    result = { s | FOR ALL Socio(s) AND Noleggio(n) AND soc_nol(s, n) AND Auto(a) AND istante_iniziale(n, istante) AND nol_aut(n, a)}
+
+     algoritmo:
+
+     SELECT s.*
+     FROM Socio s, Noleggio n, Auto a
+     WHERE s.id = n.socio
+     AND n.id = a.noleggio
+     AND n.istante_iniziale = istante
+
+     dove a e istante sono in input 
+
+     restituisci il risultato di questa query in Q

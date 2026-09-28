@@ -1,0 +1,16 @@
+Use-case Statistiche ristoranti
+
+
+In particolare, dato un periodo di tempo, RistoBook deve permettere calcolare, per ogni promozione del ristorante considerato, il numero medio di clienti al giorno (dove la media è calcolata sui giorni di validità della promozione) che ha utilizzato quella promozione in una prenotazione.
+
+
+
+statistiche_promozioni(r:Ristorante, p:Periodo): 
+						(prom:Promozione, avg_clienti: Reale >= 0) [0..*]
+
+	pre: nessuna	
+	post:
+		result = { prom, x |
+							Promozione(prom) and rist_prom(r, prom) and
+							n_clienti_medio_g(prom, p, x)
+		}

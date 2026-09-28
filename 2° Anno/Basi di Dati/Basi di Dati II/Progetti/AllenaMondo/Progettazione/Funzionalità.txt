@@ -1,0 +1,55 @@
+Specifica delle Funzionalità
+
+- MaxSportAmico(s: Sportivo, s': Sportivo, i: DataOra, f: DataOra): Sport[0..*]
+
+pre:
+
+post:
+
+    algoritmo:
+
+    WITH
+    -- Attività dell’amico s' nell’intervallo [i, f]
+        AttivitaAmico AS (
+            SELECT a.id AS attivita_id,
+                a.sport_esercitato,
+                s1.nome_utente AS sportivo,
+                s2.nome_utente AS amico
+            FROM AttivitaSportiva a, Sportivo s1, Sportivo s2, amicizia am
+            WHERE am.richiedente = s1.nome_utente
+            AND am.accettatore = s2.nome_utente
+            AND a.sportivo_tracciatore = s2.nome_utente
+            AND a.istante_inizio > '2025-01-01 00:00:00'
+            AND a.istante_fine   < '2025-12-31 23:59:59'
+    ),
+
+    -- Attività dello sportivo s nello stesso sport
+        AttivitaS AS (
+            SELECT a.id AS attivita_id,
+                a.sportivo_tracciatore,
+                a.sport_esercitato,
+                (a.istante_fine - a.istante_inizio) AS durata
+            FROM AttivitaSportiva a, AttivitaAmico aa
+            WHERE a.sportivo_tracciatore = aa.sportivo
+            AND a.sport_esercitato = aa.sport_esercitato
+    ),
+
+    -- Somma delle durate per sport
+        Somme AS (
+            SELECT sport_esercitato, SUM(durata) AS totale
+            FROM AttivitaS
+            GROUP BY sport_esercitato
+    ),
+
+    -- Troviamo la durata massima
+        MaxDurata AS (
+            SELECT MAX(totale) AS max_totale
+            FROM Somme
+    )
+
+    -- Risultato finale: sport associati al massimo
+    SELECT so.sport_esercitato AS sport
+    FROM Somme so, MaxDurata m
+    WHERE so.totale = m.max_totale;
+
+    

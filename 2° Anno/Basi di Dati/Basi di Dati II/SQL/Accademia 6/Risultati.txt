@@ -1,0 +1,105 @@
+1. Quanti sono gli strutturati di ogni fascia?
+
+select distinct persona.posizione, count(posizione) as numero
+from persona
+group by persona.posizione
+order by numero asc
+
+2. Quanti sono gli strutturati con stipendio ≥ 40000?
+
+select distinct count(posizione) as numero
+from persona
+where persona.stipendio >= 40000
+
+3. Quanti sono i progetti già finiti che superano il budget di 50000?
+
+select distinct count(progetto.nome) as numero
+from progetto
+where progetto.inizio < progetto.fine
+and progetto.budget >= 50000
+
+4. Qual è la media, il massimo e il minimo delle ore delle attività relative al progetto ‘Pegasus’ ?
+
+select avg(attivitaprogetto.oredurata) as media, 
+max(attivitaprogetto.oredurata) as massimo,
+min(attivitaprogetto.oredurata) as minimo
+from attivitaprogetto, progetto
+where progetto.nome = 'Pegasus'
+and attivitaprogetto.progetto = progetto.id
+
+5. Quali sono le medie, i massimi e i minimi delle ore giornaliere dedicate al progetto ‘Pegasus’ da ogni singolo docente?
+
+select pers.id as id persona,
+pers. nome as nome,
+pers. cognome as cognome,
+avg (a. oreDurata) as
+media,
+max(a. oreDurata) as massimo,
+min(a.oreDurata) as minimo
+from Persona pers, Progetto pri, AttivitaProgetto a
+where prj. nome = 'Pegasus'
+and a.progetto = prj.id
+and pers.id = a. persona
+group by pers.id, pers. nome, pers. cognome;
+
+6. Qual è il numero totale di ore dedicate alla didattica da ogni docente?
+
+select persona.id as id_persona,
+persona.nome as nome,
+persona.cognome as cognome,
+sum(attivitanonprogettuale.oredurata) as ore_didattica
+from persona, attivitanonprogettuale
+where attivitanonprogettuale.tipo = 'Didattica'
+and attivitanonprogettuale.persona = persona.id
+group by persona.id, persona.nome, persona.cognome
+
+7. Qual è la media, il massimo e il minimo degli stipendi dei ricercatori?
+
+select avg(persona.stipendio) as media,
+min(persona.stipendio) as minimo,
+max(persona.stipendio) as massimo
+from persona
+where persona.posizione = 'Ricercatore'
+
+8. Quali sono le medie, i massimi e i minimi degli stipendi dei ricercatori, dei professori associati e dei professori ordinari?
+
+select distinct persona.posizione as posizione,
+avg(persona.stipendio) as media,
+min(persona.stipendio) as minimo,
+max(persona.stipendio) as massimo
+from persona
+group by persona.posizione
+order by posizione desc
+
+9. Quante ore ‘Ginevra Riva’ ha dedicato ad ogni progetto nel quale ha lavorato?
+
+select progetto.id as id_progetto,
+progetto.nome as nome,
+sum(attivitaprogetto.oredurata) as totale_ore
+from progetto, attivitaprogetto, persona
+where progetto.id = attivitaprogetto.progetto
+and persona.id = attivitaprogetto.persona
+and persona.nome = 'Ginevra'
+and persona.cognome = 'Riva'
+group by progetto.id, progetto.nome
+
+10. Qual è il nome dei progetti su cui lavorano più di due strutturati?
+
+select distinct progetto.id as id_progetto,
+progetto.nome as progetto
+from progetto, attivitaprogetto, persona
+where progetto.id = attivitaprogetto.progetto
+and persona.id = attivitaprogetto.persona
+group by progetto.id, progetto.nome
+having count(distinct persona.id) > 2
+
+11. Quali sono i professori associati che hanno lavorato su più di un progetto?
+
+select distinct persona.id as id_persona,
+persona.nome as nome,
+persona.cognome as cognome
+from persona, progetto, attivitaprogetto
+where persona.id = attivitaprogetto.persona
+and progetto.id = attivitaprogetto.progetto
+and persona.posizione = 'Professore Associato'
+group by persona.id, persona.nome, persona.cognome

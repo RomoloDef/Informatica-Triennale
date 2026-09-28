@@ -1,0 +1,34 @@
+Si tratta di un sistema di compravendita di oggetti. Ci interessa sapere:
+
+1. Utente Registrato:
+	1.1 nickname: Stringa {id}
+	1.2 data_registrazione: Data
+
+2. Oggetto_in_vendita:
+	2.1 descrizione: Stringa
+	2.2 categoria:
+	2.3 prezzo: Reale > 0
+	2.4 metodo_di_pagamento: Enumerativo {bonifico, carta_di_credito}
+	2.5 Nuovo:
+		2.5.1 garanziaN: Intero > 2
+	2.6 Usato:
+		2.6.1 garanziaU: 
+		2.6.2 condizioni: Enumerativo {ottimo, buono, discreto, da sistemare}
+	
+
+3. Annuncio (Post): 
+	3.1 PostConAsta:
+		3.1.1 prezzoIniziale: Reale > 0
+		3.1.2 rialzo: Reale > 0
+		3.2.3 istanteScadenza: DataOra
+	3.2 CompraloSubito:
+		3.2.1 prezzoVendita: Reale > 0
+
+4. Bid (Offerta d'asta)
+	4.1 istanteProposto: DataOra
+	4.2 Bidder (vedi requisito 1):
+	4.3 prezzo: 
+
+5. Asta:
+	
+	

@@ -1,0 +1,24 @@
+Specifica dei tipi di dato 
+
+- Coordinate: {
+    latitudine: Stringa ~ ^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$
+    longitudine: Stringa ~ ^[-+]?((1[0-7]\d)|(\d{1,2}))(\.\d+)?|180(\.0+)?$
+} 
+
+- Specie: {
+    nome_scientifico: Stringa
+    nome_comune: Stringa
+}
+
+- Rischio: {trascurabile, basso, medio, alto}
+
+- Causa: {completamento del ciclo di vita, sostituzione, cedimento, rischio alto, necessità di costruzione}
+
+- CodiceFiscale: Stringa ~ ^[A-Z0-9]{3,20}(-[A-Z0-9]{1,10})*$
+
+- Tipologia: {strumento leggero, veicolo, veicolo speciale}
+
+- TipologiaAtt: {piantumazione, monitoraggio, potatura, abbattimento, sfalcio, cura sanitaria}
+
+- Gravità: {bassa, media, alta, mortale}
+

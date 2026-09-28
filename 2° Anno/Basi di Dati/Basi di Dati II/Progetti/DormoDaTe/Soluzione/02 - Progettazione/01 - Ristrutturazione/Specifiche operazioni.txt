@@ -1,0 +1,3 @@
+Specifiche ristrutturate delle operazioni di classe ed use-case
+
+Per esercizio.

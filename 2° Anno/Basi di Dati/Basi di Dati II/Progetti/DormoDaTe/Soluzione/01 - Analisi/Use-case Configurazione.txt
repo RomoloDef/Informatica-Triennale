@@ -1,0 +1,31 @@
+Use-case Configurazione
+
+nuova_nazione(nome:Stringa)
+	pre: not EXISTS n Nazione(n) and nome(n, nome)
+	post:
+		Side-effect:
+			Nuovo elem del dom. di interpr. ALPHA
+
+			Nazione(ALPHA)
+			nome(ALPHA, nome).
+
+
+nuova_citta(nome:Stringa, nazione:Nazione)
+	...
+
+
+
+nuovo_stato_prenotazione(nome:Stringa, iniziale:Booleano, recensioni_ammesse:Booleano, sistemazioni_riservate:Booleano)
+	...
+
+modifica_stato_prenotazione(s:StatoPrenotazione, iniziale:Booleano, recensioni_ammesse:Booleano, sistemazioni_riservate:Booleano)	
+	...
+
+
+nuova_transizione_prenotazione(da:StatoPrenotazione, a:StatoPrenotazione)
+	...
+
+...
+...	
+
+

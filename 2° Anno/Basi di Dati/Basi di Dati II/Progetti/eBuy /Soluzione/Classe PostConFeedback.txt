@@ -1,0 +1,28 @@
+Specifica classe PostConFeedback
+
+acquirente() : Privato
+	pre: esiste (u,this): aquirente
+	post: 
+		result è tale che:
+			acquirente(p,result)
+
+
+Vincoli esterni
+
+[V.PostConFeedback.feedback_possibile]
+	Per ogni p:PostConFeedback:
+		- se p:Asta, allora p.bidAggiudicante():Bid
+		- altrimenti (p:CompraloSubito), allora deve esistere u:Privato tale che:
+			(p,u):acquirente
+
+
+	ALL p  
+		PostConFeedback(p) --> [
+			Asta(p) -->
+				EXISTS b bidAggiudicante_{Asta}(p, b)
+
+			and
+
+			CompraloSubito(p) --> 
+				EXISTS u   acquirente(p, u)
+		].

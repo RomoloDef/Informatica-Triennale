@@ -1,0 +1,58 @@
+tipi di dato ristrutturati - DBMS: postSQL
+
+- Stringa -> 
+
+    CREATE DOMAIN Stringa AS Varchar(
+        CHECK (value is not null)
+    )
+
+- Email ->
+
+    CREATE DOMAIN Email AS Varchar
+        CHECK(
+            VALUE ~ '^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$'
+    );
+
+- Durata -> 
+
+    CREATE DOMAIN __Durata__ AS (
+        da: Date
+        a: Date
+    )
+
+    CREATE TYPE Durata AS __Durata__ (
+        CHECK ((value).da is not null and (value).a is not null 
+	    and (value).a >= (value).da);
+    )
+
+- Indirizzo ->
+
+    CREATE DOMAIN __Indirizzo__ AS (
+        via: varchar
+        civico: varchar
+    )
+
+    CREATE TYPE Indirizzo AS __Indirizzo__ (
+        CHECK ((value).via is not null and (value).civico is not null)
+    )
+
+- Intero > 0 -> 
+
+    CREATE DOMAIN IntegerGZ AS Integer(
+        CHECK (value > 0 AND value is not null)
+    )
+
+- Reale > 0 ->
+
+    CREATE DOMAIN RealGZ AS Real(
+        CHECK (value > 0 AND value is not null)
+    )
+
+
+- 1..5 ->
+
+    CREATE DOMAIN Integer1-5 AS Integer(
+        CHECK (value >=1 AND value <=5 AND value is not null)
+    )
+
+- Data, DataOra -> TimeStamp

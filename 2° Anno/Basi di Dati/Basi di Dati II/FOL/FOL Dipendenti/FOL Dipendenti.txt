@@ -1,0 +1,30 @@
+Modellare, mediante formule in logica del primo ordine, le seguenti affermazioni,
+dopo aver progettato opportuni insiemi di simboli di predicato e/o funzione:
+
+1. Tutte le persone hanno almeno un numero di telefono
+
+F = {Persona/1, Telefono/1, possedere/2}
+
+FOR ALL p (Persona(p)) --> EXIST t (Telefono(t) AND possedere(p, t))
+
+2. Ogni persona ha esattamente un nome
+
+F = {Persona/1, Nome/1, possedere/2}
+
+FOR ALL P, n1, n2 (Persona(p) AND Nome(n1) AND Nome(n2) AND possedere(p, n1) AND possedere(p, n2) AND n1 != n2)
+
+3. Non ci sono dipendenti che lavorano in più di due dipartimenti
+
+F = {Dipendente/1, Dipartimento/1, lavora/2}
+
+NOT EXIST d, d1, d2, d3 (Dipendente(d) AND Dipartimento(d1) AND Dipartimento(d2) AND Dipartimento(d3)
+
+AND lavora(d, d1) AND lavora(d, d2) AND lavora(d, d3) AND d1 != d2 AND d1 != d3 AND d2 != d3)
+
+4. Ogni dipartimento ha esattamente un direttore che è una persona.
+
+F = {Dipartimento/1, Direttore/1, Persona/1, gestito/2}
+
+NOT EXIST d, d1, d2 (Dipartimento(d) AND Direttore(d1) AND Direttore(d2) AND Persona(d1) AND Persona(d2)
+ 
+AND d1 != d2 AND gestito(d, d1) AND gestito(d, d2))

@@ -1,0 +1,72 @@
+Passaggi per arrivare al lavoro da progettista su questa esercitazione:
+
+1. Eliminazione dei valori multivalori: Non ce ne sono 
+
+2. Scelta e progettazione dei tipi di dato:
+
+- Stringa --> varchar
+
+- Intero >= 0 --> CREATE DOMAIN Int_gz_not_null AS Integer CHECK (value IS NOT NULL and value >= 0);
+
+- Intero >= 2 --> CREATE DOMAIN Int_gz_mag_due AS Integer CHECK (value IS NOT NULL and value >= 2);
+
+- Denaro --> CREATE DOMAIN Denaro AS Real CHECK (value IS NOT NULL and value > 0);
+
+- DataOra -->  TimeStamp
+
+- 1..5 --> CREATE DOMAIN Int_tra_due_cinque AS INTEGER CHECK (value is NOT NULL and value >= 1 AND value <= 5)
+
+- TipoPost: CREATE TYPE TipoPost AS ENUM ('Post', 'PostConFeedback')
+
+3. Ristrutturazione delle generalizzazioni: Vedi UML
+
+4. Identificatori di classi: Vedi UML
+
+5. Vincoli Esterni: 
+
+- Vincolo esterno che concerne la fusione tra post e postconfeedback 
+
+Per ogni istanza di p Post: p.tipo = 'PostConFeedback' se e solo se è valorizzato
+
+FOR ALL p Post(p) -> (tipo(p, 'PostConFeedback') <-> EXIST v voto(p, v))
+
+- Vincoli esterni che concernono la sostituzione con associazioni di post, nuovo e usato
+
+Disgiunzione e Completezza:
+
+NOT EXIST p, n, u (Post(p) AND Nuovo(n) AND Usato(u) AND post-us(p, u) AND post-n(p, n))
+
+FOR ALL p Post(p) -> ((EXIST u post-us(p, u)) OR (EXIST n post-n(p, n))
+
+- Vincoli esterni che concernono la sostituzione con associazioni di post, asta e compralosubito
+
+Disgiunzione e Completezza:
+
+NOT EXIST p, a, c (Post(p) AND Asta(a) AND CompraloSubito(c) AND post-a(p, a) AND post-cs(p, c))
+
+FOR ALL p Post(p) -> ((EXIST a post-a(p, a)) OR (EXIST c post-cs(p, c))
+
+- Vincoli esterni che concernono la sostituzione con associazioni di utente, privato e vendprofessionale
+
+Disgiunzione e Completezza:
+
+NOT EXIST u, p, v (Utente(u) AND Privato(p) AND VendProfessionale(v) AND ut-pr(u, p) AND ut-vp(u, v))
+
+FOR ALL u Utente(u) -> ((EXIST p ut-pr(u, p)) OR (EXIST v ut-vp(u, v)) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

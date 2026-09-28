@@ -1,0 +1,2 @@
+[V.Utente.proprietario]
+	ALL u,r  proprietario(u,r) --> is_proprietario(u, true).

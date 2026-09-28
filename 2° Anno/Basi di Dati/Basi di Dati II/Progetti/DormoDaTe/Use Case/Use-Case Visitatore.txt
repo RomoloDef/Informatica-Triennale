@@ -1,0 +1,7 @@
+Use Case Visitatore
+
+iscrizione():
+
+INSERT INTO Utente(nome, cognome, sesso, data_nascita, età, id_città)
+VALUES('...')
+

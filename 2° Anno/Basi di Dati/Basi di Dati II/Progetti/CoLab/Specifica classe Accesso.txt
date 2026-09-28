@@ -1,0 +1,14 @@
+Specifica classe AccessoConcluso
+
+- fine(): DataOra
+
+pre:
+
+post:
+    
+    FOR ALL a, ia, dur (Accesso(a) AND istante_accesso(a, ia) AND durata_minuti(this, dur)) --> result = ia + dur
+
+[V.AccessoConcluso.inizio.fine]
+
+FOR ALL a, ia, if (Accesso(a) AND AccessoConcluso(a) AND istante_accesso(a, ia) AND fine(a, if)) ---> ia < if
+

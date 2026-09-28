@@ -1,0 +1,10 @@
+Specifica dei vincoli esterni 
+
+[V.Crociera.date]
+
+FOR ALL c, i, f (Crociera(c) AND data_inizio(c, i) AND data_fine(c, f) --> i < f)
+
+[V.Prenotazione.posti.minori]
+
+FOR ALL p, np, c (Prenotazione(p) AND Crociera(c) AND pre_cr(p, c) AND numero_posti_prenotati(p, np)) --> EXIST n, m (Nave(n) AND utilizza(c, n) AND max_passeggeri(c, m) --> np < m)
+

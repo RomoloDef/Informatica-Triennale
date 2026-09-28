@@ -1,0 +1,493 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\geometry{a4paper, margin=1in}
+
+\title{Capitolo 4 - Crittografia Asimmetrica e Funzioni Hash}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+La funzione hash unidirezionale, o funzione hash sicura, è importante non solo nell'autenticazione dei messaggi ma anche nelle firme digitali. Tutte le funzioni hash operano secondo i seguenti principi generali: l'input (messaggio, file, ecc.) è visto come una sequenza di blocchi da n-bit; l'input viene elaborato un blocco alla volta in modo iterativo per produrre una funzione hash da n-bit.
+
+\vspace{0.8cm}
+
+\section*{Funzione HASH}
+
+Una delle funzioni hash più semplici è l'operazione \textbf{OR esclusivo (XOR)} bit per bit di ogni blocco. Questa può essere espressa come segue:
+
+\begin{equation*}
+    C_i = b_{i1} \oplus b_{i2} \oplus \dots \oplus b_{im}
+\end{equation*}
+
+\noindent dove:
+
+\begin{itemize}
+    \item $C_i$ = i-esimo bit del codice hash, $1 \le i \le n$,
+    \item m = numero di blocchi da n bit nell'input,
+    \item $b_{ij}$ = i-esimo bit nel j-esimo blocco, e
+    \item $\oplus$ = operazione XOR.
+\end{itemize}
+
+\vspace{0.5cm}
+
+\noindent \begin{minipage}{0.48\textwidth}
+    essa produce una parità semplice per ogni posizione di bit ed è nota come \textbf{controllo di ridondanza longitudinale (LRC)}. È ragionevolmente efficace per dati casuali come controllo di integrità dei dati.
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+\includegraphics[width=\textwidth]{Screenshot 2026-05-04 alle 13.18.10.png}
+\end{minipage}
+
+\vspace{0.8cm}
+
+Un modo semplice per migliorare la situazione consiste nell'eseguire uno \textbf{scorrimento circolare di 1 bit}, o rotazione, sul valore hash dopo che ogni blocco è stato elaborato. La procedura può essere riassunta come segue:
+
+\begin{enumerate}
+    \item Inizialmente impostare il valore hash a n bit a zero.
+    \item Elaborare ogni blocco successivo di dati a n bit come segue: a. Ruotare l'attuale valore hash a sinistra di 1 bit. b. Eseguire lo XOR del blocco nel valore hash.
+\end{enumerate}
+
+Questo ha l'effetto di "randomizzare" l'input in modo più completo e superare le regolarità che appaiono nell'input. Sebbene la seconda procedura fornisca una buona misura dell'integrità dei dati, è virtualmente inutile per la sicurezza dei dati quando un codice hash crittografato viene utilizzato con un messaggio in chiaro. Dato un messaggio, è facile preparare un nuovo messaggio che produca quel codice hash: basta preparare il messaggio alternativo desiderato, quindi aggiungere un blocco da n bit che forzi il nuovo messaggio più il blocco a produrre il codice hash desiderato.
+
+Sebbene un semplice XOR o uno XOR ruotato (RXOR) siano insufficienti se viene crittografato solo il codice hash, si potrebbe pensare che una funzione così semplice possa essere utile quando vengono crittografati sia il messaggio che il codice hash. Ma bisogna fare attenzione. Un'altra tecnica è quella che utilizza XOR applicato a blocchi di 64 bit del messaggio e poi una crittografia dell'intero messaggio che utilizzava la modalità \textbf{CBC (Cipher Block Chaining)}. Possiamo definire lo schema come segue: dato un messaggio composto da una sequenza di blocchi a 64 bit X1,X2,...,XN, definiamo il codice hash C come lo XOR blocco per blocco di tutti i blocchi e aggiungiamo il codice hash come blocco finale:
+
+\begin{equation*}
+    C = X_{N+1} = X_1 \oplus X_2 \oplus \dots \oplus X_N
+\end{equation*}
+
+Successivamente, si crittografa l'intero messaggio più il codice hash, utilizzando la modalità CBC per produrre il messaggio crittografato Y\_1, Y\_2, Y\_N+1
+
+\begin{align*}
+    X_1 &= IV \oplus D(K, Y_1) \\
+    X_i &= Y_{i-1} \oplus D(K, Y_i) \\
+    X_{N+1} &= Y_N \oplus D(K, Y_{N+1})
+\end{align*}
+
+Ma $X_{N+1}$ è il codice hash:
+
+\begin{align*}
+    X_{N+1} &= X_1 \oplus X_2 \oplus \dots \oplus X_N \\
+            &= [IV \oplus D(K, Y_1)] \oplus [Y_1 \oplus D(K, Y_2)] \oplus \dots \oplus [Y_{N-1} \oplus D(K, Y_N)]
+\end{align*}
+
+Poiché i termini nell'equazione precedente possono essere sottoposti a XOR in qualsiasi ordine, ne consegue che il codice hash non cambierebbe se i blocchi di testo cifrato venissero permutati.
+
+\vspace{0.8cm}
+
+\section*{La Funzione HASH sicura}
+
+\vspace{0.2cm}
+\noindent \begin{minipage}{0.48\textwidth}
+    Negli ultimi anni, la funzione hash più ampiamente utilizzata è stata il \textbf{Secure Hash Algorithm (SHA)}. Infatti, poiché quasi ogni altra funzione hash di largo consumo presentava sostanziali debolezze crittoanalitiche, lo SHA è rimasto l'unico algoritmo hash standardizzato fino al 2005.
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+\includegraphics[width=\textwidth]{Screenshot 2026-05-04 alle 13.18.26.png}
+\end{minipage}
+
+\vspace{0.8cm}
+
+Sviluppato dal NIST e pubblicato come FIPS 180 nel 1993, lo SHA ha subito diverse revisioni:
+
+\begin{itemize}
+    \item \textbf{SHA-0:} La versione originale (ritirata per debolezze).
+    \item \textbf{SHA-1:} Revisione del 1995 (FIPS 180-1), produce un hash di 160 bit.
+    \item \textbf{SHA-2:} Famiglia che comprende SHA-256, SHA-384 e SHA-512, introdotta nel 2002 (FIPS 180-2).
+    \item \textbf{SHA-3:} Lo standard più recente (FIPS 202, 2015), basato su una struttura differente.
+\end{itemize}
+
+\vspace{0.8cm}
+
+\section*{SHA-512}
+
+L'algoritmo accetta in input un messaggio con una lunghezza massima inferiore a $2^{128}$ bit e produce come output un digest di 512 bit. Il messaggio viene elaborato in blocchi da 1024 bit.
+
+\vspace{0.5cm}
+
+\subsection*{I Passaggi dell'Algoritmo}
+
+\begin{itemize}
+    \item \textbf{Passaggio 1: Aggiunta dei bit di padding.} Il messaggio viene imbottito in modo che la sua lunghezza sia congruente a 896(mod1024). Il padding consiste in un singolo bit "1" seguito dal numero necessario di bit "0".
+    \item \textbf{Passaggio 2: Aggiunta della lunghezza.} Un blocco di 128 bit (trattato come intero big-endian) viene aggiunto al messaggio, contenente la lunghezza del messaggio originale prima del padding.
+    \item \textbf{Passaggio 3: Inizializzazione del buffer hash.} Viene utilizzato un buffer di 512 bit per memorizzare i risultati intermedi e finali. Il buffer è rappresentato da otto registri da 64 bit (a, b, c, d, e, f, g, h), inizializzati ai seguenti valori esadecimali:
+\end{itemize}
+
+\begin{align*}
+    a &= \text{6A09E667F3BCC908} & e &= \text{510E527FADE682D1} \\
+    b &= \text{BB67AE8584CAA73B} & f &= \text{9B05688C2B3E6C1F} \\
+    c &= \text{3C6EF372FE94F82B} & g &= \text{1F83D9ABFB41BD6B} \\
+    d &= \text{A54FF53A5F1D36F1} & h &= \text{5BE0CD19137E2179}
+\end{align*}
+
+\begin{figure}[h!]
+    \centering
+\includegraphics[width=0.8\textwidth]{Screenshot 2026-05-04 alle 13.18.38.png}
+\end{figure}
+
+\vspace{0.5cm}
+
+\noindent \begin{minipage}{0.48\textwidth}
+    \begin{itemize}
+        \item \textbf{Passaggio 4: Elaborazione in blocchi da 1024 bit.} Il cuore dell'algoritmo è un modulo composto da \textbf{80 round} (indicato come funzione F). Ogni round t prende come input il valore del buffer a 512 bit \textbf{abcdefgh} e lo aggiorna utilizzando:
+        \begin{enumerate}
+            \item Una word da 64 bit Wt, derivata dal blocco di dati corrente.
+            \item Una costante additiva Kt, dove $0 \le t \le 79$. Queste costanti eliminano regolarità nei dati di input.
+            \item Operazioni di scorrimento circolare e funzioni booleane primitive (AND, OR, NOT, XOR).
+        \end{enumerate}
+    \end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+\includegraphics[width=\textwidth]{Screenshot 2026-05-04 alle 13.18.46.png}
+\end{minipage}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item \textbf{Passaggio 5: Output.} Dopo che tutti gli N blocchi da 1024 bit sono stati elaborati, l'output dello stadio N-esimo è il digest del messaggio a 512 bit.
+\end{itemize}
+
+SHA-512 possiede la proprietà per cui ogni bit del codice hash è funzione di ogni bit dell'input. La ripetizione complessa della funzione F produce risultati ben mischiati, rendendo estremamente difficile trovare due messaggi con lo stesso digest (resistenza alle collisioni).
+
+\vspace{0.8cm}
+
+\section*{SHA-3}
+
+Nonostante la sicurezza di SHA-2 sia ancora solida, il NIST ha indetto una competizione nel 2007 per SHA-3 per avere un'alternativa pronta qualora SHA-2 venisse compromesso. I requisiti per SHA-3 erano:
+
+\begin{enumerate}
+    \item \textbf{Sostituzione immediata:} Deve poter sostituire SHA-2 nelle applicazioni esistenti (stesse lunghezze hash).
+    \item \textbf{Natura online:} Deve elaborare piccoli blocchi di dati senza richiedere l'intero messaggio in memoria.
+\end{enumerate}
+
+SHA-3 è basato su una struttura a "spugna" (\textbf{Permutation-Based Hash}), sostanzialmente diversa da quella di SHA-1 e SHA-2. Questo garantisce che se una debolezza venisse scoperta in uno standard, l'altro rimarrebbe probabilmente sicuro.
+
+\vspace{0.8cm}
+
+\section*{HMAC}
+
+Negli ultimi anni, c'è stato un crescente interesse nello sviluppo di un MAC derivato da un codice hash crittografico, come lo SHA-1. Le motivazioni di questo interesse sono le seguenti:
+
+\begin{itemize}
+    \item Le funzioni hash crittografiche generalmente vengono eseguite \textbf{più velocemente} via software rispetto agli algoritmi di cifratura convenzionali come il DES.
+    \item Il codice di libreria per le funzioni hash crittografiche è \textbf{ampiamente disponibile}.
+\end{itemize}
+
+Una funzione hash come lo SHA-1 non è stata progettata per essere usata come MAC e non può essere utilizzata direttamente per tale scopo perché non si basa su una chiave segreta. Sono state avanzate diverse proposte per l'incorporazione di una chiave segreta in un algoritmo hash esistente. L'approccio che ha ricevuto il maggior supporto è \textbf{HMAC}.
+
+\vspace{0.5cm}
+
+\subsection*{Obiettivi di Progettazione di HMAC}
+
+La RFC 2104 elenca i seguenti obiettivi di progettazione per HMAC:
+
+\begin{itemize}
+    \item Utilizzare, senza modifiche, le funzioni hash disponibili — in particolare, funzioni hash che abbiano buone prestazioni in software e per le quali il codice sia liberamente e ampiamente disponibile.
+    \item Consentire una \textbf{facile sostituibilità} della funzione hash integrata nel caso in cui vengano trovate o richieste funzioni hash più veloci o più sicure.
+    \item Preservare le prestazioni originali della funzione hash senza subire un degrado significativo.
+    \item Utilizzare e gestire le chiavi in modo semplice.
+    \item Avere un'analisi crittografica ben compresa della robustezza del meccanismo di autenticazione basata su ipotesi ragionevoli sulla funzione hash integrata.
+\end{itemize}
+
+\vspace{0.8cm}
+
+\subsection*{Algoritmo HMAC}
+
+\vspace{0.2cm}
+\noindent \begin{minipage}{0.48\textwidth}
+    La figura illustra il funzionamento generale di HMAC. Definiamo i seguenti termini:
+    \begin{itemize}
+        \item H = funzione hash integrata (es. SHA-1)
+        \item M = messaggio di input a HMAC (incluso il padding specificato nella funzione hash integrata)
+        \item $Y_i$ = i-esimo blocco di M, $0 \le i \le (L-1)$
+        \item L = numero di blocchi in M
+        \item b = numero di bit in un blocco
+        \item n = lunghezza del codice hash prodotto dalla funzione hash integrata
+        \item K = chiave segreta; se la lunghezza della chiave è maggiore di b, la chiave viene passata alla funzione hash per produrre una chiave a n bit; la lunghezza raccomandata è $\ge n$
+    \end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Screenshot 2026-05-04 alle 13.18.56.png}
+    
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item $K^+$ = K con l'aggiunta di zeri a sinistra in modo che il risultato sia lungo b bit
+        \item ipad = \textbf{00110110} (36 in esadecimale) ripetuto b/8 volte
+        \item opad = \textbf{01011100} (5C in esadecimale) ripetuto b/8 volte
+    \end{itemize}
+\end{minipage}
+
+\vspace{0.5cm}
+
+Quindi HMAC può essere espresso come segue:
+
+\begin{equation*}
+    HMAC(K, M) = H[(K^+ \oplus \text{opad}) \parallel H[(K^+ \oplus \text{ipad}) \parallel M]]
+\end{equation*}
+
+\vspace{0.3cm}
+
+\noindent In altre parole questo è il funzionamento:
+
+\begin{enumerate}
+    \item \textbf{Aggiungere zeri} all'estremità sinistra di K per creare una stringa K+ di b bit (ad esempio, se K ha una lunghezza di 160 bit e b=512, a K verranno aggiunti 44 byte di zeri \textbf{0x00}).
+    \item Eseguire lo \textbf{XOR} (OR esclusivo bit a bit) di K+ con ipad per produrre il blocco di b bit $S_i$.
+    \item Appendere M a $S_i$.
+    \item Applicare H allo stream generato nel passaggio 3.
+    \item Eseguire lo \textbf{XOR} di K+ con opad per produrre il blocco di b bit $S_o$.
+    \item Appendere il risultato dell'hash del passaggio 4 a $S_o$.
+    \item Applicare H allo stream generato nel passaggio 6 e produrre l'output.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\subsection*{Sicurezza di HMAC}
+
+La sicurezza di \textbf{HMAC} dipende direttamente dalla robustezza crittografica della funzione \textit{hash} sottostante. Il grande valore di questo protocollo risiede nella capacità dei suoi progettisti di dimostrare una relazione esatta tra la forza della funzione \textit{hash} integrata e quella di HMAC. In pratica, per un dato livello di sforzo applicato a messaggi generati da un utente legittimo e intercettati da un attaccante, la probabilità di riuscire a violare HMAC equivale a portare a termine con successo uno dei seguenti attacchi sulla funzione \textit{hash}: calcolare un output della funzione di compressione nonostante l'impiego di un \textbf{IV (Vettore di Inizializzazione)} casuale, segreto e sconosciuto all'attaccante, oppure individuare delle collisioni nella funzione \textit{hash} anche quando l'IV è mantenuto segreto e casuale.
+
+\vspace{0.8cm}
+
+\section*{Authenticated Encryption (AE)}
+
+La \textbf{Cifratura Autenticata (AE)} è un termine usato per descrivere sistemi di cifratura che proteggono simultaneamente la \textbf{riservatezza} e l'\textbf{autenticità} (integrità) delle comunicazioni. In altre parole, l'AE fornisce sia la cifratura del messaggio che la sua autenticazione. Molte applicazioni e protocolli richiedono entrambe le forme di sicurezza, ma fino a poco tempo fa i due servizi venivano progettati separatamente.
+
+L'AE è implementata utilizzando una struttura a modalità di cifratura a blocchi. Un esempio utilizzato in numerose applicazioni è il \textbf{CCM}. In questa sezione, esaminiamo l'\textbf{Offset Codebook (OCB)}.
+
+\vspace{0.8cm}
+
+\subsection*{Caratteristiche dell'OCB}
+
+\begin{itemize}
+    \item \textbf{Standard:} Proposto dal NIST, è uno standard Internet definito nella \textbf{RFC 7253} ed è approvato nello standard wireless LAN IEEE 802.11. È incluso anche in \textit{MiniSec}, un modulo di sicurezza IoT open-source.
+    \item \textbf{Efficienza:} L'obiettivo chiave di OCB è l'efficienza. Questo viene ottenuto minimizzando il numero di cifrature richieste per messaggio e consentendo l'\textbf{operazione parallela} sui blocchi di un messaggio.
+    \item \textbf{Singolo Passaggio:} È richiesto un solo passaggio sul messaggio per generare sia il testo cifrato (\textit{ciphertext}) che il codice di autenticazione.
+    \item \textbf{Configurazione Tipica:} Di solito si usa \textbf{AES} come algoritmo di cifratura con blocchi da n=128 bit.
+\end{itemize}
+
+\subsection*{Struttura e Funzionamento di OCB}
+
+\noindent \begin{minipage}{0.48\textwidth}
+    La struttura di OCB è simile alla modalità \textit{Electronic Codebook} (ECB), dove ogni blocco è cifrato indipendentemente. Tuttavia, l'ECB è insicuro perché blocchi identici producono testi cifrati identici. OCB elimina questo problema utilizzando un \textbf{offset Z[i]} unico per ogni blocco.
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+\includegraphics[width=\textwidth]{Screenshot 2026-05-04 alle 13.19.06.png}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\subsubsection*{La formula fondamentale}
+Per ogni blocco M[i], il testo cifrato C[i] si ottiene come:
+
+\begin{equation*}
+    C[i] = E_K(M[i] \oplus Z[i]) \oplus Z[i]
+\end{equation*}
+
+Prima si applica lo XOR tra il blocco di testo in chiaro e l'offset Z[i], poi si cifra il risultato con la chiave K, e infine si applica nuovamente lo XOR con lo stesso offset Z[i]. Grazie all'offset, due blocchi identici nella stessa posizione produrranno testi cifrati diversi perché i loro Z[i] saranno differenti.
+
+\subsubsection*{Il Nonce (N)}
+Viene scelto un valore a n bit chiamato \textbf{nonce}. L'unico requisito è che, se più messaggi vengono cifrati con la stessa chiave, deve essere utilizzato un \textit{nonce} diverso ogni volta (il \textit{nonce} viene usato solo una volta).
+
+\subsubsection*{Calcolo degli Offset Z[i]}
+Il calcolo degli offset è la parte tecnicamente più complessa ed è riassunto dalle seguenti equazioni:
+
+\begin{enumerate}
+    \item Valore iniziale $L$: $L(0) = L = E_K(0^n)$ (Cifratura di una stringa di zeri).
+    \item Valore $R$: $R = E_K(N \oplus L)$ (Cifratura del Nonce XORato con $L$).
+    \item Generazione dei sotto-valori $L(i)$: $L(i) = 2 \cdot L(i - 1)$ per $1 \le i \le m$.
+    \item Primo Offset: $Z[1] = L \oplus R$.
+    \item Offset Successivi: $Z[i] = Z[i - 1] \oplus L(\text{ntz}(i))$.
+\end{enumerate}
+
+\textbf{Nota Tecnica:} L'operatore $\cdot$ si riferisce alla moltiplicazione nel campo finito $GF(2^n)$. L'operatore $\text{ntz}(i)$ indica il numero di zeri finali (meno significativi) in $i$. I valori $Z[i]$ risultanti mantengono una distanza di Hamming massima tra loro.
+
+\subsection*{Gestione dell'Ultimo Blocco e del Tag}
+Poiché la lunghezza di M potrebbe non essere un multiplo intero di n, l'ultimo blocco viene trattato diversamente:
+
+\begin{enumerate}
+    \item Si calcola X[m]:
+    \begin{equation*}
+        X[m] = \text{len}(M[m]) \oplus L(-1) \oplus Z[m]
+    \end{equation*}
+    \item Si ottiene T[m] tramite cifratura:
+    \begin{equation*}
+        Y[m] = E_K(X[m])
+    \end{equation*}
+    \item C[m] viene generato tramite XOR tra M[m] e i primi bit necessari di Y[m]. Il testo cifrato finale C ha quindi la stessa lunghezza del testo in chiaro originale M.
+\end{enumerate}
+
+\subsection*{Autenticazione (Il Checksum e il Tag)}
+Viene prodotto un \textbf{checksum} dal messaggio M seguendo questa formula:
+
+\begin{equation*}
+    \text{checksum} = M[1] \oplus M[2] \oplus \dots \oplus Y[m] \oplus C[m]0^*
+\end{equation*}
+
+Infine, viene generato un \textbf{tag di autenticazione} di lunghezza $\tau$:
+
+\begin{equation*}
+    tag = \text{primi } \tau \text{ bit di } E_K(\text{checksum} \oplus Z[m])
+\end{equation*}
+
+Per verificare il messaggio, il ricevente ricalcola il \textit{checksum} e il tag: se il tag calcolato corrisponde a quello ricevuto, il messaggio è autentico e integro.
+
+\vspace{0.8cm}
+
+\section*{Cifratura a Chiave Pubblica: RSA}
+
+L'algoritmo RSA, sviluppato nel 1977 da Ron Rivest, Adi Shamir e Len Adleman presso il MIT, rappresenta lo schema a chiave pubblica più ampiamente implementato. Si basa sulla teoria dei numeri, trattando il testo in chiaro e il testo cifrato come interi compresi tra 0 e n-1 per un determinato valore di n.
+
+\subsection*{Descrizione dell'Algoritmo}
+Il sistema utilizza l'esponenziazione di interi in aritmetica modulare. Sia il mittente che il destinatario devono conoscere i valori di n ed e, che costituiscono la chiave pubblica. Solo il destinatario conosce il valore di d, che costituisce la chiave privata.
+
+\begin{itemize}
+    \item \textbf{Chiave Pubblica (PU):} $\{e, n\}$.
+    \item \textbf{Chiave Privata (PR):} $\{d, n\}$.
+\end{itemize}
+
+\begin{align*}
+    \text{Cifratura: } C &\equiv M^e \pmod n \\
+    \text{Decifratura: } M &\equiv C^d \pmod n \equiv (M^e)^d \pmod n \equiv M^{ed} \pmod n
+\end{align*}
+
+\subsection*{Generazione delle Chiavi}
+Il processo di generazione delle chiavi segue passaggi matematici precisi per garantire la relazione tra le componenti:
+
+\begin{enumerate}
+    \item \textbf{Selezione dei primi:} Scegliere due numeri primi distinti, p e q.
+    \item \textbf{Calcolo del modulo:} Calcolare $n = p \times q$.
+    \item \textbf{Funzione Toziente di Eulero:} Calcolare $\phi(n) = (p-1)(q-1)$. Questa funzione indica il numero di interi positivi minori di n e coprimi con esso.
+    \item \textbf{Selezione dell'esponente pubblico:} Scegliere un intero e tale che $\gcd(\phi(n), e) = 1$ e $1 < e < \phi(n)$.
+    \item \textbf{Calcolo dell'esponente privato:} Determinare d tale che $de \equiv 1 \pmod{\phi(n)}$, ovvero d deve essere l'inverso moltiplicativo di e modulo $\phi(n)$.
+\end{enumerate}
+
+\vspace{0.8cm}
+
+\subsection*{Requisiti di Sicurezza e Prestazioni}
+
+Perché il sistema sia soddisfacente, devono essere soddisfatti i seguenti requisiti:
+
+\begin{itemize}
+    \item \textbf{Correttezza:} Deve essere possibile trovare valori di e, d, n tali che $M^{ed} \equiv M \pmod n$ per ogni $M < n$.
+    \item \textbf{Efficienza:} Il calcolo di $M^e$ e $C^d$ deve essere relativamente semplice.
+    \item \textbf{Inviolabilità:} Deve essere \textit{computazionalmente} impossibile determinare d conoscendo solo e ed n. Questo requisito è soddisfatto utilizzando valori molto grandi per e e n.
+\end{itemize}
+
+\subsection*{Analisi degli Attacchi e Vulnerabilità}
+
+La sicurezza dell'RSA è costantemente valutata attraverso diversi approcci di attacco:
+
+\subsubsection*{1. Attacchi Matematici (Fattorizzazione)}
+
+L'attacco matematico principale consiste nel tentare di fattorizzare n nei suoi fattori primi p e q. Se un attaccante riesce a fattorizzare n, può calcolare $\phi(n)$ e successivamente determinare d.
+
+\begin{itemize}
+    \item \textbf{Benchmark di sicurezza:} Le prestazioni degli algoritmi di fattorizzazione fungono da benchmark per valutare la sicurezza dell'RSA.
+    \item \textbf{Raccomandazioni:} Attualmente si consigliano chiavi di dimensione compresa tra 1024 e 2048 bit.
+\end{itemize}
+
+\begin{enumerate}
+    \item $p$ e $q$ devono differire in lunghezza solo di poche cifre.
+    \item Sia $(p - 1)$ che $(q - 1)$ devono contenere un fattore primo grande.
+    \item $\gcd(p - 1, q - 1)$ deve essere piccolo.
+\end{enumerate}
+
+\subsubsection*{2. Attacchi Temporali (Timing Attacks)}
+
+Paul Kocher ha dimostrato che un osservatore può determinare una chiave privata monitorando il tempo impiegato da un computer per decifrare i messaggi. L'attacco analizza le variazioni temporali nell'esponenziazione modulare, che viene eseguita bit per bit.
+
+\textbf{Contromisure:}
+\begin{itemize}
+    \item \textbf{Tempo di esponenziazione costante:} Garantisce che tutte le operazioni richiedano lo stesso tempo, sebbene possa degradare le prestazioni.
+    \item \textbf{Ritardo casuale:} Aggiunge un ritardo variabile per confondere l'analisi temporale.
+    \item \textbf{Blinding (Oscuramento):} Moltiplica il testo cifrato per un numero casuale prima dell'esponenziazione:
+\end{itemize}
+
+\begin{enumerate}
+    \item Genera un numero casuale segreto $r$ tra $0$ e $n - 1$
+    \item Calcola $C' \equiv C(r^e) \pmod n$
+    \item Calcola $M' \equiv (C')^d \pmod n$
+    \item Calcola $M \equiv M'r^{-1} \pmod n$
+\end{enumerate}
+
+\vspace{0.8cm}
+
+\subsection*{Esempio Pratico dell'Algoritmo RSA}
+
+\begin{center}
+\textbf{1. Generazione delle Chiavi} \\
+\vspace{0.2cm}
+Scelta Primi: $p = 17, q = 11$ \\
+Calcolo Modulo: $n = p \times q = 187$ \\
+$\phi(n) = (p - 1)(q - 1) = 160$ \\
+Scelta $e$: $\gcd(160, 7) = 1 \implies e = 7$ \\
+Calcolo $d$: $23 \times 7 \equiv 1 \pmod{160} \implies d = 23$ \\
+Chiave Pubblica: $PU = \{7, 187\}$ \\
+Chiave Privata: $PR = \{23, 187\}$ \\
+
+\vspace{0.5cm}
+
+\textbf{2. Operazioni (Messaggio $M = 88$)} \\
+\vspace{0.2cm}
+Cifratura: $C \equiv 88^7 \pmod{187} = 11$ \\
+Decifratura: $M \equiv 11^{23} \pmod{187} = 88$
+\end{center}
+
+\vspace{0.8cm}
+
+\section*{Cifratura a Chiave Pubblica: Lo scambio di chiavi Diffie-Hellman}
+
+L'algoritmo Diffie-Hellman, pubblicato nel 1976, è stato il primo protocollo a chiave pubblica a comparire nella letteratura scientifica. A differenza dell'RSA, il suo scopo primario non è la cifratura generica di messaggi, ma consentire a due utenti di scambiarsi in modo sicuro una \textbf{chiave segreta} che potrà poi essere utilizzata per la successiva cifratura dei messaggi tramite algoritmi simmetrici.
+
+L'efficacia del protocollo si basa sulla difficoltà computazionale del calcolo dei \textbf{logaritmi discreti}.
+
+\begin{itemize}
+    \item \textbf{Radice Primitiva:} Si definisce radice primitiva $\alpha$ di un numero primo q quel valore le cui potenze generano tutti gli interi distinti da 1 a q-1 modulo q.
+    \item \textbf{Logaritmo Discreto:} Data l'equazione $b \equiv a^i \pmod p$, è relativamente facile calcolare l'esponenziale modulare, ma è estremamente difficile determinare l'esponente i (il logaritmo discreto) conoscendo b, a e p. Per numeri primi di grandi dimensioni, questo compito è considerato impossibile.
+\end{itemize}
+
+\begin{center}
+Dati $q$ (numero primo) e $\alpha$ (radice primitiva di $q$): \\
+$Y \equiv \alpha^X \pmod q$ \\
+$X = \text{dlog}_{\alpha, q}(Y)$ \quad (Problema difficile)
+\end{center}
+
+\subsection*{Descrizione dell'Algoritmo}
+
+Il protocollo prevede la condivisione di elementi pubblici globali e la generazione di chiavi private e pubbliche per ciascun utente.
+
+\vspace{0.3cm}
+\noindent \textbf{1. Elementi Pubblici Globali:}\\
+Un numero primo $q$ e una radice primitiva $\alpha$ di $q$.
+
+\vspace{0.3cm}
+\noindent \textbf{2. Generazione delle Chiavi Utente:}
+\begin{itemize}
+    \item \textbf{Utente A:} Seleziona una chiave privata $X_A < q$ e calcola la chiave pubblica $Y_A \equiv \alpha^{X_A} \pmod q$
+    \item \textbf{Utente B:} Seleziona una chiave privata $X_B < q$ e calcola la chiave pubblica $Y_B \equiv \alpha^{X_B} \pmod q$
+\end{itemize}
+
+\vspace{0.3cm}
+\noindent \textbf{3. Calcolo della Chiave Segreta Condivisa ($K$):}
+\begin{itemize}
+    \item L'utente A calcola: $K \equiv (Y_B)^{X_A} \pmod q$
+    \item L'utente B calcola: $K \equiv (Y_A)^{X_B} \pmod q$
+    \item Entrambi ottengono lo stesso risultato grazie alle proprietà delle potenze.
+\end{itemize}
+
+\end{document}

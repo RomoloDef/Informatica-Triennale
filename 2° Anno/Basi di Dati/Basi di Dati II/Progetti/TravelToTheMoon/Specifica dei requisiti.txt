@@ -1,0 +1,55 @@
+Specifica dei requisiti
+
+1. Crociera:
+    1.1 codice: Codice {id}
+    1.2 data_inizio: Data
+    1.3 data_fine: Data 
+    1.4 nave_utilizzata: (vedi req 2)
+    1.5 itinerario: (vedi req 4)
+
+    1.0.1 CrocieraLunaDiMiele
+        1.1.1 tipo: {tradizionale, alternativa}
+
+    1.0.2 CrocieraPerFamiglia
+
+2. Nave:
+    2.1 nome: Stringa
+    2.2 comfort: (3..5)
+    2.3 max_passeggeri: Intero > 0
+
+3. Destinazioni:
+    3.1 itinerario: (vedi req 4)
+    3.2 nome: Stringa
+    3.3 continente: Continente
+    3.4 posti_da_vedere: (vedi req 5)
+
+    3.0.1 DestinazioneRomantica
+
+    3.0.3 DestinazioneDivertente
+
+4. Itinerario:
+    4.1 partenza: DataOra 
+    4.2 arrivo: DataOra 
+
+5. PostoDaVedere:
+    5.1 nome: Stringa
+    5.2 descrizione: Stringa 
+    5.3 fascia_oraria: Fascia 
+
+6. Cliente:
+    6.1 nome: Stringa
+    6.2 cognome: Stringa 
+    6.3 età: Intero >= 0
+    6.4 indirizzo: Indirizzo 
+
+7. Prenotazione:
+    7.1 istante_prenotazione: DataOra
+    7.2 crociera: (vedi req 1)
+    7.3 numero_posti_prenotati: Intero > 0
+
+
+
+
+
+
+

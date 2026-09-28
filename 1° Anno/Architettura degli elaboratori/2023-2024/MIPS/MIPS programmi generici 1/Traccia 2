@@ -1,0 +1,65 @@
+# Scrivere un programma in linguaggio assemblativo MARS che acquisito un intero positivo (da 0 a 255) inserito da tastiera, scrivere il valore 
+# binario al contrario. Esempio -> INPUT: 5(00000101), OUTPUT: 160(10100000)
+
+.data
+prompt: .asciiz "Inserisci un numero intero positivo (da 0 a 255): "
+binary_msg: .asciiz "Il valore binario al contrario è: "
+
+.text
+.globl main
+
+main:
+    # Stampa il messaggio per inserire il numero intero
+    li $v0, 4           # Carica il codice di servizio per la stampa della stringa
+    la $a0, prompt      # Carica l'indirizzo della stringa 'prompt' nella syscall
+    syscall             # Esegui la syscall per stampare il messaggio
+
+    # Leggi il numero intero da tastiera
+    li $v0, 5           # Carica il codice di servizio per la lettura di un intero
+    syscall             # Esegui la syscall per leggere l'intero
+    move $s0, $v0       # Salva il numero intero in $s0
+
+    # Stampa il messaggio per indicare che si sta convertendo il numero in binario al contrario
+    li $v0, 4           # Carica il codice di servizio per la stampa della stringa
+    la $a0, binary_msg  # Carica l'indirizzo della stringa 'binary_msg' nella syscall
+    syscall             # Esegui la syscall per stampare il messaggio
+
+    # Chiama la procedura per invertire il numero binario
+    jal reverse_binary
+
+    # Termina il programma
+    li $v0, 10          # Carica il codice di servizio per l'uscita dal programma
+    syscall             # Esegui la syscall per terminare il programma
+
+# Procedura per invertire il numero binario
+reverse_binary:
+    # Inizializza il registro per la rappresentazione binaria invertita
+    li $t0, 0           # $t0 conterrà il numero binario invertito
+
+    # Ciclo per invertire il numero binario
+    reverse_loop:
+        # Estrai il bit meno significativo dal numero intero
+        andi $t1, $s0, 1  # $t1 = $s0 & 1 (bit meno significativo)
+
+        # Aggiungi il bit estratto al numero binario invertito
+        sll $t0, $t0, 1   # Shift logico a sinistra di $t0 (prepara per aggiungere un nuovo bit)
+        or $t0, $t0, $t1  # Aggiungi il bit estratto a $t0
+
+        # Shifta il numero intero a destra per estrarre il prossimo bit
+        srl $s0, $s0, 1   # Shift logico a destra di $s0 (prepara per estrarre il prossimo bit)
+
+        # Controlla se il numero intero è diverso da zero (fine della conversione)
+        bnez $s0, reverse_loop
+
+    # Stampa il risultato binario invertito (contenuto in $t0)
+    print_reversed_binary:
+        # Stampa il numero binario invertito (su 8 bit)
+        li $v0, 1           # Carica il codice di servizio per la stampa di un intero
+        move $a0, $t0       # Carica il numero binario invertito da stampare
+        syscall             # Esegui la syscall per stampare il numero binario invertito
+
+    # Ritorna al chiamante
+    jr $ra              # Ritorna alla chiamata principale
+
+# Fine del programma
+

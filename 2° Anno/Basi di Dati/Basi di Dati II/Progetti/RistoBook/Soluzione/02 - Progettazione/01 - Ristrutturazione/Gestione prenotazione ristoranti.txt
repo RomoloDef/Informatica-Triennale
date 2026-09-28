@@ -1,0 +1,22 @@
+Gestione prenotazione ristoranti
+
+
+	accetta_prenotazione(p:Prenotazione):
+		pre: not Accettata(p) and not Rifiutata(p)
+		post: ...
+
+
+	rifiuta_prenotazione(p:Prenotazione):
+		pre: not Rifiutata(p) and not Completata(p) and not NonUtilizzata(p)
+		post: ...
+
+
+	contrassegna_prenotazione_completata(p:PrenotazioneAccettata)
+		pre: not nonUtilizzata(p)
+		post: ...
+
+
+	contrassegna_prenotazione_nonUtilizzata(p:PrenotazioneAccettata)
+		pre: not Completata(p)
+		post: ...
+

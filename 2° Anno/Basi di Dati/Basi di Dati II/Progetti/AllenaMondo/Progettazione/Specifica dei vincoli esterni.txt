@@ -1,0 +1,100 @@
+Ulteriori vincoli esterni da inserire dopo la ristrutturazione 
+
+[V.Sfida.disgiunzione]
+
+NOT EXIST s, sg, sq (Sfida(s) AND SfidaSingolo(sg) AN SfidaSquadra(sq) AND is_Singolo(s, sg) AND is_Squadra(s, sq))
+
+[V.Sfida.Completezza]
+
+FOR ALL s (Sfida(s)) --> (EXIST sg is_Singolo(s, sg)) OR (EXIST sq is_Squadra(s, sq))
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Trigger 
+
+[V.Sfida.Disgiunzione]
+
+Operazioni da intercettare: Inserimento e Modifica in SfidaSingolo e SfidaSquadra 
+
+Quando: BEFORE 
+
+Funzione:
+
+    - sia iError := False 
+
+    - sia new l'ennupla che si vuol inserire o modificare 
+
+    - se lo si vul fare allora:
+
+    - iError :=
+
+        SELECT *
+        FROM SfidaSingolo ss, SfidaSquadra 
+        WHERE ss.id = new.id 
+        AND sq.id = new.id 
+
+    - se iError = True lancia l'eccezione 
+
+    - altrimenti permetti 
+
+[V.Sfida.Completezza]
+
+Trigger 1
+
+Operazioni da intercettare: Inserimento in Sfida
+
+Quando: AFTER 
+
+Funzione:
+
+    - sia iError := False 
+
+    - sia new l'ennupla che si vuol inserire o modificare 
+
+    - se lo si vul fare allora:
+
+    - iError := IF NOT EXIST (
+
+        SELECT Sfida
+        FROM SfidaSingolo ss
+        WHERE Sfida = new.id
+        UNION 
+        SELECT Sfida
+        FROM SfidaSquadra sq
+        WHERE Sfida = new.id
+
+    )
+
+    - se iError = True lancia l'eccezione 
+
+    - altrimenti permetti 
+
+Trigger 2 
+
+Operazioni da intercettare: Rimozione in SfidaSingolo o SfidaSquadra 
+
+Quando: AFTER 
+
+Funzione:
+
+    - sia iError := False 
+
+    - sia new l'ennupla che si vuol inserire o modificare 
+
+    - se lo si vul fare allora:
+
+    - iError := 
+
+        SELECT *
+        FROM (Sfida LEFT OUTER JOIN SfidaSingolo ON Sfida.id = SfidaSingolo.id)
+        LEFT OUTER JOIN SfidaSquadra ON Sfida.id = SfidaSquadra.id 
+        WHERE Sfida.id = old.Sfida 
+        AND (SfidaSingolo.sfida IS NULL) AND (SfidaSquadra.sfida IS NULL)
+
+    - se iError = True lancia l'eccezione 
+
+    - altrimenti permetti 
+
+
+
+

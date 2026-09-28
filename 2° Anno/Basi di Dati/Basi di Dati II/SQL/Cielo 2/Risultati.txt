@@ -1,0 +1,55 @@
+1. Quante sono le compagnie che operano (sia in arrivo che in partenza) nei diversi aeroporti?
+
+select distinct aeroporto.codice, aeroporto.nome, count(distinct compagnia.nome) as num_compagnie
+from aeroporto, volo, compagnia, arrpart
+where volo.comp = compagnia.nome
+and arrpart.codice = volo.codice
+and arrpart.comp = compagnia.nome
+and (arrpart.partenza = aeroporto.codice or arrpart.arrivo = aeroporto.codice)
+group by aeroporto.codice, aeroporto.nome
+order by num_compagnie asc
+
+2. Quanti sono i voli che partono dall ’ aeroporto di almeno 100 minuti?
+
+select count(distinct aeroporto.codice) as num_voli
+from volo, aeroporto, arrpart
+where arrpart.partenza = aeroporto.codice
+and aeroporto.codice = 'HTR'
+and volo.durataminuti >= 100
+
+3. Quanti sono gli aeroporti sui quali opera la compagnia 'Apitalia', per ogni nazione nella quale opera?
+
+select distinct luogoaeroporto.nazione as nazione, count(distinct aeroporto.codice) as num_aeroporto
+from aeroporto, compagnia, luogoaeroporto, arrpart, volo
+where luogoaeroporto.aeroporto = aeroporto.codice
+and volo.codice = arrpart.codice
+and (arrpart.partenza = aeroporto.codice or arrpart.arrivo = aeroporto.codice)
+and volo.comp = 'Apitalia'
+group by luogoaeroporto.nazione
+order by num_aeroporto desc
+
+4. Qual e’ la media, il massimo e il minimo della durata dei voli effettuati dalla compagnia ’MagicFly ’?
+
+select avg(volo.durataminuti) as media, min(volo.durataminuti) as minimo, max(volo.durataminuti) as massimo
+from compagnia, volo
+where volo.comp = compagnia.nome
+and compagnia.nome = 'MagicFly'
+
+5. Qual e’ l’anno di fondazione della compagnia piu’ vecchia che opera in ognuno degli aeroporti?
+
+SELECT aeroporto.codice, aeroporto.nome, min (compagnia.annofondaz)
+FROM Aeroporto, Compagnia, Volo, ArrPart
+WHERE volo.comp = compagnia.nome
+and arrpart.codice = volo.codice
+and (aeroporto.codice = arrpart.partenza or aeroporto.codice = arrpart.arrivo)
+group by aeroporto.codice, aeroporto.nome
+
+6. Quante sono le nazioni ( diverse ) raggiungibili da ogni nazione tramite uno o piu’ voli?
+
+
+
+
+
+
+
+

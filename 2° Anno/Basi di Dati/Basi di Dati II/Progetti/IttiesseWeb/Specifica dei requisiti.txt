@@ -1,0 +1,55 @@
+Specifica dei requisiti
+
+1. Corso
+    1.1 durata = 2 anni
+    1.2 tirocinio (vedi req 8)
+    1.3 nome: Stringa 
+
+2. Edizione --> attivata per il corso 
+    2.1 anno: Integer 
+    2.2 numero_crediti_max_esame: Intero > 0
+    2.3 numero_crediti_max_tirocinio: Intero > 0
+
+3. Studente
+    3.1 nome: Stringa
+    3.2 cognome: Stringa 
+    3.3 data_nascita: Data 
+    3.4 codice_fiscale: Codice 
+
+    iscritto ad una sola edizione (relazione)
+
+4. Modulo (Insegnamento) --> ESEMPIO BASE DI DATI I
+    4.1 nome: Stringa 
+    4.2 docenti_che_insegnano: Operazione 
+
+    fa parte di esattamente un blocco (relazione)
+
+
+5. Blocco --> INTERO BASE DI DATI 
+    5.1 ottenimento_crediti: Operazione
+    5.2 è_sostenibile: Operazione 
+
+6. Esame 
+    6.1 codice: Stringa 
+    6.2 periodo: Periodo 
+    6.3 superato: Operazione 
+
+    6.0.1 EsameStato 
+
+7. Prova 
+    7.1 nome: Stringa
+    7.2 data: Data 
+
+8. Tirocinio 
+    8.1 data_inizio: DataOra
+    8.2 azienda_coinvolta: (vedi req 9)
+
+9. Azienda 
+    9.1 partita_IVA: IVA 
+    9.2 ragione_sociale: Stringa
+
+10. Docente
+    10.1 nome: Stringa
+    10.2 cognome: Stringa
+    10.3 email: Mail 
+    10.4 codice_fiscale: Codice 

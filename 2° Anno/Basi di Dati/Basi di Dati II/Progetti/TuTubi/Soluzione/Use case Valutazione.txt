@@ -1,0 +1,24 @@
+Specifica Use case Valutazione
+
+	valuta(vid:Video, voto:Voto)
+		pre:
+			Sia u:Utente l'oggetto che rappresenta l'attore che ha invocato l'operazione. 
+
+			not valutazione(u, vid) and
+			not utente_pubblica_video(u, vid) and
+			EXISTS vis, i_vis   
+				Visualizzazione(vis) and
+				ut_vis(u, vis) and vid_vis(vid, vis) and
+				istante(vis, i_vis) and i_vis < adesso.
+
+
+		post:	
+			- Dom. di Interp.: invariato
+
+			- Variazioni nell'interpretazione dei simboli di predicato:
+				- valutazione(u, vid)
+				- voto(u, vid, voto)
+				- istante(u, vid, adesso).
+
+
+Questo svolgimento potrebbe essere incompleto. E' infatti possibile che manchino le specifiche di ulteriori operazioni o di altri use-case, che si lasciano eventualmente per esercizio.				

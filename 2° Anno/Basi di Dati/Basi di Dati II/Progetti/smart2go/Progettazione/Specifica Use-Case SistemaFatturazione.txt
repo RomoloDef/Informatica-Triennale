@@ -1,0 +1,50 @@
+Specifica Use-Case SistemaFatturazione
+
+- trovaSocieta(): Societa[0..*]
+
+pre:
+
+post:
+
+    result = { s | FOR ALL s, c, a (Società(s) AND Convenzioni(c) AND ConvenzioniEcompatibili(c) 
+               AND AutoEcompatibile(a) AND stipula(s, c) AND ConvAutoEcompatibile(a, c)) }
+
+    algoritmo:
+
+    SELECT DISTINCT s.*
+    FROM Societa s, Convenzioni c, ConvenzioniEcompatibili ce, AutoEcompatibile a 
+    WHERE c.id = ce.convenzione
+    AND stipula.societa = s.iban
+    AND stipula.convenzione = c.id 
+    AND ConvAutoEcompatibile.auto = a.id
+
+    esegui questa query e restituisci il risultato in Q
+    
+
+
+- ricercaSocieta(s: Societa): Societa[0..*]
+
+pre:
+
+post: 
+
+    result = { s | FOR ALL s, c, a, ca, n, t1, t2 (Noleggio(n) AND Societa(s) AND Convenzioni(c) AND Auto(a) AND Categoria(ca)
+               AND CategoriaAuto(a, ca) AND nol_aut(a, n) AND nol_conv(n, c) AND stipula(c, s) AND tasso_sconto(c, t1)
+               AND tasso_sconto(c, t2) AND t1 != t2)}
+
+
+    algoritmo:
+
+    SELECT DISTINCT s.*
+    FROM Societa s
+    JOIN Convenzioni c1 ON c1.societa = s.iban
+    JOIN Convenzioni c2 ON c2.societa = s.iban
+    WHERE c1.id <> c2.id
+    AND c1.tass_sconto <> c2.tass_sconto;
+
+    esegui questa query e restituisci il risultato in Q
+    
+
+    
+
+

@@ -1,0 +1,144 @@
+Ulteriori vincoli esterni provenienti dalla progettazione
+
+[V.Persona.disgiunzione]
+
+NOT EXIST p, s, d (Persona(p) AND Studente(s) AND Docente(d) AND is_d(p, d) AND is_s(p, s))
+
+[V.Persona.completezza]
+
+FOR ALL p Persona(p) --> (EXIST s is_s(p, s)) OR (EXIST d is_d(p, d))
+
+[V.Corso.Tirocinio]
+
+FOR ALL c Corso(c) --> EXIST t is_t(c, t)
+
+[V.Partecipazione.Esame.Stato]
+
+FOR ALL p Partecipazione(p) --> (EXIST e (Esame(e) AND partecipazioneEsameStato(p, e)) <-> tipo(e, 'EsameStato'))
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+Trigger - Disgiunzione
+
+[V.Persona.disgiunzione]
+
+Operazione da intercettare: INSERIMENTO e MODIFICA in Studente e Docente
+
+Quando: BEFORE 
+
+Funzione:
+
+    - sia iError := False 
+
+    - sia new l'ennupla che si vuole inserire o modificare 
+
+    - se lo si vuol fare 
+
+    - iError:
+
+        SELECT *
+        FROM Studente, Docente 
+        WHERE Studente.persona = new.id 
+        AND Docente.persona = new.id 
+
+    - se iError = True lancia l'eccezione 
+
+    - altrimenti permetti 
+
+Trigger - Completezza 1
+
+[V.Persona.completezza]
+
+Operazione da intercettare: INSERIMENTO in Persona 
+
+Quando: AFTER 
+
+Funzione:
+
+     - sia iError := False 
+
+    - sia new l'ennupla che si vuole inserire o modificare 
+
+    - se lo si vuol fare 
+
+    - iError: Se NOT EXIST (
+
+        SELECT Persona
+        FROM Studente
+        WHERE Studente.persona = new.id 
+        UNION
+        SELECT Persona 
+        FROM Docente
+        AND Docente.persona = new.id 
+
+    )
+
+    - se iError = True lancia l'eccezione 
+
+    - altrimenti permetti 
+
+
+Trigger - Completezza 2
+
+[V.Persona.completezza]
+
+Operazione da intercettare: Rimozione in Studente o Docente 
+
+Quando: AFTER 
+
+Funzione:
+
+    - sia iError := False 
+
+    - sia new l'ennupla che si vuole inserire o modificare 
+
+    - se lo si vuol fare 
+
+    - iError: 
+
+        SELECT *
+        FROM (
+            Persona LEFT OUTER JOIN Studente ON Persona.id = studente.persona
+        ) 
+        LEFT OUTER JOIN Docente ON Persona.id = Docente.persona 
+        WHERE Persona.id = old.persona 
+        AND (Studente.id IS NULL) AND (Docente.id IS NULL)
+
+    - se iError = True lancia l'eccezione 
+
+    - altrimenti permetti 
+
+
+Trigger - PartecipazioneEsame 
+
+[V.Partecipazione.Esame.Stato]
+
+Operazione da intercettare: Inserimento e Modifica in Esame e Partecipazione 
+
+Quando: AFTER 
+
+Funzione:
+
+    - sia iError := False 
+
+    - sia new l'ennupla che si vuole inserire o modificare 
+
+    - se lo si vuol fare 
+
+    - iError := 
+
+        -- per Esame di tipo 'EsameStato'
+        SELECT 1 
+        FROM Partecipazione p 
+        WHERE p.id = new.partecipazione;
+
+        -- per Partecipazione
+        SELECT 1 
+        FROM Esame e
+        WHERE e.partecipazione = new.id
+        AND e.tipo <> 'EsameStato';
+
+    - se iError = True lancia l'eccezione 
+
+    - altrimenti permetti 
+

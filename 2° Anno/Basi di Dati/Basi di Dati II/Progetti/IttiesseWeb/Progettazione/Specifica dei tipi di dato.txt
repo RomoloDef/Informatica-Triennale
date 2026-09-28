@@ -1,0 +1,41 @@
+Tipi di dato 
+
+DBMS: postgreSQL
+
+- Codice: 
+
+    CREATE DOMAIN Codice varchar
+        CHECK (codice_fiscale ~ '^[A-Z0-9]{16}$')
+
+- Mail: 
+
+    CREATE DOMAIN Mail varchar 
+        CHECK(value ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
+
+- IVA:  
+
+    CREATE DOMAIN IVA varchar
+        CHECK (value ~ '^[0-9]{11}$')
+
+- Durata: INTERVAL
+
+- IntegerGZ: 
+
+    CREATE DOMAIN IntegerGZ AS Integer
+        CHECK (value IS NOT NULL and VALUE > 0);
+
+- Periodo:
+
+    CREATE TYPE Periodo (
+        da timestamp,
+        a timestamp
+    );
+
+- TipoEsame: CREATE TYPE TipoEsame AS ENUM ('Esame', 'EsameStato')
+
+- Votazione (0..10): 
+
+    CREATE DOMAIN Votazione AS Integer 
+        CHECK (values IS NOT NULL and VALUE >= 0 AND VALUE <= 10);
+        
+

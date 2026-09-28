@@ -1,0 +1,23 @@
+Specifica Use Case Sistema 
+
+- trovaSquadreRichieste(i: Intervento): Squadra[0..*]
+
+pre: 
+
+post:
+
+    algoritmo:
+
+    SELECT * 
+    FROM Squadra s, Intervento i, Attrezzatura a, Operatore o, Utilizza 
+    WHERE i.attrezzatura = a.id 
+    AND i.squadra = s.codice_identificativo
+    AND s.operatore = o.id 
+    AND utilizza.operatore = o.codice_identificativo
+    AND utilizza.attrezzatura = a.id 
+    AND s.minimo_operatori > s.membri  
+
+    esegui la query e salvane il risultato in Q
+
+
+

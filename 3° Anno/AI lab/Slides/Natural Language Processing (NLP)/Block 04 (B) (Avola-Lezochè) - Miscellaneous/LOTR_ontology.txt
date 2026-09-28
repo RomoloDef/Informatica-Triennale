@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://example.org/lotr#"
+ xml:base="http://example.org/lotr"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:owl="http://www.w3.org/2002/07/owl#"
+ xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<owl:Ontology rdf:about="http://example.org/lotr"/>
+
+<owl:Class rdf:about="#Character"/>
+<owl:Class rdf:about="#Location"/>
+
+<owl:Class rdf:about="#Hobbit">
+ <rdfs:subClassOf rdf:resource="#Character"/>
+</owl:Class>
+
+<owl:ObjectProperty rdf:about="#livesIn">
+ <rdfs:domain rdf:resource="#Character"/>
+ <rdfs:range rdf:resource="#Location"/>
+</owl:ObjectProperty>
+
+<owl:NamedIndividual rdf:about="#Frodo">
+ <rdf:type rdf:resource="#Hobbit"/>
+</owl:NamedIndividual>
+
+</rdf:RDF>

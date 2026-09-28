@@ -1,0 +1,40 @@
+# --- STADIO 1: Builder ---
+# Aggiorna alla versione 1.21 per supportare le nuove librerie
+FROM golang:1.21 AS builder
+
+# Crea una cartella di lavoro dentro il container chiamata /app
+WORKDIR /app
+
+# Copia i file che descrivono le dipendenze del progetto
+COPY go.mod go.sum ./
+
+# Scarica le librerie.
+RUN go mod download
+
+# Ora copia tutto il resto del tuo codice sorgente dentro il container
+COPY . .
+
+# Per compilare il progetto:
+# Crea un file eseguibile chiamato "webapi"
+RUN go build -o webapi ./cmd/webapi/
+
+
+# --- STADIO 2: Runtime ---
+# Uso la stessa versione aggiornata per l'esecuzione
+FROM golang:1.21
+
+# Crea la cartella di lavoro
+WORKDIR /app
+
+# Crea la cartella per i file caricati (uploads)
+# con i permessi necessari
+RUN mkdir -p /app/uploads && chmod 777 /app/uploads
+
+# Copia SOLO il file eseguibile "webapi" creato nello Stadio 1
+COPY --from=builder /app/webapi .
+
+# Diciamo a Docker che questo container ascolterà sulla porta 3000
+EXPOSE 3000
+
+# Il comando finale: quando si avvii il container, viene lanciato questo programma
+CMD ["./webapi"]

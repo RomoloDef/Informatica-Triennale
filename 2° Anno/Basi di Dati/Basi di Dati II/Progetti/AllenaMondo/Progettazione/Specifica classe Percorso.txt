@@ -1,0 +1,27 @@
+Specifica classe Percorso 
+
+- calcola_distanza(): Reale >= 0
+
+pre:
+
+post:
+
+    algoritmo:
+
+    WITH formule (
+        SELECT (c'.latitudine - c.latitudine) AS L, (c'.longitudine - c.longitudine) AS Lo, (pow(sin(L/2), 2) + cos(c.latitudine) + cos(c'.latitudine) * pow(sin(L0/2), 2)) as a,
+        FROM Percorso p, Coordinate c, Coordinate c'
+        WHERE c.latitudine = p.latitudine 
+        AND c.longitudine = p.longitudine
+        WHERE c'.latitudine = p.latitudine 
+        AND c'.longitudine = p.longitudine
+    ),
+
+    ultimo (
+        SELECT (2 * 2(atan(sqrt(formule.a), sqrt(1 - formule.a)))) as c
+        FROM formule
+    )
+
+    SELECT (6371 * c) AS distanza
+    FROM ultimo
+

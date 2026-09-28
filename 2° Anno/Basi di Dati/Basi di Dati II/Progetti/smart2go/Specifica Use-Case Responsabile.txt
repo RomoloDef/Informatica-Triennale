@@ -1,0 +1,28 @@
+Specifica Use-Case Responsabile
+
+- accettaPreRegistrazione(s: Società): Dipendente
+
+pre: EXIST s Socio(s)
+
+post:
+     Side Effect:
+     Nuovo elemento del dominio di interpretazione: ALPHA
+
+    - Dipendente(ALPHA)
+
+    result = ALPHA
+
+- rifiutaPreRegistrazione(s: Società): Dipendente
+
+pre: EXIST s Socio(s)
+
+post:
+     Side Effect:
+     Nuovo elemento del dominio di interpretazione: ALPHA
+
+    - Dipendente(ALPHA)
+
+    result = NOT(ALPHA)
+
+
+-

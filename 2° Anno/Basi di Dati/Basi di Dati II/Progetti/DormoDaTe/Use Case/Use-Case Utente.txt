@@ -1,0 +1,24 @@
+Use Case Utente
+
+ospita():
+
+	INSERT INTO UtenteHost (id_utente)
+	VALUES (LAST_INSERT_ID())
+
+viaggia():
+
+	INSERT INTO UtenteViaggiatore (id_utente)
+	VALUES (LAST_INSERT_ID())
+
+modifica_dati():
+
+	UPDATE Utente
+	SET nome = '...',
+	cognome = '...' ,
+	sesso = '...',
+	data_nascita = '...',
+	età = '...', 
+	città = '...'
+	
+	WHERE id_utente = '...'    	
+	

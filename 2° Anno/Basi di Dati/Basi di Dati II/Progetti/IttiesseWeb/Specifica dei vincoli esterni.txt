@@ -1,0 +1,24 @@
+Specifica dei vincoli esterni
+
+[V.Corso.durata] - Ogni corso ha una durata di due anni
+
+FOR ALL c, d, a (Corso(c) AND da(a, c) AND a(a, c)) --> (a - d = 2)
+
+[V.Prova.date] - La data della prova deve essere compresa nel periodo di esame 
+
+FOR ALL p, da, e, d, a (Prova(p) AND data(p, da) AND Esame(e) AND da(d, e) AND a(a, e) AND formato(e, p)) --> (da >= d AND da <= a)
+
+[V.Partecipazione.istanti] - L'istante di partecipazione alla prova deve essere minore uguale alla data della prova 
+
+FOR ALL part, p, i, d (Partecipazione(part) AND Prova(p) AND istante_partecipazione(i, part) AND data(d, p)) --> i <= p
+
+[V.Esame.periodo] - l'inizio del periodo deve essere minore della fine 
+
+FOR ALL e, inizio, fine (Esame(e) AND da(inizio, e) AND a(fine, e)) --> inizio <= fine
+
+[V.Blocco.propedeudico] - dati due blocchi per cui uno studente deve fare l'esame, non si può fare il secondo blocco se non si è superato l'esame del primo
+
+FOR ALL s, b1, b2 (Studente(s) AND Blocco(b1) AND Blocco(b2) AND Esame(s, b2) AND propedeuticità(b1, b2)) --> superato(s, b1, 'True')
+
+
+

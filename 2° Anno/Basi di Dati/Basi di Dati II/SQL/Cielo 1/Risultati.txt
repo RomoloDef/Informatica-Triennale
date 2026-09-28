@@ -1,0 +1,85 @@
+1. Quali sono i voli (codice e nome della compagnia) la cui durata supera le 3 ore?
+
+select volo.codice, volo.comp
+from volo, compagnia
+where volo.comp = compagnia.nome
+and volo.durataMinuti > 180;
+
+2. Quali sono le compagnie che hanno voli che superano le 3 ore?
+
+select distinct compagnia.nome as compagnia
+from compagnia, volo
+where volo.comp = compagnia.nome
+and volo.durataminuti > 180;
+
+3. Quali sono i voli (codice e nome della compagnia) che partono dall’aeroporto con codice 
+‘CIA’?
+
+select distinct arrpart.codice, arrpart.comp
+from volo, compagnia, aeroporto, arrpart
+where volo.comp = compagnia.nome
+and aeroporto.codice = 'CIA'
+and arrpart.partenza = aeroporto.codice
+
+4. Quali sono le compagnie che hanno voli che arrivano all’aeroporto con codice ‘FCO’ ?
+
+select distinct comp as compagnia
+from arrpart
+where arrpart.arrivo = 'FCO'
+
+5. Quali sono i voli (codice e nome della compagnia) che partono dall’aeroporto ‘FCO’ e arrivano all’aeroporto ‘JFK’?
+
+select distinct arrpart.codice, arrpart.comp
+from volo, aeroporto, compagnia, arrpart
+where volo.comp = compagnia.nome
+and arrpart.arrivo = 'JFK'
+and arrpart.partenza = 'FCO'
+
+6. Quali sono le compagnie che hanno voli che partono dall’aeroporto ‘FCO’ e atter- rano all’aeroporto ‘JFK’?
+
+select distinct arrpart.comp as compagnia
+from arrpart
+where arrpart.partenza = 'FCO'
+and arrpart.arrivo = 'JFK'
+order by compagnia desc
+
+7. Quali sono i nomi delle compagnie che hanno voli diretti dalla città di ‘Roma’ alla città di ‘New York’?
+
+select distinct arrpart.comp as compagnia
+from luogoaeroporto luogo_p, arrpart, luogoaeroporto luogo_a
+where arrpart.partenza = luogo_p.aeroporto
+and arrpart.arrivo = luogo_a.aeroporto
+and luogo_p.citta = 'Roma'
+and luogo_a.citta = 'New York'
+
+8. Quali sono gli aeroporti (con codice IATA, nome e luogo) nei quali partono voli della compagnia di nome ‘MagicFly’?
+
+select aeroporto.codice, aeroporto.nome, luogoaeroporto.citta
+from aeroporto, luogoaeroporto, arrpart
+where arrpart.comp = 'MagicFly'
+and arrpart.partenza =  aeroporto.codice
+and arrpart.partenza = luogoaeroporto.aeroporto
+
+9. Quali sono i voli che partono da un qualunque aeroporto della città di ‘Roma’ e atterrano ad un qualunque aeroporto della città di ‘New York’? Restituire: codice del volo, nome della compagnia, e aeroporti di partenza e arrivo.
+
+select distinct arrpart.codice as codice_volo, arrpart.comp as compagnia,
+arrpart.partenza as partenza, arrpart.arrivo as arrivo
+from luogoaeroporto luogo_p, arrpart, luogoaeroporto luogo_a
+where arrpart.partenza = luogo_p.aeroporto
+and arrpart.arrivo = luogo_a.aeroporto
+and luogo_p.citta = 'Roma'
+and luogo_a.citta = 'New York'
+
+10. Quali sono i possibili piani di volo con esattamente un cambio (utilizzando solo voli della stessa compagnia) da un qualunque aeroporto della città di ‘Roma’ ad un qualunque aeroporto della città di ‘New York’? Restituire: nome della compagnia, codici dei voli, e aeroporti di partenza, scalo e arrivo.
+
+
+
+11. Quali sono le compagnie che hanno voli che partono dall’aeroporto ‘FCO’, atter- rano all’aeroporto ‘JFK’, e di cui si conosce l’anno di fondazione?
+
+select ap.comp
+from arrpart as ap, compagnia as c
+where ap.partenza = 'FCO'
+and ap.arrivo = 'JFK'
+and c.nome = ap.comp
+and c.annofondaz is not null
+

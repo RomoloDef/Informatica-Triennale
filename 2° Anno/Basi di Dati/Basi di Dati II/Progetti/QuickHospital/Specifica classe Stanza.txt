@@ -1,0 +1,13 @@
+Specifica delle operazioni presenti in Stanza
+
+postiLiberi(): Intero > 0
+
+Pre:
+
+Post:
+
+	FOR ALL pl, paz (Paziente(paz) AND PostoLetto(pl) AND posti(this, p) AND
+
+	ricovero(pl, paz)) --> A = {(this, pl) | stanz-post(this, pl)}
+
+	return p - |A|

@@ -1,0 +1,6 @@
+Specifica Classe Gestione
+
+[V.GestioneFinita.istanti]
+
+FOR ALL g, ii, if (Gestione(g) AND GestioneFinita(g) AND istante_iniziale(ii, g) AND istante_finale(if, g)) --> ii < if
+

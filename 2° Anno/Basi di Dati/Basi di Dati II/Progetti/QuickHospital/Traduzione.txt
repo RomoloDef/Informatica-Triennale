@@ -1,0 +1,86 @@
+Stanza(__id__ : serial, piano: Int_gz_not_null, settore: Int_gz_not_null, posti: Int_tra_uno_otto)
+
+
+PostoLetto(__id__ : serial, numero: Int_tra_uno_otto, stanza: serial)
+	fk: stanza references to Stanza(id)
+
+
+Dimissione(__id__ : serial, istante: TimeStamp, postoletto: serial, paziente: serial)
+	fk: postoletto references to PostoLetto(id)
+	fk: paziente references to Paziente(id)
+
+
+ricovero(__paziente__ : serial, postoletto: serial, data: TimeStamp)
+	altrachiave: postoletto
+	fk: paziente references to Paziente(id)
+	fk: postoletto references to PostoLetto(id)
+
+
+Paziente(__id__ : serial, tipo: TipoPaziente, recapito_telefonico: Telefono, recapito_postale: varchar, 
+recapito_email: varchar, persona: serial)
+	fk: persona references to Persona(id)
+	ennupla: (tipo is 'PazienteEsterno') = (persona is not null)
+
+
+Richiede(id: serial, istante: TimeStamp, __paziente__: serial, prestazionemedica: varchar)
+	altrachiave: id
+	fk: paziente references to Paziente(id)
+	fk: prestazionemedica references to PrestazioneMedica(descrizione)
+
+
+PrestazioneMedica(__descrizione__ : varchar , data: TimeStamp, specializzazione: varchar)
+	fk: specializzazione references to Specializzazione(nome)
+
+
+Specializzazione(__nome__ : varchar)
+
+
+secondaria(__medico__ : serial, __specializzazione__ : varchar)
+	fk : medico references to Medico(id)
+	fk: specializzazione references to Specializzazione(nome)
+
+
+Medico(__id__ : serial, specializzazione: varchar, persona: serial)
+	fk: specializzazione references to Specializzazione(nome)
+	fk: persona references to Persona(id)
+
+
+Visita(__id__ : serial, istante: timeStamp, medico: serial)
+	fk : medico references to Medico(id)
+	
+
+Persona(__id__ : serial, nome: varchar, cognome: varchar, data_nascita: TimeStamp)
+
+
+-- Progetto Trigger [V.Persona.gen.compl]
+
+-- FOR ALL p Persona(p) -> ((EXIST m pers-med(p, m)) OR (EXIST paz pers-paz(p, paz))
+
+Quando Intercettarlo: DOPO INSERT(new) in Post
+
+Controllo da effettuare: new.id deve occorre in Medico(persona) o Paziente(persona)
+
+If (NOT EXIST (SELECT persona FROM medico WHERE persona = new.id
+UNION SELECT persona FROM paziente WHERE persona = new.id):
+	raise Exception
+
+else:	
+
+	return new
+
+ 
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	

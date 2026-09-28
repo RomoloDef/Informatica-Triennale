@@ -1,0 +1,47 @@
+/* Le dichiarazione in CSS sono nella forma proprietà: valore; */
+
+body {
+    background-color: lightgray;
+}
+
+h1 {
+    color: navy;;
+}
+
+h2 {
+    color: darkred;
+}
+
+p {
+    color: black;
+}
+
+/* Utilizzo dei selettori di classe e ID */
+h1, h2, p {
+    text-align: center;
+}
+
+ul, ol {
+    margin: 20px;
+    padding: 20px;
+    text-align: left;
+}
+
+/* Utilizzo dei selettori complessi (combinatori) */
+
+/* 1. Selettore discendente - Seleziona tutti i discendenti di un elemento */
+div p {
+    background-color: white;
+}
+
+/* 2. Selettore figlio - Seleziona solo i figli diretti di un elemento */
+div > p {
+    font-weight: bold;
+}
+
+/* 3. Selettore fratello adiacente - Seleziona l'elemento che segue immediatamente un altro elemento */
+h2 + p {
+    margin-top: 10px;
+}
+
+

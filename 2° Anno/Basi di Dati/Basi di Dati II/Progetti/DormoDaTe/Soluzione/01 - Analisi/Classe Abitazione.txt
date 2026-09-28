@@ -1,0 +1,46 @@
+Classe Abitazione
+
+
+distanza_da_risorsa_più_vicina_m(t:TipoRisorsaGeografica): reale >= 0
+	L'operazione restituisce la distanza dell'abitazione this dalla risorsa geografica di tipo 't' più vicina.
+
+	pre: nessuna
+	post: 
+		- Sia c tale da soddisfare: coord(this, c).
+		- result soddisfa: 
+			distanza_alla_più_vicina_[CoordGeo](c, t) // Operazione del tipo di dato CoordGeo
+
+
+distanza_da_centro_m(): reale >= 0
+	pre: nessuna
+	post = 
+		- Sia CENTRO tale da soddisfare:   TipoRisorsaGeografica(CENTRO) and nome(CENTRO, "centro").
+		- result soddisfa: distanza_da_risorsa_più_vicina_(this, CENTRO, result)
+
+
+sistemazioni_disponibili(p:Periodo): Sistemazione [0..*]
+	pre: nessuna
+	post:
+		result = { sist |	Sistemazione(sist) and
+							abitazione(sist, this) and
+							not indisponibile(sist, p) and
+							not EXISTS pren, pren_per, stato_pren Prenotazione(pren) 
+									and pren_sist(pren, sist)
+									and periodo(pren, pren_per) and interseca(pren_per, p)
+									and stato(pren, stato_pren, adesso) 
+									and sistemazione_riservata(stato_pren, true).
+		}.
+
+posti_disponibili(p:Periodo): Intero >= 0
+	pre: nessuna
+	post:
+		Sia 
+			
+			X = { x, c | sistemazioni_disponibili(this, p, x) and cap(x,c) }
+
+		l'insieme delle coppie (x,c), dove x è uno degli oggetti (di classe Sistemazione) restituiti dall'invocazione dell'operazione this.sistemazioni_disponibili(p), e 'c' è la sua capacità (numero di persone che la sistemazione può ospitare).
+
+		result  =  SUM       [ c ].
+		           (x,c) in X
+
+		Ovvero, result è il risultato della sommatoria, per tutti gli elementi (x,c) in X, dei valori delle componenti 'c'.

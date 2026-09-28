@@ -1,0 +1,40 @@
+Specifica Use-Case Socio
+
+- preRegistrazione(n: Stringa, c: Stringa, data: Data, patente: Stringa): Socio 
+
+pre:
+
+post:
+    Side Effect
+    Nuovo elemento del dominio di interpretazione: ALPHA
+
+    - Socio(ALPHA)
+    - nome(n, ALPHA)
+    - cognome(c, ALPHA)
+    - data_nascita(data, ALPHA)
+    - estremi_patente(patente, ALPHA)
+
+    result = ALPHA
+
+
+- effettuaNoleggio(): Noleggio
+
+pre:
+
+post:
+
+    FOR ALL n, ii, (Noleggio(n) AND istante_iniziale(n, ii)) --> 
+
+    result = Noleggio.calcola_tariffa()
+
+- denunciaDanni(a: Auto):
+
+pre:
+
+post:
+     Side Effect
+     Nuovo elemento del dominio di interpretazione: ALPHA
+
+    - evetuali_danni(a, ALPHA)
+
+    result = ALPHA

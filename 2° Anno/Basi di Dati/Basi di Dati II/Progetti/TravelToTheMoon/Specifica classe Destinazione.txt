@@ -1,0 +1,11 @@
+Specifica classe Destinazione
+
+- posti(): PostoDaVedere[0..*]
+
+pre:
+
+post:
+
+    result = { p | PostoDaVedere(p) AND dest_post(this, p)}
+
+    

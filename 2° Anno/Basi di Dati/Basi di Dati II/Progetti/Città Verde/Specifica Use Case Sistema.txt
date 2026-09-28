@@ -1,0 +1,44 @@
+Specifica Use Case Sistema 
+
+- trovaSquadreRichieste(i: Intervento): Squadra[0..*]
+
+pre: 
+
+    (FOR ALL i, attr, s (Intervento(i) AND Attrezzatura(attr) AND usata(i, attr) AND Squadra(s) AND effettua(i, s)) -->
+
+    EXIST o (Operatore(o) AND lavora(o, s) AND utilizza(o, attr)))
+
+    AND 
+
+    (FOR ALL i, s, m, min (Intervento(i) AND Squadra(s) AND effettua(s, i) AND minimo_operatori(i, min) AND membri(s, m)) --> m <= min)
+
+post:
+
+    result = { s | effettua(i, s) }
+
+
+- calcoloTassoMalattia(inizio: DataOra, fine: DataOra, mal: Malattia[0..*]): Reale >= 0
+
+pre:
+
+post:
+
+    sia A l'insieme dei soggetti malati nel determinato periodo
+
+    A = { s | SoggettoVerde(s) AND PiantaMalata(s) AND EXIST em, d (EpisodioMalattia(em) AND cura(em, s) AND data_scoperta(em, d) AND
+    
+    d >= inizio AND d <= fine)}
+
+    sia B l'insieme dei soggetti malati di una specifica malattia 
+
+    B = { s | SoggettoVerde(s) AND PiantaMalata(s) AND Malattia(mal) AND EXIST em, d, succ (EpisodioMalattia(em) AND cura(em, s) AND 
+    
+    data_scoperta(em, d) AND successo(em , mal) AND d >= inizio AND d <= fine) }
+
+    result = B/A
+    
+    
+    
+
+
+

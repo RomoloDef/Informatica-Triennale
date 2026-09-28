@@ -1,0 +1,22 @@
+# Scrivere in linguaggio assemblativo MIPS/MARS una funzione che riceve in ingresso tre numeri interi h, m e che rappresentano ore minuti e secondi
+# e restituisce il numero di secondi trascorsi dalla mezzanotte
+
+
+.text
+.globl converti_in_secondi
+
+converti_in_secondi:
+    # Calcola i secondi totali per le ore
+    li $t0, 3600        # 3600 secondi in un'ora
+    mul $t1, $a0, $t0   # $t1 = h * 3600 (secondi in ore)
+    
+    # Calcola i secondi totali per i minuti
+    li $t0, 60          # 60 secondi in un minuto
+    mul $t2, $a1, $t0   # $t2 = m * 60 (secondi in minuti)
+    
+    # Aggiungi i secondi
+    add $t3, $t1, $t2   # $t3 = (h * 3600) + (m * 60)
+    add $t3, $t3, $a2   # $t3 = (h * 3600) + (m * 60) + s
+    
+    # Restituisci il risultato (secondi totali dalla mezzanotte)
+    move $v0, $t3       # $v0 contiene il risultato (secondi totali)

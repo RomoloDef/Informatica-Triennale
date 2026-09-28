@@ -1,0 +1,6 @@
+2026-06-23-Romolo-Deffereria-2114887
+RR 16.1328
+x 3
+y 0
+tau0 15.6
+tau1 0

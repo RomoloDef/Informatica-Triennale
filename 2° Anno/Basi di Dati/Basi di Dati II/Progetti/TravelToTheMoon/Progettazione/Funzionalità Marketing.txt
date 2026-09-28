@@ -1,0 +1,74 @@
+Funzionalità Marketing 
+
+- etàMedia(i: dataOra, f: dataOra): Reale >= 0
+
+pre:
+
+post:
+
+    algoritmo:
+
+    SELECT SUM(c.età) * 1.0 / COUNT(*) AS Risultato
+    FROM Cliente c, Prenotazione p, Crociera cr, Itinerario i, Destinazione d, Continente cont, cliente_prenotazione cp, Arrivo a, Partenza part
+    WHERE c.id = cp.cliente 
+    AND cp.prenotazione = p.id 
+    AND cr.codice = itinerario.crociera 
+    AND cr.inizio < cr.fine 
+    AND (i.arrivo = d.id OR i.partenza = d.id)
+    AND cont.destinazione = d.id 
+    AND cont.esotico = TRUE
+
+    restituisci risultato di questa query e inserisci in Q
+
+- percentualeDestinazioni(i: dataOra, f: dataOra): Reale >= 0
+
+pre:
+
+post:
+
+    algoritmo:
+
+    WITH
+    -- Crociere Luna di Miele
+    CL AS (
+        SELECT DISTINCT c.id, d.id
+        FROM Crociera c, Itinerario i, Destinazione d, LunaDiMiele l
+        WHERE i.crociera = c.id
+        AND i.arrivo = d.id
+        AND c.id = l.crociera
+    ),
+
+    -- Crociere Per Famiglia
+    CF AS (
+        SELECT DISTINCT c.id, d.id
+        FROM Crociera c, Itinerario i, Destinazione d, PerFamiglia p
+        WHERE i.crociera = c.id
+        AND i.arrivo = d.id
+        AND c.id = p.crociera
+    ),
+
+    -- Tutte le destinazioni arrivo (insieme D)
+    D AS (
+        SELECT DISTINCT d.id_destinazione
+        FROM Crociera c, Itinerario i, Destinazione d
+        WHERE c.id = i.crociera
+        AND i.arrivo = d.id
+    ),
+
+    -- Destinazioni "grandi" DG
+    DG AS (
+        SELECT d.id
+        FROM D d
+            LEFT JOIN CL cl ON d.id = cl.id
+            LEFT JOIN CF cf ON d.id = cf.id
+        GROUP BY d.id
+        HAVING COUNT(DISTINCT cl.id) >= 10
+            OR COUNT(DISTINCT cf.id) >= 15
+    )
+
+    -- Risultato finale
+    SELECT (COUNT(*)::float / (SELECT COUNT(*) FROM D)) * 100 AS risultato
+    FROM DG;
+
+
+    restituisci risultato di questa query e inserisci in Q

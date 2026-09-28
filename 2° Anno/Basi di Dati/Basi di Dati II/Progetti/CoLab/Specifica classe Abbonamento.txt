@@ -1,0 +1,16 @@
+Specifica classe Abbonamento
+
+- fine(): DataOra
+
+pre:
+
+post: 
+
+    FOR ALL tip, in, dur (TipologiaAbbonamento(tip) AND tipologia(this, tip) AND istante_inizio(this, in)
+    
+    AND durata_giorni(tip, dur)) --> result = in + dur
+
+[V.Abbonamento.inizio.fine]
+
+FOR ALL a, ia, if (Abbonamento(a) AND istante_accesso(a, ia) AND fine(a, if)) ---> ia < if
+

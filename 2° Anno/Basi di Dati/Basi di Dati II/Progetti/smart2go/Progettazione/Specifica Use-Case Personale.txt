@@ -1,0 +1,19 @@
+Specifica Use-Case Personale
+
+- accettaPreRegistrazione(c: varchar):
+
+pre:
+
+post:
+     Side Effect
+     Nuovo elemento del dominio di interpretazione: ALPHA
+    - SmartCard(ALPHA)
+    - codice(c, ALPHA)
+
+    result = ALPHA
+
+    algoritmo:
+
+    INSERT INTO SmartCard(codice) VALUES (PAR_1)
+
+    dove PAR_1 sarà sostituito con c

@@ -1,0 +1,11 @@
+Specifica classe Sfida 
+
+- sport_presenti(): Sport[0..*]
+
+pre:
+
+    EXIST s (Sport(s) AND presente(s, this))
+
+post:
+
+    result = { s | EXIST presente(s, this)}

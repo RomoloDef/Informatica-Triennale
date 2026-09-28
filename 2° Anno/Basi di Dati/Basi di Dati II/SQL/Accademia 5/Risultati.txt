@@ -1,0 +1,103 @@
+1. Quali sono il nome, la data di inizio e la data di fine dei WP del progetto di nome ‘Pegasus’ ?
+
+select WP.nome, WP.inizio, WP.fine
+from WP, Progetto
+where WP.progetto = Progetto.id
+and Progetto.nome = 'Pegasus'
+
+2. Quali sono il nome, il cognome e la posizione degli strutturati che hanno almeno una attività 
+nel progetto ‘Pegasus’, ordinati per cognome decrescente?
+
+select distinct Persona.id, Persona.nome, Persona.cognome, Persona.posizione
+from AttivitaProgetto, Persona, Progetto
+where AttivitaProgetto.persona = Persona.id and AttivitaProgetto.progetto = Progetto.id
+and Progetto.nome = 'Pegasus'
+order by cognome desc
+
+3. Quali sono il nome, il cognome e la posizione degli strutturati che hanno più di una attività nel progetto ‘Pegasus’?
+
+select distinct Persona.id, Persona.nome, Persona.cognome, Persona.posizione
+from AttivitaProgetto att, AttivitaProgetto att2, Persona, Progetto
+where att.persona = Persona.id 
+and att.progetto = Progetto.id
+and att2.persona = Persona.id
+and att2.progetto = Progetto.id
+and att.id<>att2.id
+and Progetto.nome = 'Pegasus'
+
+4. Quali sono il nome, il cognome e la posizione dei Professori Ordinari che hanno fatto almeno una assenza per malattia?
+
+select distinct Persona.id, Persona.nome, Persona.cognome
+from Assenza, Persona
+where Assenza.persona = Persona.id
+and Persona.posizione = 'Professore Ordinario'
+and Assenza.tipo = 'Malattia'
+
+5. Quali sono il nome, il cognome e la posizione dei Professori Ordinari che hanno fatto più di una assenza per malattia?
+
+select distinct Persona.id, Persona.nome, Persona.cognome
+from Persona, Assenza ass1, Assenza ass2
+where Persona.id = ass1.persona 
+and Persona.id = ass2.persona
+and Persona.posizione = 'Professore Ordinario'
+and ass1.tipo = 'Malattia' and ass2.tipo = 'Malattia' 
+and ass1.id <> ass2.id
+
+6. Quali sono il nome, il cognome e la posizione dei Ricercatori che hanno almeno un impegno per didattica?
+
+select distinct Persona.id, Persona.nome, Persona.cognome
+from Persona, AttivitaNonProgettuale
+where Persona.id = AttivitaNonProgettuale.persona 
+and Persona.posizione = 'Ricercatore'
+and AttivitaNonProgettuale.tipo = 'Didattica'
+order by id desc
+
+7. Quali sono il nome, il cognome e la posizione dei Ricercatori che hanno più di un impegno per didattica?
+
+select distinct Persona.id, Persona.nome, Persona.cognome
+from Persona, AttivitaNonProgettuale a1, AttivitaNonProgettuale a2
+where Persona.id = a1.persona and Persona.id = a2.persona
+and Persona.posizione = 'Ricercatore'
+and a1.tipo = 'Didattica'
+and a2.tipo = 'Didattica'
+and a1.id <> a2.id
+
+8. Quali sono il nome e il cognome degli strutturati che nello stesso giorno hanno sia attività progettuali che attività non progettuali?
+
+select distinct Persona.id, persona.nome, Persona.cognome
+from Persona, AttivitaProgetto, AttivitaNonProgettuale
+where Persona.id = AttivitaProgetto.persona and Persona.id = AttivitaNonProgettuale.persona
+and AttivitaProgetto.giorno = AttivitaNonProgettuale.giorno
+
+9. Quali sono il nome e il cognome degli strutturati che nello stesso giorno hanno sia attività progettuali che attività non progettuali? Si richiede anche di proiettare il giorno, il nome del progetto, il tipo di attività non progettuali e la durata in ore di entrambe le attività.
+
+select Persona.nome, Persona.cognome, AttivitaProgetto.giorno, AttivitaNonProgettuale.tipo,
+AttivitaProgetto.oredurata, AttivitaNonProgettuale.oredurata 
+from Persona, AttivitaProgetto, AttivitaNonProgettuale, Progetto
+where AttivitaProgetto.persona = Persona.id
+and AttivitaNonProgettuale.persona = Persona.id
+and AttivitaProgetto.giorno = AttivitaNonProgettuale.giorno
+and Progetto.id = AttivitaProgetto.progetto
+
+10. Quali sono il nome e il cognome degli strutturati che nello stesso giorno sono assenti e hanno attività progettuali?
+
+select distinct Persona.id, Persona.nome, Persona.cognome
+from Persona, Assenza, AttivitaProgetto
+where Persona.id = AttivitaProgetto.persona
+and Assenza.giorno = AttivitaProgetto.giorno
+
+11. Quali sono il nome e il cognome degli strutturati che nello stesso giorno sono assenti e hanno attività progettuali? Si richiede anche di proiettare il giorno, il nome del progetto, la causa di assenza e la durata in ore della attività progettuale.
+
+select distinct Persona.id, Persona.nome, Persona.cognome, 
+AttivitaProgetto.giorno, Assenza.tipo, AttivitaProgetto.oredurata, Progetto.nome
+from Persona, Assenza, AttivitaProgetto, Progetto
+where Persona.id = AttivitaProgetto.persona
+and Assenza.giorno = AttivitaProgetto.giorno
+and Progetto.id = AttivitaProgetto.progetto
+
+12. Quali sono i WP che hanno lo stesso nome, ma appartengono a progetti diversi?
+
+select distinct wp1. nome as "Nome WP"
+from wp as wp1, wp as wp2
+where wp1.nome = wp2. nome
+and wp1. progetto <> wp2.progetto

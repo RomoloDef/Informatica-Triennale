@@ -1,0 +1,6 @@
+Vincoli esterni aggiuntivi dopo la ristrutturazione
+
+[V.Attività.spostamenti.pernottamenti]
+
+NOT EXISTS a, s, p (Attività(a) AND Spostamenti(s) AND Pernottamenti(p) AND is_spost(a, s) AND is_perno(a, p))
+

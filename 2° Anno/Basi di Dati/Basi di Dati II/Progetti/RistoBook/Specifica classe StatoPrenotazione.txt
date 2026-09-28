@@ -1,0 +1,41 @@
+Specifica classe StatoPrenotazione
+
+[V.StatoPrenotazione.solo.uno.stato.pendente] - Deve esistere esattamente uno stato pendente per ogni Prenotazione
+
+EXISTS s (StatoPrenotazione(s) and pendente(s, true))
+AND 
+NOT EXISTS s' StatoPrenotazione(s') AND s != s' AND pendente(s', true)
+
+- precedente(): Evento [0..1]
+		L'opererazione valuta all'evento immediatamente precedente this (della stessa prenotazione), se esiste
+
+pre: nessuno
+
+post:
+	Siano i_this (istante di this) e p (prenotazione di this) tali che:  
+		istante(this, i_this) and ev_pren(this,p).
+
+		E = { e , i  | EventoPrenotazione(e) and ev_pren(e, p) and istante(e,i) and i < i_this }.
+
+		result è tale che:
+			EXISTS i  (result,i) in E AND (NOT EXISTS e',i'   (e',i') in E AND i < i')
+
+
+[V.StatoPrenotazione.cambio.di.stato] - Si deve poter cambiare di stato se esiste uno stato pendente della prenotazione
+
+ovvero passare da uno stato s' ad uno stato s se e solo se la prenotazione p non ha eventi precedenti e s è considerato 
+
+uno stato pendente
+
+FOR ALL p, e, s (Prenotazione(p) AND EventoPrenotazione(e) AND even-pren(e, p) AND stato_raggiunto(e, s)) 
+
+--> (NOT EXIST prec (precedente(e, prec)) --> pendente(s, true))
+
+AND
+
+(FOR ALL ev_prec, s_prec (precedente(e, ev_prec) AND stato_raggiunto(ev_prec, s_prec)) --> transizione(s_prec, s))
+
+
+
+
+

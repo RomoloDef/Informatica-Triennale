@@ -1,0 +1,84 @@
+Specifica classe Utente
+
+ottieniPlaylist(u:Utente): Playlist
+	precondizioni:
+		p:Playlist, deve esistere almeno un (u,p): play-utente
+
+	Formalmente:
+	
+		FOR ALL p, u Playlist(p) AND Utente(u) -> EXISTS play-utente(up) 	
+
+
+	postcondizioni:
+		p: Playlist, per ogni (u,p): pale-utente, se p.stato = pubblica, return p
+
+	
+	Formalmente:
+
+		FOR ALL p, u (Playlist(p) AND Utente(u) AND pale-utente(u,p) AND stato(p, u)) --> return p
+		
+		
+
+------------------------------------------------------------------------------------------------
+
+cercaVideo(c:categoria, tag[1..*], v): Video
+	precondizioni:
+		l'intero v inserito deve essere compreso tra 0 e 5. Non deve esistere (vid, censura):
+		video-cens con vid: Video e cen: Censura
+
+	Formalmente:
+		
+		FOR ALL v Video(v) --> v > 0 AND v < 5
+		
+		AND 
+
+		FOR ALL v, c  (Video(v) AND Censura(c)) -> NOT EXIXTS video-cens(v, c)
+	
+	
+	postcondizioni:
+		per ogni vid:Video, tale che (vid,c): video-cat, se almeno uno tra i vid.tag appartiene a tag
+		allora se (vid.valutazione()>=v o vid.valutazione() = -1) return vid
+
+
+	Formalmente:
+	
+		FOR ALL v, c (Video(v) AND Censura(c) AND video-cat(v, c) AND (EXIXTS t (tag(t) AND hatag(v, t) AND 
+
+		(valutazione(v) >= v OR valutazione(v) = -1) --> EXIXTS v
+		
+
+------------------------------------------------------------------------------------------------
+
+cercaVideoRisposta(c:Categoria): Video
+	precondizioni:
+		non deve esistere (v, cens):video-cena con v:Video, cens:Censura
+
+	Formalmente:
+
+		FOR ALL v, c (Video(v) AND Censura(c)) ---> NOT EXIXTS video-cens(v,c)
+
+	postcondizioni:
+		per ogni v:Video, tale che esiste (v,c): vid-cat, sia v1:Video, restituisci v:Video[1..*]
+		che hanno (v, v1): risposta con quantità maggiore
+
+	Formalmente:
+
+		FOR ALL v, v1, c (Video(v) AND Categoria(c) AND video-cat(v, c)) AND Video(v1) ---> EXITS Max(risposta(v, v1))
+
+------------------------------------------------------------------------------------------------
+
+calcolaCronologia(): Video[0..*]
+	precondizioni:
+	postcondizioni:
+		v:Visualizza, vid:Video, per ogni (this,v):utente_vis, per ogni (v, vid):vis_video,
+		Q= la somma dei (v,vid):vis_video dove vid è sempre uguale, return vid (una volta
+		sola), Q
+
+	Formalmente:
+
+		FOR ALL vid, u (Visualizza(vid) AND Video(v) AND utente_vis(this, v) AND vis_video(v, 
+
+		
+
+------------------------------------------------------------------------------------------------
+		

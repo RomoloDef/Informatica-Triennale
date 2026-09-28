@@ -1,0 +1,58 @@
+Specifica dei vincoli esterni
+
+- [V.Squadra.Caratteristiche.Intervento] 
+
+Per ogni intervento che usa attrezzatura esiste almeno un membro della squadra che effettua l'intervento che utilizza l'attrezzatura
+
+FOR ALL i, attr, s (Intervento(i) AND Attrezzatura(attr) AND usata(i, attr) AND Squadra(s) AND effettua(i, s)) -->
+
+EXIST o (Operatore(o) AND lavora(o, s) AND utilizza(o, attr))
+
+- [V.Istanti.Intevento]
+
+l'istante di acquisizione deve essere minore di quello di completamento 
+
+FOR ALL i, ia, ic (Intervento(i) AND InterventoCompletato(i) AND istante_acquisizione(i, ia) AND istante_completamento(i, ic)) --> ia <= ic
+
+- [V.Istanti.Squadra]
+
+la data di scioglimento deve essere maggiore di quella di formazione 
+
+FOR ALL s, df, ds (Squadra(s) AND SquadraSciolta(s) AND data_formazione(s, df) AND data_scioglimento(s, ds)) --> df <= ds
+
+- [V.Istanti.Operatore]
+
+la data di inizio servizio deve essere minore di quella di fine servizio
+
+FOR ALL o, di, df (Operatore(o) AND OperatoreFinito(o) AND data_inizio_servizio(o, di) AND data_fine_servizio(s, df)) --> di <= df
+
+- [V.Numero.Operatori.Squadra.Intervento]
+
+Il numero minimo di operatori della squadra deve essere uguale o maggiore rispetto ai membri della squadra 
+
+FOR ALL i, s, m, min (Intervento(i) AND Squadra(s) AND effettua(s, i) AND minimo_operatori(i, min) AND membri(s, m)) --> m <= min 
+
+- [V.Date.PiantaMalata]
+
+La data di scoperta della malattia su una pianta malata deve essere maggiore rispetto alla data di piantificazione 
+
+FOR ALL s, em, dp, ds (SoggettoVerde(s) AND PiantaMalata(s) AND EpisodioMalattia(em) AND episodio(s, em) AND data_scoperta(s, ds) AND data_piantumazione(s, dp)) --> dp <= ds
+
+- [V.Date.PiantaRimossa]
+
+La data di rimozione della pianta deve essere maggiore rispetto alla data di piantificazione
+
+FOR ALL s, em, dp, dr (SoggettoVerde(s) AND PiantaRimossa(s) AND data_rimozione(s, dr) AND data_piantumazione(s, dp)) --> dp <= dr
+
+- [V.PiantaMalataCurata.Esistenza]
+
+La pianta malata curata esiste se e solo se in episodio malattia risoluzione = 'True'
+
+FOR ALL p, em, (PiantaMalata(p) AND EpisodioMalattia(em) AND episodio(p, em)) --> EXIST PiantaMalataCurata(p) <-> risoluzione(em, 'True')
+
+
+
+
+
+
+

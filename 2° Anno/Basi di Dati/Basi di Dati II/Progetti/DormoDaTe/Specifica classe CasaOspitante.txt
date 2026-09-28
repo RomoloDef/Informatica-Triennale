@@ -1,0 +1,27 @@
+Specifica classe CasaOspitante
+
+- disponibile(da: DataOra, a: DataOra): Boolean
+
+Pre:
+
+Post:
+
+	FOR ALL c, u, disp (CasaOspitante(c) AND UtenteHost(u) AND possiede(c, u))
+
+	AND NOT EXIST disp (non_disponibile(c, disp)) -->
+
+	result = TRUE
+
+- postiDisponibili(da: DataOra, a: DataOra): Intero >= 0
+
+Pre:
+	EXIST c, dispo (disponibile(c, dispo))
+
+Post:
+
+	result = | { pl | PostoLetto(pl) and casa-pl(this, pl) } |
+	
+	
+
+
+

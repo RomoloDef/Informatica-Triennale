@@ -1,0 +1,20 @@
+Use Case Gestione delle visite
+
+1. Registrazione di una visita tra medico e paziente
+
+visita(medico: Medico, paziente: Paziente, istante: DataOra)
+
+Pre:
+
+Post:
+
+	vengono creati i link (m, v) e (v, p) delle associazioni med-vis e vis-paz tale che 
+	
+	si crei l'istanza di visita
+
+Formalmente:
+
+	FOR ALL m, p, v (Medico(m) AND Paziente(p) AND med-vis(m, V) AND vis-paz(v, p)
+
+	--> EXIXTS v (Visita(v))
+

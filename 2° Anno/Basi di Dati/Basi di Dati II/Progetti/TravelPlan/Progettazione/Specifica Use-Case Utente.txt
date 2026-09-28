@@ -1,0 +1,16 @@
+Specifica Use-Case Utente
+
+- registrazione(nome: Stringa, cognome: Stringa, email: Email, data_iscrizione: Data, città: Città): 
+
+pre: nessuna
+
+post:
+
+    algoritmo:
+
+        INSERT INTO Utente(nome, cognome, email, data_iscrizione, città) VALUES (PAR_1, PAR_2, PAR_3, PAR_4, PAR_5)
+        sostituendo i valori PAR_n rispettivamente con i parametri dell'operazione
+
+        Se il comando precedente restituisce un errore di vincolo di chiave violato, allora genera l’errore
+
+        END

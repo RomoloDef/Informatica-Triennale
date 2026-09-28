@@ -1,0 +1,12 @@
+[V.viaggio.massimo.maggiore.minimo]
+
+FOR ALL v, x, y (Viaggio(v) AND numero_massimo(v,x) AND numero_minimo(v,y)) --> x > y
+
+[V.pernottamento.solo.uno.al.giorno] - se un utente partecipa a due pernottamento in un giorno, devono essere uguali
+
+FOR ALL u, v, p1, p2, g (Utente(u) AND Viaggio(v) AND Pernottamenti(p1) AND Pernottamenti(p2) AND ut_part(u, v) AND ut_perno(u, p1) AND
+        ut_perno(u, p2) AND Giorno(p1, g) AND Giorno(p2, g) --> p1 = p2)
+
+[V.utente.non.due.città]
+
+FOR ALL u , c1, c2 (Utente(u) AND Città(c1) AND Città(c2) AND città_appartenenza(u, c1) AND città_appartenenza(u,c2) AND c1 != c2)

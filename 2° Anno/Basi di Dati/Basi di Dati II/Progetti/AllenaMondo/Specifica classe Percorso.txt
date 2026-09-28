@@ -1,0 +1,26 @@
+Specifica classe Percorso 
+
+- calcola_distanza(): Reale >= 0
+
+pre:
+
+post:
+
+    FOR ALL  c, lat, long, c' lat', long' (Coordinate(c) AND avente(this, c) AND latitudine(c, lat) AND longitudine(c, long) AND latitudine(c', lat') AND longitudine(c', long')) 
+    
+    --> 
+
+    L = lat' - lat 
+
+    Lo = long' - long 
+
+    a = sin^2(L/2) + cos(lat) + cos(lat') * sin^2(Lo/2)
+
+    c = 2 * 2arctan(sqrt(a), sqrt(1-a))
+
+    R = 6371
+
+    d = result = R * c
+    
+
+    (questa è la formula per calcolare la distanza)

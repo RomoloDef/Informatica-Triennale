@@ -1,0 +1,39 @@
+[V.Noleggio.inizio.fine] - l'istante di fine deve essere maggiore di quello iniziale
+
+FOR ALL n, x, y (Noleggio(n) AND istante_inizio(n, x) AND istante_fine(n, y) -> x < y)
+
+[V.Noleggio.Auto] - non ci possono essere due automobili uguali per lo stesso noleggio
+
+FOR ALL n, a1, a2 (Noleggio(n) AND Auto(a1) AND Auto(a2) AND nol_aut(n, a1) AND nol_aut(n,a2) AND a1 != a2) 
+
+- differenza_minuti(t1: Ora, t2: Ora): Intero 
+
+pre:
+
+post: 
+
+        result = (t2 - t1) * 60
+
+- durata(): Intero 
+
+pre:
+
+post:
+
+    FOR ALL n, i, a (Noleggio(n) AND istante_inizio(n, i) AND adesso(n, a) AND a >= i) <-->
+
+    durata(n, this) -> this = differenza_minuti(i, f)
+
+    // adesso è un simbolo di predicato adesso/2 
+
+
+- calcola_tariffa(): Reale
+
+pre:
+
+post:
+
+    FOR ALL n, d, q (Noleggio(n) AND durata(n, d) AND quota_al_minuto(q) AND d >= 0 AND q > 0
+    
+    -> tariffa(n, this) <-> this = q * d )
+

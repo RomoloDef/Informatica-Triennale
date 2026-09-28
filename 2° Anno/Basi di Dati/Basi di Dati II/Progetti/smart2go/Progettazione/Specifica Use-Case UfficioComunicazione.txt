@@ -1,0 +1,36 @@
+Specifica Use-Case UfficioComunicazioni
+
+-trovaAuto(s: Socio): Auto[0..*]
+
+pre:
+
+post:
+
+        algoritmo:
+
+        Q =
+
+        WITH categorie_noleggiate AS (
+        SELECT DISTINCT a.categoria
+        FROM Auto a
+        JOIN Noleggio n ON a.targa = n.auto
+        JOIN effettua e ON n.id = e.noleggio
+        WHERE e.socio = :socio_id
+        )
+        SELECT a.*
+        FROM Auto a
+        JOIN Noleggio n ON a.targa = n.auto
+        JOIN effettua e ON n.id = e.noleggio
+        WHERE e.socio = :socio_id
+        AND (SELECT COUNT(*) FROM categorie_noleggiate) = 1;
+
+        inserisci all'interno di Q il risultato di questa query
+    
+
+
+
+
+
+
+
+

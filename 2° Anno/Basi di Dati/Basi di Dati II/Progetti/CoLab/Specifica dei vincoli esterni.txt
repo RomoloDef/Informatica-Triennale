@@ -1,0 +1,13 @@
+[V.Utenti.no.Accessi.contemporanei]
+
+~ non ci possono essere due accessi nello stesso tempo per lo stesso utente
+
+NOT EXIST a1, a2, u, i1, i2, t (Accesso(a1) AND Accesso(a2) AND Utente(u) AND esegue(u, a1) AND esegue(u, a2) AND 
+
+istante_accesso(i1) AND istante_accesso(i2) AND DataOra(t) AND i1 <= t AND i2 <= t AND (FOR ALL f1 (fine(a, f1)) --> t <= f1) 
+
+AND (FOR ALL f2 (fine(a, f2)) --> t <= f2))
+
+[V.Utente.nascita.prima.di.accesso]
+
+~ 

@@ -1,0 +1,38 @@
+# --- STADIO 1: (Builder) ---
+# Si usa l'immagine di Node.js (necessaria per npm/yarn)
+FROM node:lts AS builder
+
+# Imposto la cartella di lavoro
+WORKDIR /app
+
+# Copio la cartella 'webui' dentro il container
+COPY webui ./webui
+
+# Si sposta dentro quella cartella
+WORKDIR /app/webui
+
+# Vengono installate le dipendenze (come 'npm install', ma con yarn)
+RUN yarn install --immutable --immutable-cache
+
+# Il sito viene compilato per la produzione
+# Questo comando crea la cartella 'dist'
+RUN yarn build-prod
+
+
+# --- STADIO 2: (Nginx) ---
+# Usiamo Nginx, un server web leggero e veloce
+FROM nginx:stable
+
+# 1. Vengono copiati i file del sito compilato (HTML/JS/CSS) dallo Stadio 1 
+# nella cartella pubblica di Nginx
+COPY --from=builder /app/webui/dist /usr/share/nginx/html
+
+# 2. Viene copiato il file di configurazione di Nginx personalizzato
+# Questo serve a far funzionare le chiamate API (/chats, /users)
+COPY webui/nginx.conf /etc/nginx/nginx.conf
+
+# Docker sa con questo comando che il container ascolta sulla porta 80 
+EXPOSE 80
+
+# Avviamo Nginx
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,11 @@
+Specifica classe Modulo
+
+- docenti(): Docente[0..*]
+
+pre: nessuna
+
+post:
+
+    result = { d | EXIST Docente(d) AND insegna(this, d)}
+
+    

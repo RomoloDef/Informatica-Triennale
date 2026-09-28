@@ -1,0 +1,93 @@
+Vincoli Esterni Ristrutturati
+
+- Persona
+
+[V.Persona.disj]
+
+NOT EXISTS p, r, s (Persona(p) AND Responsabile(r) AND Socio(s) AND is_resp(p, r) AND is_socio(p, s))
+
+- Auto
+
+[V.Auto.disj]
+
+NOT EXISTS a, at, ae (Auto(a) AND AutoTradizionale(at) AND AutoEcompatibile(ae) AND is_trad(a, at) AND is_ecomp(a, ae))
+
+[V.Auto.compl]
+
+FOR ALL a (Auto(a)) --> ((EXIST at is_trad(a, at)) OR (EXIST ae is_ae(a, ae)))
+
+// vincoli uguali per auto parcheggiata e noleggiata
+
+- Sinistri
+
+// vincoli uguali 
+
+- Convenzioni
+
+// vincoli uguali 
+
+------------------------------------------------------------------------------------------------------
+
+- Trigger Disgiunzione Persona
+
+[V.Persona.disj] - NOT EXISTS p, r, s (Persona(p) AND Responsabile(r) AND Socio(s) AND is_resp(p, r) AND is_socio(p, s))
+
+Operazione da intercettare: INSERT o UPDATE in Socio e Responsabile
+
+Quando: AFTER 
+
+Funzione(old, new):
+
+Sia iError = EXIST (
+    SELECT *
+    FROM Responsabile r, Socio s 
+    WHERE r.persona = persona.id 
+    AND s.persona = persona.id 
+)
+
+IF iError = TRUE
+    raise Exception
+
+ELSE
+    return new
+
+- Trigger Completezza Auto
+
+[V.Auto.disj] - NOT EXISTS a, at, ae (Auto(a) AND AutoTradizionale(at) AND AutoEcompatibile(ae) AND is_trad(a, at) AND is_ecomp(a, ae))
+
+Trigger 1
+
+Quando deve scattare: subito dopo INSERT(new) in Auto
+
+Controllo da effettuare: new.id deve occorrere in AutoTradizione(auto) o AutoEcompatibile(auto):
+
+IF NOT EXISTS (
+SELECT auto FROM AutoEcompatibile WHERE auto = new.id
+UNION
+SELECT auto FROM AutoTradizionale WHERE auto = new.id
+)
+    raise Exception
+ELSE
+    return new
+
+Trigger 2
+
+Quando deve scattare: subito dopo DELETE(old) in AutoTradizionale o AutoTradizionale
+
+Controllo da effettuare: se old.id è in Auto, deve occorrere in AutoTradizionale(auto) o AutoEcompatibile(auto)
+
+IF 
+    EXISTS( SELECT *
+    FROM (Auto a LEFT OUTER JOIN AutoTradizionale at ON a.id = at.auto)
+    LEFT OUTER JOIN AutoEcompatibile ae ON a.id = ae.auto
+    WHERE a.id = old.auto
+    AND (at.auto IS NULL) AND (ae.auto IS NULL)
+    )
+        raise Exception 
+ELSE
+    return new
+
+Tutti gli altri trigger hanno la stessa forma di questi
+
+
+

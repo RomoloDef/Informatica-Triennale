@@ -1,0 +1,13 @@
+Specifica classe Esame 
+
+- superato(): Booleano
+
+pre:
+
+    EXIST p (Prova(p) AND formato(this, p)) 
+
+post:
+
+    result = 'True' <-> FOR ALL p, v (Prova(p) AND voto(v, p) AND formato(this, p) --> v >= 6)
+    
+     

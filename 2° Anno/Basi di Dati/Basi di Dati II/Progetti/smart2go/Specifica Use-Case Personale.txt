@@ -1,0 +1,14 @@
+Specifica Use-Case Personale
+
+- accettaPreRegistrazione(s: Socio):
+
+pre:
+
+post:
+     Side Effect
+     Nuovo elemento del dominio di interpretazione: ALPHA
+
+    - ottiene(s, ALPHA)
+    - SmartCart(ALPHA)
+
+    result = ALPHA

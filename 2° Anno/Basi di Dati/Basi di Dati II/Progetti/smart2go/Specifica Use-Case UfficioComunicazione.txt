@@ -1,0 +1,25 @@
+Specifica Use-Case UfficioComunicazioni
+
+-trovaAuto(s: Socio): Auto[0..*]
+
+pre:
+
+post:
+
+        C = { n | Noleggio(n) AND Auto(a) AND Categoria(c) AND sol_nol(s, n) AND nol_aut(n, a) AND CategoriaAuto(a, c) }
+
+        result = EXIST C AND (FOR ALL c' (Categoria(c') -> 
+        
+                 NOT EXIST C' = { n | Noleggio(n) AND Auto(a) AND Categoria(c') AND sol_nol(s, n) AND nol_aut(n, a) AND CategoriaAuto(a, c') }
+                 
+                 AND C =! C'))
+
+    
+
+
+
+
+
+
+
+

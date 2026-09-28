@@ -1,0 +1,27 @@
+Specifica dei tipi di dato 
+
+- Indirizzo: 
+    via: Stringa
+    civico: Stringa
+
+- Periodo:
+    da: DataOra
+    a: DataOra
+
+- Vincoli sulle istanze del tipo di dato:	
+
+[V.Periodo.legale]: ALL p,x,y Periodo(p) and da(p,x) and a(p,y) --> a >= da.
+
+- Operazioni del tipo di dato
+
+disgiunti(p1:Periodo, p2:Periodo): Booleano
+	pre: nessuna
+	
+    post:
+		result = true <--> 
+			EXISTS x1, y1, x2, y2 (da(p1, x1) AND a(p1, y1) AND da(p2, x2) AND a(p2, y2) AND (y1 < x2 or y2 < x1))
+
+
+interseca(p1:Periodo, p2:Periodo): Booleano
+	pre:  nessuna
+	post: result = true <--> disgiunti(p1, p2, false)

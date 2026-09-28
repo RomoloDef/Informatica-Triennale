@@ -1,0 +1,17 @@
+Tipi di Dato 
+
+- Indirizzo:
+    via: Stringa 
+    civico: Stringa 
+
+- Sconto: Reale >= 0 AND Reale < 1
+
+- Targa: Stringa ~ ^[A-Z]{2}[0-9]{3}[A-Z]{2}$
+
+- IBAN: Stringa ~ ^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$
+
+- Coordinate:
+    latitudine: Stringa ~ ^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$
+    longitudine: Stringa ~ ^[-+]?((1[0-7]\d)|(\d{1,2}))(\.\d+)?|180(\.0+)?$
+    
+

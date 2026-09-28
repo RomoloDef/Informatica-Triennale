@@ -1,0 +1,14 @@
+Use-case Registrazione
+
+
+nuovo_utente(nome:Stringa, cognome:Stringa, sesso:Sesso, anno_nascita:Intero > 0, citta_resid:Città)
+	pre: nessuna
+	post:
+		Side-effect
+			Nuovo elem. del dom. di interpr. ALPHA
+
+			Utente(ALPHA)
+			nome(ALPHA, nome)
+			...
+
+			ut_citta_resid(ALPHA, c)

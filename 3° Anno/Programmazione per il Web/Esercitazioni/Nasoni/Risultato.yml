@@ -1,0 +1,225 @@
+openapi: '3.0.3'
+info:
+  title: 'Nasoni API'
+  version: '1.0'
+servers:
+  - url: https://api.server.test/v1
+
+# -------------------------------
+# SEZIONE 1 - Analisi e Schemi
+# -------------------------------
+
+# Task 1.1: Definizione degli schemi
+
+components:
+  schemas:
+    # Nuovo Schema per l'ID, ora riutilizzato in Fountain e FountainID Parameter
+    FountainIdSchema:
+      type: integer
+      format: int64
+      description: ID univoco assegnato dal server.
+      readOnly: true
+      example: 12345
+
+    # creo gli schemi Latitudine, Longitudine e Range (che mi serviranno anche per i parametri di query)
+
+    Latitudine:
+      type: number
+      format: float
+      minimum: -90.0
+      maximum: 90.0
+      description: La latitudine deve essere compresa tra -90 e 90 gradi.
+      example: 41.9028
+
+    Longitudine:
+      type: number
+      format: float
+      minimum: -180.0
+      maximum: 180.0
+      description: La longitudine deve essere compresa tra -180 e 180 gradi.
+      example: 12.4964
+
+    Range:
+      type: number
+      format: float
+      description: Raggio (in metri o km) per il filtro di vicinanza.
+      minimum: 0
+
+    Fontana:
+      title: Nasone
+      description: Rappresentazione completa di una risorsa Fontana (Nasone).
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/FountainIdSchema'
+        stato:
+          type: string
+          enum:
+            - good 
+            - faulty 
+        Latitudine:
+          $ref: '#/components/schemas/Latitudine'
+        Longitudine:
+          $ref: '#/components/schemas/Longitudine'
+      required:
+        - state
+        - latitude
+        - longitude
+
+  # Aggiungo l'oggetto Error per i messaggi di errore
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "NOT_FOUND"
+        message:
+          type: string
+          example: "La risorsa richiesta non è stata trovata."
+
+# Task 1.2: Definizione dei parametri
+
+  parameters:
+    FountainID:
+      name: id
+      in: path
+      description: ID univoco della fontana.
+      required: true
+      schema:
+        $ref: '#/components/schemas/FountainIdSchema'
+
+# Task 1.3: Definizione delle risposte comuni
+
+  responses:
+    NotFound:
+      description: Risorsa non trovata (404 Not Found)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            fountainNotFound:
+              value:
+                code: "NASONE_404"
+                message: "Nessuna fontana trovata con l'ID specificato."
+
+    BadRequest:
+      description: Richiesta non valida (400 Bad Request)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            invalidInput:
+              value:
+                code: "VALIDATION_ERROR"
+                message: "I dati forniti non sono validi. Controllare vincoli e campi richiesti."
+
+# -------------------------------
+# SEZIONE 2 - Definizione dei Paths
+# -------------------------------
+
+paths:
+  /fountains:
+
+    # Task 2.1: Definizione del metodo POST per creare una nuova fontana
+    post: 
+      summary: Crea una nuova fontana.
+      operationId: createFountain
+
+      # Deve accettare un corpo di richiesta JSON contenente lo schema Fontana (senza ID perchè non vogliamo che l'utente lo fornisca)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fontana'
+
+      # Deve rispondere con 201 Created, restituiendo la risorsa Fountain completa (incluso l'ID generato ed assegnato dal server)
+      responses:
+        '201':
+          description: Fontana creata con successo.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fontana'
+
+
+      # Task 2.2: Definizione del metodo GET per ottenere tutte le fontane (con filtri di vicinanza)
+    get:
+      summary: Ottiene tutte le fontane, con filtri opzionali di vicinanza.
+      operationId: listFountains
+
+      # includo i parametri di query per latitudine, longitudine e range
+      parameters:
+        - name: latitude
+          in: query
+          description: Latitudine del punto di riferimento per il filtro di vicinanza.
+          required: false
+          schema:
+            $ref: '#/components/schemas/Latitudine'
+        - name: longitude
+          in: query
+          description: Longitudine del punto di riferimento per il filtro di vicinanza.
+          required: false
+          schema:
+            $ref: '#/components/schemas/Longitudine'
+        - name: range
+          in: query
+          description: Raggio (in metri o km) per il filtro di vicinanza.
+          required: false
+          schema:
+            $ref: '#/components/schemas/Range'
+
+      # Rispondo con 200 OK e una lista di fontane (array di oggetti Fountain)
+      responses:
+        '200':
+          description: Elenco delle fontane.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fontana'
+
+# Task 2.3: Definizione del percorso /fountains/{id} per operazioni su una singola fontana         
+  /fountains/{id}:
+    put:
+      summary: Aggiorna una fontana esistente.
+      operationId: updateFountain
+
+      parameters:
+        - $ref: '#/components/parameters/FountainID'
+
+      # Deve accettare un corpo di richiesta JSON contenente lo schema Fontana (il client invia l'intera risorsa per sostituirla)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fontana'
+
+      # Deve rispondere con 200 OK, restituendo la risorsa Fountain aggiornata
+      responses:
+        '200':
+          description: Fontana aggiornata con successo.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fontana'
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    delete:
+      operationId: deleteFountain
+      summary: Eliminazione di una Fontana
+      description: Elimina la risorsa fontana con l'ID specificato.
+      responses:
+        '204':
+          description: Fontana eliminata con successo (No Content)
+        '404':
+          $ref: '#/components/responses/NotFound'
+

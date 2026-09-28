@@ -1,0 +1,29 @@
+Specifica dei requisiti
+
+1. Clienti 
+    1.1 nome: Stringa
+    1.2 email: Stringa
+
+2. Ristorante:
+    2.1 nome: Stringa   
+    2.2 partita_iva: Stringa 
+    2.3 indirizzo: Indirizzo    
+    2.4 città 
+    2.5 tipologia_cucina: (vedi requisito 3)
+    2.6 indisponibile 
+
+3. TipologiaCucina:
+    4.1 nome: Stringa
+
+4. Prenotazione:
+    5.1 giorno: Data   
+    5.2 ora: DataOra
+    5.3 numero_commensali: Intero > 0
+    5.4 stato --> vediamo come implementarlo --> pendente, accettata, rifiutata, completata, non utilizzata
+    5.5 costo: Reale > 0
+
+5. Promozioni:
+    6.1 massimo: Intero > 0
+    6.2 sconto: (vedi requisito 5.5) --> dovrei poter fare un'operazione per calcolarlo
+    6.3 periodo_di_validità: Periodo
+

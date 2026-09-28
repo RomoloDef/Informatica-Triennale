@@ -1,0 +1,54 @@
+1. Qual e’ la media e la deviazione standard degli stipendi per ogni categoria di strutturati?
+
+select persona.posizione, avg(persona.stipendio) as stipendio, stddev(persona.stipendio) as dev_standard
+from persona
+group by persona.posizione
+
+2. Quali sono i ricercatori (tutti gli attributi) con uno stipendio superiore alla media della loro categoria?
+
+select ricercatore.*
+from (
+	select avg(persona.stipendio) as stip
+	from persona
+	where persona.posizione = 'Ricercatore'
+	) med, 
+	Persona ricercatore
+where ricercatore.posizione = 'Ricercatore'
+	and ricercatore.stipendio > med.stip
+
+
+3. Per ogni categoria di strutturati quante sono le persone con uno stipendio che differisce di al massimo una deviazione standard dalla media della loro categoria?
+
+
+
+4. Chi sono gli strutturati che hanno lavorato almeno 20 ore complessive in attivita ’ progettuali? Restituire tutti i loro dati e il numero di ore
+lavorate .
+
+select persona.*, sum(attivitaprogetto.oredurata) as ore_lavorate 
+from Persona, AttivitaProgetto
+where attivitaprogetto.persona = persona.id
+group by persona.id, persona.nome, persona.cognome, persona.posizione, persona.stipendio
+having sum(attivitaprogetto.oreDurata) >= 20
+
+5. Quali sono i progetti la cui durata e’ superiore alla media delle durate di tutti i progetti? Restituire nome dei progetti e loro durata in giorni .
+
+select proj.nome, (proj.fine - proj.inizio) as durata_giorni
+from
+	(
+		select avg(progetto.fine - progetto.inizio) as durata
+		from progetto
+	) statistiche,
+	progetto proj
+where (proj.fine - proj.inizio) > statistiche.durata
+
+6. Quali sono i progetti terminati in data odierna che hanno avuto attività di tipo "Dimostrazione"? Restituire nome di ogni progetto e il numero complessivo delle ore dedicate a tali attività nel progetto.
+
+select distinct progetto.nome, sum(attivitaprogetto.oredurata) as ore_dimostrazione
+from progetto, attivitaprogetto
+where progetto.id = attivitaprogetto.progetto
+and progetto.fine < CURRENT_DATE
+and attivitaprogetto.tipo = 'Dimostrazione'
+group by progetto.nome
+
+7. Quali sono i professori ordinari che hanno fatto piu ’ assenze per malattia del numero di assenze medio per malattia dei professori associati? Restituire id, nome e cognome del professore e il numero di giorni di assenza per malattia .
+

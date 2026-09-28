@@ -1,0 +1,32 @@
+# Scrivere un programma in linguaggio assemblativo MARS che, preso un intero n in memoria, calcola la somma dei primi n interi.
+# ES: Input: n = 5, Output: 15 cioè (5+4+3+2+1)
+
+.text
+.globl main
+
+main:
+	lw $t0, n # carico n nel registro $t0
+	li $t1, 0 # inizializzo la somma in $t1 a 0
+      CICLO:
+      	beq $t0, $zero, FINE_CICLO # se n == 0 si esce dal ciclo
+      	
+	add $t1, $t1, $t0 # aggiungo n alla somma
+	addi $t0, $t0, -1 # decremento n di -1
+	
+	j CICLO
+	
+      FINE_CICLO:
+      	li $v0, 1
+      	move $a0, $t1
+      	syscall
+      	
+      	# termine programma
+      	li $v0, 10
+      	syscall
+
+
+
+
+
+.data
+n: .word 5

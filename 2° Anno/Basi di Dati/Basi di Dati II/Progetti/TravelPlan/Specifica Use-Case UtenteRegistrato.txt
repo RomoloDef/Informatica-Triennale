@@ -1,0 +1,51 @@
+Specifica Use-Case UtenteRegistrato
+
+- creaViaggio(nome: Stringa, numero_minimo: Stringa, numero_massimo: Stringa, att: Attività[0..*]):
+
+pre:
+        FOR ALL v, x, y (Viaggio(v) AND numero_minimo(x, v) AND numero_massimo(y, v) --> y > x)
+
+post:
+    Side Effect
+        Nuovo elemento del dominio di interpretazione: ALPHA, BETA
+
+        Viaggio(ALPHA)
+        nome(nome, ALPHA)
+        numero_minimo(numero_minimo, ALPHA)
+        numero_massimo(numero_massimo, ALPHA)
+        att(att, ALPHA)
+        possiede(ALPHA, BETA)
+        Attività(BETA)
+
+- trovareViaggi(att: Attività, destinazione: Luogo, intervallo_tempo: Durata): Viaggio[0..*]
+
+pre: nessuna
+
+post:
+        
+        result = { v | Viaggio(v) AND possiede(v, att) AND att_luo(att, destinazione) AND durata(att, intervallo_tempo)}
+
+- trovareCittà(v: Viaggio, att: Attività, luo: Luogo, intervallo_tempo: Durata): Città[0..*]
+
+pre: nessuna
+
+post:
+
+        result = { c | Ciità(c) AND possiede(v, att) AND att_luo(att, luo) AND durata(att, intervallo_tempo)}
+
+- calcoloNumeroViaggi(att: Attività, luo: Luogo, cit: Città, reg: Regione, naz:Nazione, intervallo_tempo: Durata): Viaggio[0..*]
+
+pre: nessuna
+
+post: 
+
+        result = { v | Viaggio(v) AND possiede(v, att) AND att_luo(att, destinazione) AND luo_cit(luo, cit) AND
+                  cit_reg(cit, reg) AND reg_naz(reg, naz) AND durata(att, intervallo_tempo)}
+
+
+
+
+
+
+
+

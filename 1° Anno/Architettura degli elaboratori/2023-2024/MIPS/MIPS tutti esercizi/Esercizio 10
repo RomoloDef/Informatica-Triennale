@@ -1,0 +1,36 @@
+# Scrivere un programma che presi 5 numeri interi, stampi su videoterminale la media tra i cinque numeri usando il coprocessore matematico
+
+.text
+.globl main
+
+main:
+
+	lwc1 $f0, primo
+	lwc1 $f1, secondo
+	lwc1 $f2, terzo
+	lwc1 $f3, quarto
+	lwc1 $f4, quinto
+	lwc1 $f5, cinque
+	
+	add.s $f0, $f0, $f1
+	add.s $f0, $f0, $f2
+	add.s $f0, $f0, $f3
+	add.s $f0, $f0, $f4
+	
+	div.s $f0, $f0, $f5
+	
+	li $v0, 2
+	syscall
+	
+	li $v0, 10
+	syscall
+	
+	
+
+.data:
+primo: .float 2.0
+secondo: .float 5.0
+terzo: .float 7.0
+quarto: .float 3.0
+quinto: .float 9.0
+cinque: .float 5.0

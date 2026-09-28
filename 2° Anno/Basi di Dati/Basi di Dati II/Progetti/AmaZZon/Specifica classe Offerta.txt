@@ -1,0 +1,9 @@
+Specifica classe Offerta
+
+- fine(): DataOra
+
+pre:
+
+post:
+
+    EXISTS i, d (inizio(this, i) and durata(this, d) and result = i + d)

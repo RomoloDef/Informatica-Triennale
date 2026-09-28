@@ -1,0 +1,48 @@
+diSpecifica dei requisiti di DormoDaTe
+
+1. Utente:
+	1.1 nome: Stringa
+	1.2 cognome: Stringa
+	1.3 sesso: {maschio, femmina}
+	1.4 città_residenza: (vedi requisito 4)
+	1.5 età: Intero >= 0
+
+2. UtenteHost:
+	2.1 accettaPrenotazione (vedi requisito 9)
+	2.2 rifiutaPrenotazione (vedi requisito 9)
+	
+3. UtenteViaggiatore:
+
+4. Città:
+	4.1 nome: Stringa
+	
+5. CasaOspitante:
+	5.1 distanza_centro: Intero > 0
+	5.2 distanza_stazione: Intero > 0
+	5.3 numero_adulti: Intero > 0
+	5.4 numero_bambini: Intero >= 0
+	5.5 numero_persone_ospitanti: (posti_letto) (vedi requisito 6)
+
+
+6. PostoLetto:
+	6.1 tipologia: (vedi requisito 7)
+	6.2 stanza: (vedi requisito 8)
+	6.3 numero: Intero > 0
+
+7. TipologiaPosto:
+	7.1 nome: Stringa
+
+8. Stanza:
+	7.1 nome: Stringa
+
+9. Prenotazione:
+	8.1 data_inizio: dataOra
+	8.2 data_fine: dataOra
+	8.3 posto_letto: (vedi requisito 6)
+
+10. Valutazione:
+	punteggio: (1..5)
+	
+	
+	 
+

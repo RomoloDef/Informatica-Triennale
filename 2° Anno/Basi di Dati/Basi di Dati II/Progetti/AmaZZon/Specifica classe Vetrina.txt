@@ -1,0 +1,11 @@
+Specifica classe Vetrina
+
+- articoli_presenti(): Articolo [0..*]
+
+pre: 
+
+post:
+
+    result = { a | EXIST vetr_art(a, this)}
+
+    

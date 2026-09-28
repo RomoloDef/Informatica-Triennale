@@ -1,0 +1,38 @@
+Specifica Use Case Prenotazione
+
+- posti_disponibili(s: Sala): Intero 
+
+pre:
+
+    EXIST trovatosi(p, s)
+
+post:
+
+    S = { s | trovatosi(p, s)}
+
+    P = { p | Prenotazione(pr) AND preno_post(pr, p)}
+
+    result = s.capienza - SUM(p.posti)
+
+- Prenotazione(u: utente, s: Sala, posti: Intero > 0, o: DataOra): Prenotazione
+
+pre:
+
+    FOR ALL p posti_liberi(p, s) --> p >= posti
+
+post:
+
+    Variazioni degli elementi dal dominio di int: ALPHA
+		
+	Variazioni dell'interpretazione dei simboli di predicato
+
+    Prenotazione(ALPHA)
+    istante(ALPHA, adesso)
+    numero(ALPHA, posti)
+    effettua(ALPHA, u)
+    Spettacolo(spet)
+    per_quale_spettacolo(ALPHA, spet)
+    Sala(s)
+    visto_in(spet, s)
+
+    result = ALPHA

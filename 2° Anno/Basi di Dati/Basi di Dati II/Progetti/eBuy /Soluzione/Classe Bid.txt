@@ -1,0 +1,25 @@
+Specifica classe Bid
+
+
+prezzo(): Denaro
+	pre: nessuna
+	post:
+		Sia a:Asta tale (a,this):asta_bid
+		Sia B l'insieme dei b:Bid tali che:
+			- (a, b):asta_bid
+			- b.istante < this.istante
+
+		result = a.prezzoBase + (|B|-1) * a.rialzo.
+
+
+		Formalmente:
+
+		Sia a t.c. asta_bid(a, this)
+		Sia B = { b | EXISTS ib, ithis asta_bid(a, b) and
+						 and istante(b, ib) and istante(this, ithis) and 
+						 ib < ithis
+				}.
+		Sia pb tale da soddisfare:   prezzoBase(a, pb).
+		Sia r t.c.:  rialzo(a, r).
+
+		result = pb + (|B|-1) * r.

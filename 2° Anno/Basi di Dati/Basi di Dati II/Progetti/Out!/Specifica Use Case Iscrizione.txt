@@ -1,0 +1,23 @@
+Specifica Use Case Iscrizione:
+
+- Iscrizione(n: Stringa, c: Stringa, cod: Codice): Utente[0..*]
+
+pre:
+
+    NOT EXIST u Utente(u) AND codice_fiscale(u, c)
+
+post:
+
+    modifica del livello estensionale dei dati
+    nuovo elemento del dominio di interpretazione: ALPHA 
+
+    - Utente(ALPHA)
+    - nome(ALPHA, n)
+    - cognome(ALPHA, c)
+    - codice_fiscale(ALPHA, cod)
+
+    result = ALPHA
+
+
+
+    

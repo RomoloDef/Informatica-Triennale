@@ -1,0 +1,59 @@
+Passaggi per arrivare al lavoro da progettista su questa esercitazione:
+
+1. Eliminazione dei valori multivalori: Non ce ne sono 
+
+2. Scelta e progettazione dei tipi di dato:
+
+- Stringa --> varchar
+
+- Data --> TimeStamp
+
+- DataOra --> TimeStamp
+
+- Intero > 0 --> CREATE DOMAIN Int_gz_not_null AS (value is not null AND value > 0)
+
+- 1..8 --> CREATE DOMAIN Int_tra_uno_otto AS (value is not null AND value >= 1 AND value <= 8)
+
+- TipoPaziente --> CREATE TYPE TipoPaziente AS ENUM ('Paziente', 'PazienteEsterno')
+
+- Telefono --> CREATE DOMAIN Telefono
+
+3. Ristrutturazione delle generalizzazioni: Vedi UML
+
+4. Identificatori di classi: Vedi UML
+
+5. Vincoli Esterni: 
+
+Vincolo esterno che concerne la sostituzione con associazioni delle sottoclassi di persona, medico e paziente
+
+[V.Persona.gen.compl] -- Completezza
+
+FOR ALL p Persona(p) -> ((EXIST m pers-med(p, m)) OR (EXIST paz pers-paz(p, paz))
+
+Vincolo esterno che concerne la fusione della sottoclasse PazienteEsterno con la classe Paziente
+
+[V.Paziente.fus] -- Fusione
+
+FOR ALL paz Paziente(paz) -> (tipo(paz, 'PazienteEsterno') <-> EXIST r paz-rich(paz, r))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

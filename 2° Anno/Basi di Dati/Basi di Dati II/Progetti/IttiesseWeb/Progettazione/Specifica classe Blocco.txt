@@ -1,0 +1,20 @@
+Specifica classe Blocco 
+
+- ottenimento_crediti(): Intero > 0
+
+pre:
+
+    SELECT e.*
+    FROM Esame e, Studente s 
+    WHERE e.studente = s.id 
+    AND e.superato('True')
+
+post:
+
+    algoritmo:
+
+    SELECT SUM(b.crediti_ottenuti) as crediti 
+    FROM Blocco b, Studente s, Esame e 
+    WHERE b.esame = esame.blocco 
+    AND s.id = e.studente 
+    AND e.superato('True')

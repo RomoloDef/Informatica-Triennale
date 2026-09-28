@@ -1,0 +1,55 @@
+Specifica dei requisiti
+
+1. Utente
+    1.1 nome: Stringa
+    1.2 cognome: Stringa
+    1.3 data_nascita: Data
+    1.4 indirizzo: Indirizzo
+    1.5 mail: Email
+
+2. Postazione
+    2.1 id: Intero {id}
+
+3. Cliente --> sottoscrive l'abbonamento (vedi req 4)
+    3.1.0. Persona
+        3.1.1 nome: Stringa
+        3.1.2 cognome: Stringa
+        3.1.3 data_nascita: Data
+        3.1.4 partita_iva: IVA
+
+    3.2.0. Impresa
+        3.2.1 ragione_sociale: Stringa
+        3.2.2 partita_iva: IVA
+
+4. Abbonamento
+    4.1 istante_inizio: DataOra
+
+5. TipologiaAbbonamento
+    5.1 prezzo: Reale > 0
+    5.2 durata_giorni: Intero > 0
+    5.3 inizio_sottoscrizione: DataOra
+    5.4 fine_sottoscrizione: DataOra
+    5.5 utenti_usufruenti: Intero > 0
+
+6. Servizio
+    6.1 nome: Stringa
+    6.2 descrizione: Stringa
+    6.3 prezzo_unitario: Reale > 0
+
+    si possono accedere grazie ad una determinata tipologia di abbonamento (vedi req 5) -- associazione
+
+7. TipologiaServizio
+    7.1 sconto: 0 < Reale < 1
+    7.2 soglia_mensile: Intero > 0
+
+8. Utilizzo
+    8.1 istante_inizio: DataOra
+    8.2 istante_fine: DataOra
+    8.3 quantità: Intero
+
+9. Accesso
+    9.1 istante_accesso: DataOra
+    9.2 istante_uscita: DataOra
+
+
+

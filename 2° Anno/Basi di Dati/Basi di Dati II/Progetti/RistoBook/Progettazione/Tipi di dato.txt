@@ -1,0 +1,32 @@
+Tipi di dato in SQL
+
+- Stringa --> varchar
+
+- DataOra, Data, Ora --> TimeStamp
+
+- Intero > 0 --> CREATE DOMAIN Int_gz_not_null AS Integer
+                    CHECK(value > 0)
+
+- Periodo --> CREATE TYPE __Periodo__ (
+	            da DataOra,
+	            a DataOra
+                );	
+
+                CREATE DOMAIN Periodo AS __Periodo__
+	                CHECK (value.a >= value.da);
+
+- Indirizzo --> CREATE TYPE __Indirizzo__ (
+                via Stringa
+                civico Stringa
+                );
+
+                CREATE DOMAIN Indirizzo AS __Indirizzo__ 
+                    CHECK (via is NOT NULL and civico IS NOT NULL);
+
+
+- Reale > 0 --> CREATE DOMAIN Real_gz_not_null AS Real 
+                    CHECK(value > 0)
+
+            
+
+            

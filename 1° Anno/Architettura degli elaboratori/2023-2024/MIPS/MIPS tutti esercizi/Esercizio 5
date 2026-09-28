@@ -1,0 +1,28 @@
+# Scrivere un programma che, preso un intero n in memoria, calcola la somma dei primi n interi
+
+.text
+.globl main
+
+main:
+
+	lw $t0, n	# carico il numero in memoria
+	li $t1, 1	# inizializzo l'indice
+	li $t2, 0	# inizializzo a 0 il totale
+	add $t3, $t0, 1
+	
+FOR:
+	blt $t1,$t3, BLOCCOFOR
+	j FINE
+	
+BLOCCOFOR:
+	add $t2, $t2, $t1	# eseguo totale = totale + i
+	addi $1, $t1, 1		# incremento l'indice
+	j FOR
+
+FINE:	
+	li $v0, 10
+	syscall
+	
+
+.data
+n: .word 5

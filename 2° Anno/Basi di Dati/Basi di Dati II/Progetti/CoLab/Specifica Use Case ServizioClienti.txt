@@ -1,0 +1,28 @@
+Specifica UseCase ServizioClienti
+
+Periodo: {
+    da: DataOra
+    a: DataOra
+}
+
+operazione ausiliaria
+
+- contiene(d: DataOra): Booleano
+
+pre: nessuna
+
+post:
+
+    result = TRUE <-> EXIST x, y (da(this, x) AND a(this, y)) AND x <= d AND d <= y
+
+- calcolaUtentiNoAccesso(p: Periodo): Utente[0..*]
+
+pre: nessuna
+
+post: 
+
+    result = { u | Utente(u) AND EXIST a, ia, abb, us (Accesso(a) AND istante_accesso(a, ia) AND contiene(periodo, ia, False) AND Abbonamento(abb)
+    
+    AND usufruisce(u, us, abb))}
+
+

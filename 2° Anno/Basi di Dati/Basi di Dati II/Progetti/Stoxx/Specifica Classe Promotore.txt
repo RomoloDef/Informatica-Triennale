@@ -1,0 +1,11 @@
+Specifica Classe Promotore
+
+- numeroClienti(): Intero
+
+pre: nessuna
+
+post: 
+
+    N = { c | Cliente(c) AND EXIST g, p Gestione(g) AND GestioneCliente(c, g), Promotore(p) AND gestionePromotore(g, p)}
+
+    

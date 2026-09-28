@@ -1,0 +1,13 @@
+Specifica classe Spostamenti
+
+- itinerario(partenza: Luogo, arrivo: Luogo): Luogo[0..*]
+
+pre: nessuna
+
+post:
+
+    Q = {s, lp, la | FOR ALL u, v, a, lp, la, s (Utente(u) AND Viaggio(v) AND Attività(a) AND Luogo(lp) AND Luogo(la) AND
+        
+        ut_part(u, v) AND possiede(v, a) AND att_luo(a, la) AND att_luo(a, lp) AND luogo_a(la, s) AND luogo_p(lp,s))}
+
+    result = Q

@@ -1,0 +1,14 @@
+Specifica Classe CompraVendita 
+
+[V.CompraVendita.investimento]
+
+FOR ALL c, imp, i (CompraVendita(c) AND Investimento(i) AND tipoOperazione(c, 'investimento') 
+
+AND importo_investito(c, imp)) --> EXIST su(c, i)
+
+[V.CompraVendita.vendita]
+
+FOR ALL c, imp, s (CompraVendita(c) AND StrumentoFinanziario(s) AND tipoOperazione(c, 'vendita')
+
+AND importo_liquidato(c, imp)) --> EXIST vendoStrumento(c, s)
+

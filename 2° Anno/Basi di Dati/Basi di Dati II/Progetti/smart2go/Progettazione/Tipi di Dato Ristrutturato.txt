@@ -1,0 +1,50 @@
+Tipi di dato ristrutturati
+
+- Stringa -> varchar
+
+- Data, DataOra, Ora -> TimeStamp
+
+- Booleano --> Boolean 
+
+- Intero > 0 -->
+
+            CREATE DOMAIN IntegerGZ AS Integer
+                CHECK(value is not null AND value > 0);
+
+- Reale > 0 -->
+            CREATE DOMAIN RealGZ AS Real 
+                CHECK(value is not null AND value > 0);
+
+- Sconto -->
+             CREATE DOMAIN Sconto AS Real
+                CHECK (value is not null and value >= 0 AND value < 1);
+
+- Indirizzo -->
+            CREATE TYPE Indirizzo AS(
+	            via varchar(200), civico varchar(100));
+
+- IBAN --> 
+            CREATE DOMAIN IBAN AS varchar
+	            CHECK (VALUE ~ '^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$');
+
+- Targa -->
+            CREATE DOMAIN Targa AS varchar
+                CHECK (VAlue ~ '^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$');
+
+- Coordinate -->
+
+            CREATE DOMAIN Latitudine AS NUMERIC
+                CHECK (VALUE >= -90 AND VALUE <= 90);
+
+            CREATE DOMAIN Longitudine AS NUMERIC
+                CHECK (VALUE >= -180 AND VALUE <= 180);
+
+            CREATE TYPE Coordinate AS (
+                latitudine Latitudine,
+                longitudine Longitudine
+            );
+
+
+
+
+

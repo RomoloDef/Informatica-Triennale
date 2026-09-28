@@ -1,0 +1,31 @@
+Funzionalita ServizioClienti
+
+- operazione ausiliaria: contiene()
+
+CREATE OR REPLACE FUNCTION contiene(ora TIME, inizio TIME, fine TIME)
+RETURNS BOOLEAN
+AS $$
+BEGIN
+    RETURN ora BETWEEN inizio AND fine;
+END;
+$$ LANGUAGE plpgsql;
+
+- calcolaUtentiNoAccesso(p: Periodo): Utente[0..*]
+
+pre: nessuna
+
+post: 
+
+    algoritmo:
+
+    esegui questa query e memorizzane il risultato in Q
+
+    SELECT *
+    FROM Utente u, Accesso a, Abbonamento abb, Usufruisce us
+    WHERE us.utente = utente.id 
+    AND us.abbonamento = abb.id
+    AND contiene(periodo, a.istante_accesso, FALSE)
+
+    
+
+

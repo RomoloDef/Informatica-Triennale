@@ -1,0 +1,19 @@
+Specifica Use case Visualizzazione
+
+	visualizza_video(v:Video) : Visualizzazione
+		pre: not VideoCensurato(v)
+		post: 
+			Se l'attore che invoca l'operazione è un utente registrato, allora sia u:Utente l'istanza che lo rappresenta.
+
+			- Viene creata e restituita una nuova istanza 
+				result:Visualizzazione tale che:
+					result.istante = adesso
+			- Se u è definito, viene creato il link (u,result):ut_vis
+			- Viene creato il link (v, result):vid_vis.
+
+			Formalmente:
+				Per esercizio.
+
+
+
+Questo svolgimento potrebbe essere incompleto. E' infatti possibile che manchino le specifiche di ulteriori operazioni o di altri use-case, che si lasciano eventualmente per esercizio.				

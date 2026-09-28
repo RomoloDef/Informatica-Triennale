@@ -1,0 +1,24 @@
+Specifica classe Ristorante
+
+- cucine(): Cucina [0..*]
+
+pre:
+
+post:
+
+    result = { cuc | Cucina(cuc) AND rist-cu(r,c)}
+
+
+- indisponibile(p: Periodo): Booleano
+
+pre:
+
+post:
+
+    result = true <--> (EXIST q indisponibilità(this, q) AND interseca(p, q, true))
+
+
+[V.Ristorante.non.due.prenotazione.stesso.rist]
+
+FOR ALL r, p1, p2 (Ristorante(p) AND Prenotazione(p1) AND Prenotazione(p2) AND pren-rist(p1, r) AND pren-rist(p2, r) AND p1 != p2)
+

@@ -1,0 +1,18 @@
+Use-case Statistiche ristoranti
+
+
+statistiche_promozioni(r:integer, p:Periodo): 
+						(prom:integer, avg_clienti: float) [0..*]
+
+	result = 
+		SELECT 
+			prom.id as prom,
+			n_clienti_medio_g(prom.id, p) as avg_clienti
+		FROM Ristorante rist LEFT OUTER JOIN Promozione prom 
+				ON prom.ristorante = r
+		WHERE rist.id = r
+
+	IF result = (NULL, ...):
+		raise Exception("Ristorante non esistente")
+	ELSE
+		return result; -- può essere l'insieme vuoto

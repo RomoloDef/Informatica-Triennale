@@ -1,0 +1,87 @@
+Nazione(__nome__)
+
+Citta(__id__:serial, nome, nazione:Stringa)
+	fk: nazione references Nazione(nome)
+
+Utente(
+	__email__:Email,
+	nome:Stringa,
+	is_proprietario:Boolean
+)
+	-- superchiave non minimale, utilizzata da Ristorante per implementare [V.Utente.proprietario] senza un trigger (denormalizzazione del DB: da usare con molta parsimonia!!!!!)
+	unique: (email, is_proprietario)
+
+Ristorante(__id__:serial, nome, piva, indirizzo, citta:integer, proprietario, prop_is_proprietario)
+	fk: citta references Citta(id)
+	fk: (proprietario, prop_is_proprietario) references Utente(email, is_proprietario),
+	ennupla: (prop_is_proprietario = TRUE) -- implementa [V.Utente.proprietario]
+	inclusione: id occorre in rist_tipocucina(ristorante)
+
+apertura(__ristorante__, __val_apertura__)
+	fk: (ristorante) references Ristorante(id)	
+
+
+TipologiaCucina(__nome__)
+
+rist_tipocuc(__ristorante__, __tipocuc__)
+	fk: (ristorante) references Ristorante(id)
+	fk: (tipocuc) references TipoCucina(nome)
+
+
+Promozione(__id__:serial, sconto, max_coperti, riassegnabile, nome, ristorante)
+	fk: ristorante references Ristorante(id)
+
+periodo_promozione(__promozione__:integer, __periodo__:PeriodoStrutturato)
+	fk: promozione references Promozione(id)
+
+
+
+Prenotazione(
+	__id__: serial,	
+	n,
+
+	istante_pren timestamp,
+	istante_serv timestamp,
+
+	stato_corrente StatoPrenotazione,
+
+	istante_ann timetamp*,
+	istante_acc timetamp*,
+	istante_rif timetamp*,
+	istante_compl timetamp*,
+	istante_nonutil timetamp*,
+
+	cliente Email,
+	ristorante integer,
+	promozione integer*
+)
+	fk: cliente references Cliente(email) -- accorpa cl_pren
+	fk: ristorante references Ristorante(id) -- accorpa pren_rist
+	fk: promozione references Promozione(id) -- accorpa pren_prom
+
+	v.ennupla: istante_pren < istante_serv
+
+	v.ennupla: istante_compl is null or istante_acc is not null
+	v.ennupla: istante_nonutil is null or istante_acc is not null
+	...
+	... tutti gli altri!!
+
+
+Note: La tabella Prenotazione potrà crescere facilmente a dimensioni molto grandi, e sarà probabilmente oggetto di molti accessi. Questo potrebbe facilmente portare al collasso del sistema. 
+Ad es., se il sistema censisse 10.000 ristoranti, ognuno con 20 prenotazioni/giorno, la tabella crescerà di 73 milioni di ennuple ogni anno!!
+
+Possibili azioni di mitigazione:
+
+1) Ristrutturare la generalizzazione radicata in Prenotazione in modo diverso, ad es., separando le prenotazioni "correnti" e quelle "storiche" in classi disgiunte, che diventeranno poi tabelle diverse. 
+	- Vantaggi: facile da capire
+	- Svantaggi: gestione macchinosa.
+
+2) Tentare misure meno invasive, ad es. il combinato disposto di:
+	2.1) Indici che permettano di recuperare in modo più efficiente le ennuple relative alle prenotazioni "correnti", data una città e/o un ristorante e/o una promozione. (Certamente non basteranno!)
+
+	2.2) Considerare la tecnica del TABLE PARTITIONING offerta da PostgreSQL (che in qualche modo automatizza una gestione secondo le linee del punto 1.)
+
+	2.3) Considerare il fatto che i dati si prestano molto bene ad essere partizionati in DB distinti (tutti con lo stesso schema). Ad esempio, potremmo avere un DB per città, con i soli ristoranti (e relative promozioni e prenotazioni) di quella città. Questo non inficerebbe le operazioni più critiche (che sono la ricerca di ristornati in una certa città). Un layer più esterno potrebbe offrire una visione unificante dei dati (per operazioni non critiche).
+	Per mantenere il carico di lavoro bilanciato tra i vari DB, piuttosto che avere un DB per città, si potrebbero dividere i dati in modo più oculato. 
+	Si rimanda a letture su argomenti più avanzati, come DB federati, elastic computing, architetture fortemente scalabili organizzate in microservizi replicabili, etc.
+

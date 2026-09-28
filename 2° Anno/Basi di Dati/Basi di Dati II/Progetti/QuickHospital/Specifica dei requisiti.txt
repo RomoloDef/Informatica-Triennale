@@ -1,0 +1,44 @@
+Specifica dei requisiti per il progetto QuickHospital
+
+
+1. Paziente
+	1.1 nome: Stringa
+	1.2 cognome: Stringa
+	1.3 data_nascita : Data
+	1.4 recapito_telefonico: Telefono
+	1.5 recapito email: Stringa {id}
+	1.6 recapito postale: Stringa {id}
+	
+		1.0.1 PazienteEsterno --> generalizzazione
+
+2. Medico:
+	2.1 nome: Stringa
+	2.2 cognome: Stringa
+	2.3 data_nascita: Data
+	2.4 numero_pazienti --> operazione?
+	2.5 itinerario_di_visite --> operazione? (Vedi requisito 6)
+
+3. Stanza:
+	3.1 piano: Intero > 0
+	3.2 settore: Intero > 0
+	3.3 numero_posti_letto: 1..8
+
+4. Ricovero:
+	4.1 data: Data
+	operazione --> può essere fatto solo se PostoLetto.occupato = False
+
+5. PostoLetto:
+	5.1 codice: Intero {id}
+	5.2 occupato: Booleano
+
+6. PrestazioneMediche:
+	6.1 data: Data
+	6.2 descrizione: Stringa
+	6.3 specializzazione (vedi requisito 7)
+
+7. Specializzazione:
+	7.1 nome: Stringa
+	7.2 tipo: {primaria, secondaria}
+	
+	
+	 

@@ -1,0 +1,8 @@
+Specifica classe Tirocinio
+
+- fine(): DataOra
+	pre: nessuna
+	post:
+			EXISTS i, d (inizio(this, i) and durata(this, d) and result = i + d)
+
+    

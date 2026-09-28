@@ -1,0 +1,20 @@
+Funzionalità Lista 
+
+- consulta_spettacoli(t: Tipologia, g: Genere, o: DataOra): Spettacolo[0..*]
+
+pre:
+
+post:
+
+    Algoritmo:
+
+    SELECT s.titolo, s.id
+    FROM Spettacolo s, Tipologia t, Genere g
+    WHERE t.id = s.tipologia 
+    AND g.id = s.genere 
+    AND s.orario = '...'
+    AND g.nome = '...'
+    AND t.nome = '...'
+
+    effettua query e memorizzane il risultato in Q
+

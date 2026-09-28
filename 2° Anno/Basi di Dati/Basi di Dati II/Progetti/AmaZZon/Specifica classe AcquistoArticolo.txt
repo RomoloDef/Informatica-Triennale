@@ -1,0 +1,21 @@
+Specifica classe AcquistoArticolo 
+
+- importo_totale(): Reale > 0
+
+pre:
+
+    EXIST o, a (Offerta(o) AND Articolo(a) AND relativa_a(o, a) AND art_acqu(a, this))
+
+post:
+
+    FOR ALL o, a, aa, s, p, c, na, pa, cr (Offerta(o) AND Articolo(a) AND SpeseSpedizione(s) AND AcquistoArticolo(aa) AND relativa_a(o, a) 
+    
+    AND art_spes(a, s) AND art_acqu(a, aa) AND prezzo(o, p) AND costo(c, s) AND numero_di_articoli(n, aa) AND pezzi_per_articolo(pa, aa) AND costo_ridotto(cr, s)) -->
+
+    result = c * na * pa * p <->  pa = 1 
+
+    AND 
+
+    result = cr * na * pa * p <-> pa >= 1
+
+    

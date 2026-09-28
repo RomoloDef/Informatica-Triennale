@@ -1,0 +1,33 @@
+Modellare, mediante formule in logica del primo ordine, le seguenti affermazioni,
+dopo aver progettato opportuni insiemi di simboli di predicato e/o funzione:
+
+1. Ogni crociera viene effettuata utilizzando una nave
+
+F = {Crociera/1, Nave/1, efettua/2}
+
+FOR ALL c (Crociera(c)) --> EXIST n (Nave(n) AND effettua(c, n)) 
+
+2. Ogni crociera segue un itinerario 
+
+F = {Crociera/1, Itinerario/1, segue/2}
+
+FOR ALL i (Itinerario(i)) --> EXIST c (Crociera(c) AND segue(c, i))
+
+3. Gli itinerari hanno un nome univoco
+
+F = {Itinerario/1, Nome/1, possedere/2}
+
+FOR ALL I, n1, n2 (Itinerario(i) AND Nome(n1) AND Nome(n2) AND possedere(i, n1) AND possedere(i, n2)) --> n1 = n2
+
+4. Ogni crociera tocca un certo insieme non vuoto di destinazioni - Per ogni crociera esiste almeno una destinazione che tocca
+
+F = {Crociera/1, Destinazione/1, tocca/2}
+
+FOR ALL c (Crociera(c)) --> EXIST d (Destinazione(d) AND tocca(c, d))
+
+5. Le crociere si dividono in crociere di luna di miele e crociere per famiglia - Non esiste una crociera che è sia di luna di miele e si per famiglia
+
+F = {Crociera/1, CrocieraLuna/1, CrocieraFamiglia/1}
+
+NOT EXIST c (Crociera(c) AND CrocieraFamiglia(c) AND CrocieraLuna(c))
+

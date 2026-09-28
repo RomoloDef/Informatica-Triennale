@@ -1,0 +1,43 @@
+Specifica classe Asta
+
+
+Vincoli esterni
+
+[V.Asta.scadenza]
+	Per ogni a:Asta, deve essere a.scadenza > a.istante
+
+	ALL a, i, s   Asta(a) and istante(a, i) and scadenza(a, s) --> s > i
+
+
+
+Operazioni
+
+prezzoCorrente(): Denaro
+	pre: nessuna
+	post: 
+		result è this.prezzoBase + this.rialzo * (N-1) dove N
+		è il numero di bid del post this.
+
+		result è tale da soddisfare:
+
+			EXISTS pb, r, N
+				prezzoBase(this, pb) and rialzo(this, r) and
+				N = |{ b |  Bid(b) and asta_bid(this, b) }|
+				and
+				result = pb + r * (N-1).
+
+
+bidAggiudicante() : Bid [0..1]
+	pre: l'asta this è scaduta, ovvero: this.scadenza < adesso
+	post: 
+		result:Bid, se esiste, tale che:
+			- (this,result): asta_bid
+			- per ogni b':Bid tale (this, b'):asta_bid si ha che 
+					b'.istante <= result.istante
+
+
+acquirente(): Privato
+	pre: this.bidAggiudicante(): Bid
+	post: 
+		result:Privato è tale che (result,this.bidAggiudicante()): bidder
+

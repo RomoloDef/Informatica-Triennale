@@ -1,0 +1,29 @@
+Tipi di Dato 
+
+- IntegerGZ:
+
+CREATE DOMAIN IntegerGZ AS Integer
+    CHECK (value IS NOT NULL and VALUE > 0);
+
+- Tipo:
+
+CREATE TYPE Tipo AS ENUM ('Tradizionale', 'Alternativa');
+
+- Integer3_5:
+
+CREATE DOMAIN Integer3_5 AS Integer 
+    CHECK (values IS NOT NULL and VALUE >= 3 AND VALUE <= 5);
+
+- Indirizzo:
+
+CREATE TYPE Indirizzo (
+    via varchar,
+    civico IntegerGZ 
+);
+
+- Fascia:
+
+CREATE TYPE Fascia (
+    da timestamp,
+    a timestamp
+);

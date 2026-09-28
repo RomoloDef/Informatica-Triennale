@@ -1,0 +1,11 @@
+Specifica classe Squadra 
+
+- componenti(): Sportivo[0..*]
+
+pre:
+
+    EXIST s (Sportivo(s) AND iscritto_alla(s, this))
+
+post:
+
+    result = { s | EXIST iscritto_alla(s, this)}

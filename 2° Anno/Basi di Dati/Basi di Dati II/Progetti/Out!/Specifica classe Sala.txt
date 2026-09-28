@@ -1,0 +1,14 @@
+Specifica classe Sala
+
+- posti_disponibili(): Posto[0..*]
+
+pre:
+
+post:
+
+    P = { p | Posto(p) AND EXIST prn (Prenotazione(prn) AND pren_post(prn, p))}
+
+    result = { p | Posto(p) AND EXIST s (Sala(s) AND trovatosi(p, s) AND p NOT IN P)}
+
+
+

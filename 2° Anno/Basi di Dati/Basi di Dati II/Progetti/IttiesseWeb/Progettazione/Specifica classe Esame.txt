@@ -1,0 +1,19 @@
+Specifica classe Esame
+
+conversione in SQL 
+
+- superato(): Booleano 
+
+pre:
+
+post:
+
+    algoritmo:
+
+    SELECT EXIST (
+        SELECT 1
+        FROM Prova p, Esame e
+        WHERE p.id = esame.prova
+        CHECK p.voto >= 6
+    )
+    

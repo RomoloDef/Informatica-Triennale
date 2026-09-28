@@ -1,0 +1,38 @@
+Funzionalità Management
+
+- operazione ausiliaria numGiorni()
+
+CREATE OR REPLACE FUNCTION numGiorni(mese TEXT)
+RETURNS INTEGER
+AS $$
+BEGIN
+    CASE 
+        WHEN mese IN ('Aprile', 'Giugno', 'Settembre', 'Novembre') THEN
+            RETURN 30;
+        WHEN mese = 'Febbraio' THEN
+            RETURN 28;
+        ELSE
+            RETURN 31;
+    END CASE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+- calcolaMediaGiornaliera(inizio: timestamp, fine:timestamp, m: varchar): RealGZ
+
+pre: nessuna
+
+post:
+
+    algoritmo:
+
+    esegui questa query e memorizzane il contenuto in Q
+
+    SELECT COUNT(DISTINCT u.id) / numGiorni(m) AS MediaGiornaliera
+    FROM Utente u, Abbonamento a, Usufruisce us, Postazione p 
+    WHERE us.utente = u.id 
+    AND us.abbonamento = a.id 
+    AND us.postazione = p.id 
+    AND a.inizio < a.fine
+
+    dove m è il valore inserito per il mese

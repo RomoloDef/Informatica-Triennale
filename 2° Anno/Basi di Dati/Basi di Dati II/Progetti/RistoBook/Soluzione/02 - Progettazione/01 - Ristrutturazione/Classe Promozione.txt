@@ -1,0 +1,9 @@
+Classe Promozione
+
+n_clienti_medio_g(p:Periodo): Reale >= 0
+	Da ristrutturare per esercizio.
+
+
+
+coperti_prenotati(d:Data): Intero
+	Da ristrutturare per esercizio.

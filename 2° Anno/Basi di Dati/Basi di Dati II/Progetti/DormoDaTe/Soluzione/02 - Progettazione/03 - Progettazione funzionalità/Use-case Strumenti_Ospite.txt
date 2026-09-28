@@ -1,0 +1,68 @@
+Use-case Strumenti_Ospite
+
+ricerca(
+	c:integer,  -- valore del campo 'id' che (sperabilmente) identifichi una ennupla di Città (da verificare!!)
+	p:tsrange,
+	n:IntegerGZ
+) : (id:integer, ...., utente:integer) [0..*]. -- restituisce un insieme di ennuple della tabella Abitazione
+
+	algoritmo:
+
+		restituisti il risultato della query seguente:
+
+			SELECT a.* FROM Abitazione a, ... 
+
+		- in caso di errore ...: solleva eccezione: "Città non esistente"
+		- in caso di errore ...: solleva eccezione: ...
+		...
+
+		// per esercizio
+
+
+
+Si lascia il completamento per esercizio.		
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ricerca(c: integer, p:tsrange, n:IntegerGZ): (id:integre, .... , utente:integer)
+
+algoritmo:
+
+		BEGIN TRANSACTION
+
+		Q = SELECT a.*
+			FROM Abitazione a 
+			JOIN
+			Abitazionecitta ac 
+			ON a.id = ac.abitazione
+			WHERE ac.citta = c.id;
+		
+		SE Q è vuoto:
+			errore, non esistono città etc..
+
+		SE Q <> (NULL, ..., NULL):
+			errore, non è ancora eseguito
+
+		SE Q.posti_disponibili(a, p, x) < n
+			errore
+
+		ALTRIMENTI
+
+		RESTITUISCI Q
+
+
+esprimi_feedback_da_ospite(p:Prenotazione, v:voto)
+
+algoritmo:
+
+		BEGIN TRANSACTION
+
+		Q = SELECT u.*
+			FROM Utente u, Prenotazione pren
+			JOIN
+			ut_pren up
+			ON u.id = up.utente
+			AND 
+			

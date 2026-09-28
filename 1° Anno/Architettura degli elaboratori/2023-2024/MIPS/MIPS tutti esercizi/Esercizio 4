@@ -1,0 +1,25 @@
+# Scrivere un programma che metta in $t0 1 se il valore di Batman è maggiore di quello di Robin
+
+.text
+.globl main
+
+main:
+	li $t0, 0	# inizializzo il registro a 0
+	lw $t1, Batman	# carico Batman
+	lw $t2, Robin	# carico Robin
+	bgt $t1, $t2, IF	# se il valore di Batman è maggiore di passa a IF
+	j FINE_IF
+	
+	IF:
+	li $t0, 1	# nel registro viene messo il valore 1
+	
+	FINE_IF:
+	sw $t1, Batman	# salvo batman
+	sw $t2, Robin	# salvo robin
+	li $v0, 10
+	syscall
+	
+
+.data
+Batman:.word 7
+Robin:.word 5

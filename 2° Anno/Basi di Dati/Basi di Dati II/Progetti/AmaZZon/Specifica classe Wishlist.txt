@@ -1,0 +1,9 @@
+Specifica classe Wishlist
+
+- insieme_articoli(): Articolo [0..*]
+
+pre: 
+
+post:
+
+    result = { a | EXIST contenuto(a, this)}

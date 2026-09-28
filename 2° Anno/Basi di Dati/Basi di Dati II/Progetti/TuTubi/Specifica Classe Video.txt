@@ -1,0 +1,21 @@
+Specifica classe Video
+
+Valutazione(): Reale >= 0
+	precondizioni:
+	postcondizioni:
+		u: Utente, per ogni (u, this):Feedback, tot=tot+Feedback.valore, denom+=1,
+		se denom≠ 0 return tot/denom, altrimenti return -1
+
+
+Formalmente:
+
+FOR ALL u, Utente(u) AND Feedback(u, this) -> EXIXTS tot = tot + feedback AND denom = denom + 1
+
+
+
+
+
+	
+
+
+

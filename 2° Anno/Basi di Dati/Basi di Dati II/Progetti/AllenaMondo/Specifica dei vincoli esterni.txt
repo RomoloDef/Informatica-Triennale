@@ -1,0 +1,28 @@
+Specifica dei vincoli esterni 
+
+[V.Sportivo.Squadra.SfidaSquadra]
+
+NOT EXIST sq1, sq2, s, ss (Sportivo(s) AND Squadra(sq1) AND Squadra(sq1) AND SfidaSquadra(ss) AND iscritto_alla(s, sq1) AND iscritto_alla(s, sq2) AND sfida(sq1, ss) AND sfida(sq2, ss) AND sq1 != sq2)
+
+[V.Sportivo.datanascita.minore]
+
+FOR ALL s, sf, d, p (Sportivo(s) AND Sfida(sf) AND crea(s, sf) AND data_nascita(s, d) AND periodo(sf, p)) --> d < p 
+
+lo stesso vincolo anche per tutti gli altri istanti di tempo 
+
+[V.AttivitàSportiva.Percorso]
+
+FOR ALL a, p, i, f, t (AttivitàSportiva(a) AND Percorso(p) AND memorizza(a, p) AND istante_inizio(a, i) AND istante_fine(a, f) AND istante_di_tempo(p, t) --> i <= t <= f )
+
+[V.Sfida.Periodo]
+
+FOR ALL s, i , f (Sfida(s) AND inizio(s, i) AND fine(s, f) -> i <= f)
+
+[V.Noautoamicizia]
+
+FOR ALL s, s' (Sportivo(s) AND Sportivo(s') AND amicizia(s, s')) --> s != s' 
+
+[V.SfidaSquadra.partecipanti]
+
+FOR ALL s, ss, c, m (Squadra(s) AND SfidaSquadra(ss) AND sfida(s, ss) AND componenti(s, c) AND max_partecipanti(ss, m) --> c <= m )
+

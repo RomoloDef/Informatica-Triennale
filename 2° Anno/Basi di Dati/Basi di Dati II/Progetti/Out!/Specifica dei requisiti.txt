@@ -1,0 +1,33 @@
+Specifica dei requisiti
+
+1. Sede
+    1.1 nome: Stringa
+    1.2 indirizzo: Indirizzo
+    1.3 sala: (vedi req 2)
+
+2. Sala
+    2.1 tipologia: Stringa
+    2.2 posti_a_sedere: (vedi req 3)
+
+3. Posto
+    3.1 fila: Intero >= 0
+    3.2 colonna: Intero >= 0
+
+4. Spettacolo
+    4.1 titolo: Stringa 
+    4.2 tipologia: ???
+    4.3 genere: ???
+    4.4 artisti: ???
+    4.5 orario: DataOra
+    4.6 sede: (vedi req 1)
+    4.7 sala: (vedi req 2)
+
+5. Utente
+    5.1 nome: Stringa 
+    5.2 cognome: Stringa 
+    5.3 codiceFiscale: Codice 
+
+6. CalendarioSpettacoli:
+    6.1 spattacoli_in_programma: OPERAZIONE 
+
+    

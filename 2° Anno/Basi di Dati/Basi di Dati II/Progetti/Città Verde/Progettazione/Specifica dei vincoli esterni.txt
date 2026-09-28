@@ -1,0 +1,119 @@
+Specifica dei vincoli esterni
+
+[V.TipoPianta.Rimossa]
+
+FOR ALL s (SoggettoVerde(s)) -> (tipo('Pianta Rimossa', s) <-> EXIST d, c (data_rimozione(d, s) AND causa(c, s)))
+
+[Vincoli] -> stessi vincoli per intervento, squadra, operatore e areafruibile
+
+[V.TipoPianta.MalataCurata]
+
+FOR ALL pm (PiantaMalata(pm)) -> (tipo('Pianta Malata Curata', pm) <-> EXIST i, g (intervento(i, pm) AND guarigione(g, pm)))
+
+FOR ALL pm (PiantaMalata(pm)) -> (tipo('Pianta Malata Curata', pm) <-> EXIST em cura(em, pm))
+
+[V.AreaVerde.disj]
+
+NOT EXIST a, anf, af (AreaVerde(a) AND AreaNonFruibile(anf) AND AreaFruibile(af) AND is_Nonfruibile(a, anf) AND is_Fruibile(a, af))
+
+Trigger 1
+
+Operazioni da intercettare: Inserimento e Modifica in AreaFruibile e AreaNonFruibile
+
+Quando intercettarle: BEFORE
+
+Funzione:
+
+    - sia iError := False
+
+    - sia new l'ennupla che si sta inserendo o modificando in areaFruibile e AreaNonFruibile
+
+    - se si sta inserendo o modificando l'ennupla in areaFruibile
+    
+        iError := EXIST (
+
+        SELECT *
+        FROM areaFruibile, 
+        WHERE areaFruibile.area_verde = new.area_verde 
+    
+        );
+
+    - se si sta inserendo o modificando l'ennupla in AreaNonFruibile
+
+        iError := EXIST (
+            
+        SELECT *
+        FROM areaNonFruibile
+        WHERE areaNonFruibile.area_verde = new.area_verde
+
+        );
+
+    - se iError = True blocca l'operazione 
+
+    - altrimenti permetti 
+
+
+[V.AreaVerde.compl]
+
+FOR ALL a AreaVerde(a) -> (NOT EXIST anf (is_Nonfruibile(a, anf))) OR (NOT EXIST af (is_Fruibile(a, af)))
+
+Trigger 1
+
+Operazioni da intercettare: Inserimento in AreaVerde
+
+Quando intercettarle: AFTER
+
+Funzione:
+
+    - sia iError := False 
+
+    - sia new l'ennula che si sta inserendo in AreaVerde 
+
+    - se lo si fa allora
+
+        iError := NOT EXIST (
+
+            SELECT areaverde
+            FROM AreaFruibile
+            WHERE areaverde = new.id
+            UNION
+            SELECT areaverde
+            FROM AreaNonFruibile
+            WHERE areaverde = new.id
+
+        )
+
+    - se lo permette solleva l'eccezione
+
+    - altrimenti permetti 
+
+
+Trigger 2
+
+Operazione da intercettare: Rimozione in AreaFruibile o AreaNonFruibile
+
+Quando intercettarle: AFTER
+
+Funzione: 
+
+    - sia iError := False 
+
+    - sia new l'ennula che si sta rimuovendo in AreaFruibile o AreaNonFruibile
+
+    - se lo si fa allora
+
+        iError :=  (
+
+            SELECT *
+            FROM (AreaVerde LEFT OUTER JOIN AreaFruibile ON AreaVerde.id = AreaFruibile.area_verde)
+            LEFT OUTER JOIN AreaNonFruibile ON AreaVerde.id = AreaNonFruibile.persona
+            WHERE AreaVerde.id = old.area_verde
+            AND (AreaNonFruibile.area_verde IS NULL) AND (AreaFruibile.area_verde IS NULL)
+
+        )
+
+    - se lo permette solleva l'eccezione
+
+    - altrimenti permetti 
+
+

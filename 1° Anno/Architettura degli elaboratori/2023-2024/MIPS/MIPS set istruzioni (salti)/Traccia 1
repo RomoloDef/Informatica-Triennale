@@ -1,0 +1,19 @@
+# Scrivere un programma in linguaggio assemblativo MARS che pone in $t0 il valore 1 se l'operando definito in memoria Batman è maggiore dell'operando definito in memoria Robin
+
+.text
+.globl main
+
+main:
+	lw $t1, Batman
+	lw $t2, Robin
+	bgt $t1, $t2, ISTRUZIONE
+	j FINE_IF
+     ISTRUZIONE:
+     li $t0, 1
+     FINE_IF:
+     li $v0, 10
+     syscall	
+
+.data
+Batman: .word 10
+Robin: .word 5

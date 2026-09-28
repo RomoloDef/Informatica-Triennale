@@ -1,0 +1,47 @@
+Use case Promozione
+
+- aggiungiPromozione(per: Periodo, sconto: Reale > 0, max: Int_gz_not_null):
+
+pre:
+        EXIST pren Prenotazione(pren)
+
+post:   
+        Modifica del livello estensionale dei dati
+        Variazione del dominio di interpretazione: PREN, PROM
+
+        Variazioni ennuple di predicato:
+        - Prenotazione(PREN)
+        - pren_prom(PREN, PROM)
+        - Promozione(PROM)
+        - periodo_validità(PROM, per)
+        - massimo(PROM, max)
+        - sconto(PROM, sconto)
+
+- sommaclienti(p: Prenotazione, da: DataOra, a: DataOra):
+
+pre:
+
+post:
+
+        C = { c | FOR ALL p, c, r, g (Prenotazione(p) AND numero_commensali(p, c) AND pren_rist(p, r) AND giorno(p, g) > da AND giorno(p, g) < a)}
+
+        result = SUM (C)
+
+- giorni_validi(p: Prenotazione, da: DataOra, a: DataOra): 
+
+pre:
+
+post:
+
+        Q = { g | FOR ALL p, g Prenotazione(p) AND giorno(p, g), g > da AND g < a }
+
+        result = CARD (Q)
+
+- calcolaStatistiche(p: Periodo, prom: Promozione, r: Ristorante, da: DataOra, a: DataOra):
+
+pre:
+
+post:
+
+        result = sommaclienti(p, da, a) / giorni_validi(p, da, da)
+

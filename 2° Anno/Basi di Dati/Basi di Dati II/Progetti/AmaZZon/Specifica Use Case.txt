@@ -1,0 +1,25 @@
+Specifica Use Case 
+
+- trova_paese(p: Periodo): Nazione[0..*]
+
+pre:
+
+post:
+
+    articoli = { a | EXIST u, aa, art, n, a, o, i, f (UtentePrivatoRegistrato(u) AND risiede(u, n) AND Nazione(n) AND ut_acqu(u, aa) AND AcquistoArticolo(aa) AND art_acqu(a, aa)) AND Offerta(o) AND 
+    
+    istante_inizio(o, i) AND fine(o, f) AND inizio < i, f < fine }
+
+    result = argmax_{n ∈ Nazione} | articoli |
+
+
+- prezzo_minimo(categoria: Stringa, tag: Stringa[0..*]): Articolo[0..*]
+
+pre:
+
+post:
+
+    Prezzo_minimo = argmin_(p ∈ AcquistoArticolo) { p | EXIST art, aa, p (Articolo(art) AND art_acqu(art, aa) AND AcquistoArticolo(aa) AND importo_totale(p, aa))}
+
+    result = { n, p | EXIST a, o, p (Articolo(a) AND Offerta(o) AND relativa_a(o, a) AND categoria(categoria, o) AND tag(tag, o) AND prezzo(p, o) AND p = Prezzo_minimo)}
+

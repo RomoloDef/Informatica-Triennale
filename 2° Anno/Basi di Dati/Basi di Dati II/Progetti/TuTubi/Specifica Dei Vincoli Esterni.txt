@@ -1,0 +1,27 @@
+1. L'utente può lasciare un feedback solo se ha visionato il video.
+
+1.0  Esiste un feedback se l'utente ha visionato il video
+
+1.0.1 V.Utente.feedback: Per ogni istanza (u: Utente, v: Video) della associazione Feedback esiste un'istanza (u: Utente, v: Video) della associazione Visualizza.
+
+// V.Utente.feedback: Per ogni istanza (u: Utente, v: Video) della associazione Feedback esiste un'istanza (u: Utente, v: Visualizza) della associazione utente_vis e esiste un'istanza (v: Visualizza, V: Video) della associazione vis_video
+
+// FOR ALL u, V, Utente(u), Video(V) (Feedback(u,V)) -> EXISTS v, Visualizza(v) AND utente_vis(u,v) AND vis_video(v,V)
+
+1.0.2 FOR ALL u, v Utente(u), Video(v) (Feedback(u,v)) -> EXIXTS (Visualizza(u,v))
+
+------------------------------------------------------------------------------------------------
+
+2. L'utente può lasciare un commento solo se ha visionato il video
+
+2.0 Esiste un commento se l'utente ha visionato il video
+
+2.0.1 V.Utente.commento: Per ogni istanza (u: Utente, c: Commento) della associazione Commento esiste un'istanza (u: Utente, v: Video) della associazione Visualizza
+
+2.0.2 FOR ALL u, v Utente(u), Video(v) (Commento(u,v)) -> EXIXTS (Visualizza(u,v))
+
+// V.Utente.commento: Per ogni istanza (c: Commento) della classe Commento esiste un'istanza (u: Utente, c: Commento) della associazione ute_com e esiste un'istanza (c: Commento, V: Video) della associazione com_vid e esiste una istanza della classe Visualizza(v)
+
+// FOR ALL c, Commento(c) -> EXIXTS u, c, v, V (ute_com(u,c) AND com_vid(c, V) AND Visualizza(v))
+
+------------------------------------------------------------------------------------------------

@@ -1,0 +1,13 @@
+Specifica classe Prenotazione
+
+- numeroPersone(): Intero >= 0
+
+Pre:
+
+Post:
+	result è il numero di oggetti p:Prenotazione tali che (this, p): effettua
+
+	Formalmente:
+	
+	result = | { pre | Prenotazione(pre) AND effettua(this, pre} |
+	

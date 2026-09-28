@@ -1,0 +1,67 @@
+[V.Utente.completezza]
+
+FOR ALL u Utente(u) -> ((EXIST uh u-uh(u, uh)) OR (EXIST uv u-uv(u, uv))
+
+[V.Prenotazione.disgiunzione]
+
+NOT EXIST p, pra, prf (Prenotazione(p) AND PrenotazioneAcc(pra) AND PrenotazioneF(prf) AND
+
+pr-pra(p, pra) AND pr-prf(p, prf))
+
+
+TRIGGER 1
+
+[V.Utente.completezza] --> FOR ALL u Utente(u) -> ((EXIST uh u-uh(u, uh)) OR (EXIST uv u-uv(u, uv))
+
+Operazioni da intercettare:
+
+INSERT su UtenteViaggiatore(id)
+INSERT su UtenteHost(id)
+UPDATE su UtenteViaggiatore(id)
+UPDATE su UtenteHost(id)
+
+Quando intercettarle: AFTER
+
+
+Funzione(old, new):
+
+Sia iError = EXIST (
+	SELECT *
+	FROM UtenteViaggiatore uv, UtenteHost uh
+	WHERE uv.utente = new.utente
+	AND uh.utente = new.utente
+)
+
+If (iError = True):
+	raise Exception
+
+Else:
+	return new
+
+TRIGGER 2
+
+[V.Prenotazione.disgiunzione] --> NOT EXIST p, pra, prf (Prenotazione(p) AND PrenotazioneAcc(pra) AND PrenotazioneF(prf) AND pr-pra(p, pra) AND pr-prf(p, prf))
+
+Operazioni da intercettare:
+
+INSERT in PrenotazioneAcc
+INSERT in PrenotazioneRIf
+
+Quando intercettarle: dopo INSERT(new) in Prenotazione
+
+If NOT EXIST (
+
+	SELECT prenotazione FROM PrenotazioneAcc WHERE prenotazione = new.id
+	UNION
+	SELECT prenotazione FROM PrenotazioneRif WHERE prenotazione = new.id
+
+): raise Exception
+
+else:
+	return new
+
+
+
+
+
+	

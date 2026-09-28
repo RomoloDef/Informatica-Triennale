@@ -1,0 +1,56 @@
+Specifica Use Case 
+
+- MaxSportAmico(s: Sportivo, s': Sportivo, i: DataOra, f: DataOra): Sport[0..*]
+
+pre:
+
+    EXIST amicizia(s, s') AND i <= f 
+
+post:
+
+    S = { (s, t) |
+
+    EXIST a, ai, af (traccia(a, s') AND si_esercita(a, sp) AND istante_inizio(a, ai) AND istante_fine(a, af) AND ai > i AND af < f)
+
+    AND
+
+    T = { (a, ta) | si_esercita(a, sp) AND EXIST i, f istante_inizio(a, i) AND istante_fine(a, f) AND ta = i - f AND traccia(a, s) }
+
+    AND
+
+    t = SUM         (ta)
+        (a, ta) ∈ T
+
+    }
+
+    result = { s | EXIST t (s, t) ∈ ARGMAX_{(s,t)∈S}(t) }
+
+
+- ResocontoAllenamenti(s: Sportivo, i: DataOra, f: DataOra): (Sport, durata, reale >= 0)[0..*]
+
+pre:
+
+    i <= f AND traccia(s, a)
+
+post:
+
+
+    result = { (s, d, t) |
+
+    EXIST a, ai, af (traccia(a, s') AND si_esercita(a, sp) AND istante_inizio(a, ai) AND istante_fine(a, af) AND ai > i AND af < f)
+
+    AND
+
+    D = { (a, d) | si_esercita(a, sp) AND traccia(s, a) AND EXIST p, d memorizza(a, p) AND calcola_distanza(p, d) }
+
+    AND
+
+    d = SUM         (d)
+        (a, d) ∈ D
+
+    T = { (a, t) | si_esercita(a, sp) AND EXIST i, f istante_inizio(a, i) AND istante_fine(a, f) AND t = f - i AND traccia(s, a)}
+
+    t = SUM         (t )
+        (a, t) ∈ T 
+
+    }

@@ -1,0 +1,15 @@
+Specifica classe Quota
+
+- numeroQuote(): Reale > 0
+
+pre:    EXIST cv (CompraVendita(cv) AND tipoOperazione(cv. 'investimento'))
+
+post: 
+
+        FOR ALL cv, imp, m, v, q (CompraVendita(cv) AND importo_investito(cv, imp) AND MonitoraggioQuote(m) 
+        
+        AND valore_ultima_monitorazione(v) AND Quota(q) AND su(cv, q) AND monitoraggio(q, m)) -->
+
+        result = imp / v
+
+     

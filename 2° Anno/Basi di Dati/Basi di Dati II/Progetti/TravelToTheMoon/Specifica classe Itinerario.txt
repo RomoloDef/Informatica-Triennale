@@ -1,0 +1,9 @@
+Specifica classe Itinerario
+
+- destinazioni(): Destinazione[0..*]
+
+pre:
+
+post:
+
+    result = { d | EXIST d (Destinazione(d) AND (dest_di(d, this) OR itin_di(d, this))) }

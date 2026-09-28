@@ -1,0 +1,41 @@
+Specifica delle operazioni presenti in Medico:
+
+itinerario_di_visite(): (Int > 0, Int > 0)
+
+Pre:
+
+Post:
+	FOR ALL v, paz, stanz (Visita(v) AND Paziente(paz) AND med-vis(this, v) and
+	
+	vis-paz(v, paz) AND paz-post(paz, p) AND stanz-post(stanz, po) AND piano(stanz, p) 
+
+	AND settore(stanz, set)) --> return (p, stanz)
+
+
+numero_di_pazienti(): Int > 0
+
+Pre:
+
+Post:
+	FOR ALL m, v, p (Medico(m) AND Visita(v) AND Paziente(p) AND med-vis(m, v) AND
+
+	vis-paz(v, p)) --> return p
+
+
+medici_idonei(SpecializzazioneRichiesta: s): 
+
+Pre:
+	
+
+Post:
+
+FOR ALL m Medico(m) -->
+	Medico(m) AND primaria(M, s) --> return m
+	AND
+	Medico(m) AND secondaria(M, s) --> return m
+
+
+
+	
+
+	

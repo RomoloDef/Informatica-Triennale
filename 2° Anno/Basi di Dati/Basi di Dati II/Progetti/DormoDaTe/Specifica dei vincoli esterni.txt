@@ -1,0 +1,27 @@
+Specifica dei vincoli esterni
+
+[V.CasaOspitante.non.piu.di.un.host]
+
+NOT EXIST c, h1, h2 (CasaOspitante(c) AND possiede(c, h1) AND possiede(c, h2) AND h1 != h2 AND 
+
+UtenteHost(h1) AND UtenteHost(h2))
+
+[V.PostoLetto.non.due.prenotazioni.uguali]
+
+NOT EXIST pl, pr1, pr2, (PostoLetto(pl) AND PrenotazioneAccettat(pr1) AND 
+
+PrenotazioneAccettat(pr2) AND prenA-pl(pl, pr1) AND prenA-pl(pl, pr2) AND pr1 != pr2)
+
+[V.Prenotazione.inizio.dopo.fine]
+
+FOR ALL p, inizio, fine (Prenotazione(p) AND data_inizio(p, inizio) AND data_fine (p, fine) 
+
+--> inizio <= fine
+
+[V.PrenotazioneRif.non.ha.inizio.e.fine]
+
+FOR ALL pren PrenotazioneRif(pren) --> NOT EXIST inizio, fine (data_inizio(pren, inizio) AND 
+
+data_fine(pren_fine))
+
+

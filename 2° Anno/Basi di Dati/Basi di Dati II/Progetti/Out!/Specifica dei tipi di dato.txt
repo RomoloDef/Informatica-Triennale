@@ -1,0 +1,8 @@
+Specifica dei tipi di dato 
+
+- Indirizzo:
+    via: Stringa 
+    civico: Stringa secondo standard
+
+- Codice: Stringa secondo standard 
+
