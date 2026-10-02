@@ -1,5 +1,4 @@
 # selezionare il massimo da un vettore
-.globl main
 
 .data
 	vector: .word 4, 3, -5, 500
