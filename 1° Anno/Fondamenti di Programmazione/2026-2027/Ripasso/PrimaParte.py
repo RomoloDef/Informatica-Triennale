@@ -5,6 +5,7 @@ Prima di passare agli argomenti della prima macro-cateoria del corso, facciamo u
 di dato in Python
 """
 
+import enum
 a1 = 5      # questo è un tipo di dato intero
 
 a2 = 5.0    # questo è un tipo di dato float
@@ -310,6 +311,29 @@ print(secondaLista)
 secondaLista[1:3] = ["sono", "fred"]
 print(secondaLista)
 
+"""
+Posso scorrere (ciclare) la lista in diversi modi in base a quale è la mia esigenza:
+    1. Scandire i valori e ignorare la posizione
+    2. Scandire gli indicie ed estrarre ciascun elemento
+    3. Scandire gli elementi contando con le posizioni con enumerate
+"""
+
+# 1° Modo
+
+for elemento in esempioLista:
+    print(elemento, end = " ")
+
+# 2° Modo
+
+for indice in range(len(esempioLista)):
+    elemento = esempioLista[indice]
+    print(indice, elemento)
+
+# 3° Modo
+
+for conteggio, valore in enumerate(esempioLista):
+    print(conteggio, valore)
+ 
 """
 Vediamo ora i metodi più usati per modificare le liste (gli altri li vedremo più avanti):
 
@@ -688,10 +712,203 @@ valore_default = 0
 nuovo_diz = dict.fromkeys(chiavi_nuove, valore_default)
 print(f"Dizionario creato con fromkeys(): {nuovo_diz}")
 
+"""
+Come detto precedentemente, uno degli aspetti più importanti dei contenitori dei dati è l'ordinamento.
+"""
+
+# ---- ORDINAMENTO ----
+
+"""
+Come si fa a ottenere l'ordinamento degli elementi dei vari contenitori dei dati?
+
+- Tramite il metodo sort delle liste (modifica distruttiva)
+    1. Non funziona sulle tuple, che non sono modificabili
+    2. Non funziona sugli insiemi, che non hanno un "ordine"
+    3. Non funziona sui dizionari, che ordinano in base all'inserimento
+
+- Tramite la funzione sorted(contenitore) -> list
+
+Di base l'ordinamento applicato è quelle crescente naturale per il tipo di dato scelto e tutti gli elementi devono essere confrontabili
+"""
+
+# Esempio
+
+L = ["uno", "due", "tre", "quattro"]
+
+L_1 = ["uno", "due", "tre", "quattro"]
+
+# 1° Modo: 
+
+print(sorted(L))
+
+# 2° Modo:
+
+L_1.sort()
+print(L_1)
+
+# L'ordine opposto si ottiene tramite l'argomento opzionale reverse = true
+
+print(sorted(L, reverse = True))
+
+"""
+Tecnicamente quello mostrato è il modo più semplice per fare un ordinamento naturale,
+ma come fare per ordinare gli elementi secondo criteri più complessi o sofisticati?
+Ad esempio: ordinare una lista di parole prima per lunghezza crescente e, in caso di parità, in ordine alfabetico.
+"""
+
+# ---- ORDINAMENTO COMPLESSO E TRASFORMAZIONE DI SCHWARTZ ----
+
+"""
+Perché il confronto tra tuple funziona in Python?
+Quando Python confronta due tuple (es. (3, 'due') e (3, 'tre')):
+1. Confronta il primo elemento di ciascuna tupla (3 contro 3).
+2. Solo se sono uguali (parità), passa a confrontare il secondo elemento ('due' contro 'tre' in ordine alfabetico).
+"""
+
+# 1. Metodo manuale: Decorate - Sort - Undecorate (Trasformazione di Schwartz)
+parole = ["uno", "due", "tre", "quattro", "cinque", "sei", "sette"]
+
+# Fase 1: Decorate (costruisco una lista di coppie (criterio, elemento))
+lista_coppie = []
+for parola in parole:
+    lista_coppie.append((len(parola), parola))
+print(f"Lista di coppie (lunghezza, parola): {lista_coppie}")
+
+# Fase 2: Sort (ordino la lista di coppie)
+lista_coppie.sort()
+print(f"Coppie ordinate: {lista_coppie}")
+
+# Fase 3: Undecorate (estraggo solo la parola originale)
+parole_ordinate = []
+for lunghezza, parola in lista_coppie:
+    parole_ordinate.append(parola)
+print(f"Parole ordinate per lunghezza e poi alfabeticamente: {parole_ordinate}")
 
 
+# ---- STABILITÀ DELL'ORDINAMENTO ----
+
+"""
+Cosa significa che un ordinamento è STABILE?
+Un algoritmo di ordinamento è stabile se gli elementi considerati 'uguali' secondo il criterio scelto 
+mantengono esattamente lo stesso ordine relativo che avevano nella collezione di partenza.
+
+In passato, per garantire la stabilità manualmente, si aggiungeva l'indice di posizione:
+(criterio, elemento, posizione_originale) ricavata tramite enumerate().
+
+NOTA FONDAMENTALE IN PYTHON:
+L'algoritmo di ordinamento di Python (chiamato Timsort) è GIÀ nativamente STABILE al 100%!
+Quindi non è necessario aggiungere manualmente la posizione.
+"""
 
 
+# ---- IL PARAMETRO key IN sorted() E sort() ----
+
+"""
+Python semplifica enormemente la trasformazione di Schwartz fornendo il parametro 'key'.
+A 'key' si passa una funzione di trasformazione (passata per NOME, senza le parentesi tonde!).
+Python applicherà automaticamente questa funzione a ciascun elemento per calcolare la chiave di confronto,
+ordinerà in modo stabile e restituirà direttamente gli elementi originali ordinati.
+"""
+
+# Definiamo una funzione che restituisce la tupla dei criteri
+def criterio_lunghezza_alfabetico(parola):
+    # Ritorna una tupla: (lunghezza, parola)
+    return len(parola), parola
+
+parole = ["uno", "due", "tre", "quattro", "cinque", "sei", "sette"]
+risultato = sorted(parole, key=criterio_lunghezza_alfabetico)
+print(f"Ordinamento con parametro key: {risultato}")
+
+# Esempio con più criteri:
+# 1. Lunghezza
+# 2. Ordine alfabetico ignorando maiuscole/minuscole (case-insensitive tramite lower())
+# 3. Ordine alfabetico esatto per preservare distinzioni tra maiuscole/minuscole
+def criterio_avanzato(parola):
+    return (len(parola), parola.lower(), parola)
+
+lista_nomi = ['PaPerino', 'plUTO', 'TopoLINO', 'minniE', 'PLUTO', 'papeRINO', 'papEROne', 'gasTONE', 'MInnie']
+print(f"Nomi ordinati avanzato: {sorted(lista_nomi, key=criterio_avanzato)}")
 
 
+# ---- FUNZIONI ANONIME (lambda) ----
 
+"""
+Se la funzione di trasformazione serve solo per l'ordinamento ("usa e getta") ed è formata 
+da una singola espressione di ritorno, possiamo scriverla in modo compatto tramite le funzioni lambda.
+
+Sintassi:
+lambda argomenti: espressione_restituita
+"""
+
+# Stesso ordinamento di prima ma con una funzione lambda:
+# (Attenzione: ricorda le parentesi tonde per creare la tupla di criteri!)
+ordinati_lambda = sorted(lista_nomi, key=lambda el: (len(el), el.lower(), el))
+print(f"Ordinamento con lambda: {ordinati_lambda}")
+
+
+# ---- ORDINAMENTI CONTRAPPOSTI ----
+
+"""
+Cosa succede se abbiamo criteri che devono andare in direzioni OPPOSTE?
+Esempio:
+- Vogliamo la lunghezza in ordine CRESCENTE (parole corte prima)
+- In caso di parità, vogliamo l'ordine alfabetico DECRESCENTE (da Z ad A)
+
+PROBLEMA:
+I confronti tra tuple sono monodirezionali (tutti gli elementi vengono confrontati nello stesso verso).
+Se usassimo semplicemente 'reverse=True', invertiremmo sia la lunghezza che l'alfabeto!
+
+SOLUZIONE (Il trucco del cambio di segno):
+Non possiamo rovesciare con un segno '-' una stringa, ma POSSIAMO rovesciare l'ordine di un valore numerico
+semplicemente CAMBIANDOGLI SEGNO!
+Se impostiamo la lunghezza negativa (-len(parola)) e usiamo reverse=True:
+- Le stringhe con reverse=True andranno da 'Z' ad 'A' (decrescente, come voluto).
+- Le lunghezze, avendo il segno meno, verranno invertite due volte tornando nell'ordine CRESCENTE desiderato!
+"""
+
+parole_test = ['cinque', 'due', 'nove', 'otto', 'quattro', 'sei', 'sette', 'tre', 'uno']
+
+# Funzione per criteri contrapposti
+def criterio_contrapposto(parola):
+    # -len(parola) unito a reverse=True produce lunghezza crescente
+    return (-len(parola), parola)
+
+risultato_contrapposto = sorted(parole_test, key=criterio_contrapposto, reverse=True)
+print(f"Ordinamento contrapposto (lungh. crescente, alfabetico decrescente): {risultato_contrapposto}")
+
+# Lo stesso con lambda:
+risultato_contrapposto_lambda = sorted(parole_test, key=lambda el: (-len(el), el), reverse=True)
+print(f"Ordinamento contrapposto con lambda: {risultato_contrapposto_lambda}")
+
+
+# Esempio con tuple di record (età, genere, nome):
+personaggi = [
+    (27, 'M', 'Paperino'),
+    (31, 'M', 'Topolino'),
+    (26, 'F', 'Paperina'),
+    (32, 'F', 'Minnie')
+]
+
+# Vogliamo ordinare per:
+# 1. Lunghezza del nome crescente
+# 2. Genere crescente ('F' viene prima di 'M')
+# 3. Età crescente
+def trasforma_personaggio(record):
+    eta, genere, nome = record   # Unpacking della tupla
+    return (len(nome), genere, eta)
+
+personaggi_ordinati = sorted(personaggi, key=trasforma_personaggio)
+print(f"Personaggi ordinati per criteri multipli: {personaggi_ordinati}")
+
+
+# ---- USO DI key CON min() E max() ----
+
+"""
+La trasformazione dei criteri tramite funzione o lambda può essere applicata 
+esattamente allo stesso modo anche alle funzioni integrate min() e max().
+Questo permette di trovare l'elemento minimo o massimo secondo criteri complessi 
+in tempo lineare O(N), senza dover ordinare l'intera sequenza.
+"""
+
+print(f"Minimo (secondo i criteri): {min(personaggi, key=trasforma_personaggio)}")
+print(f"Massimo (secondo i criteri): {max(personaggi, key=trasforma_personaggio)}")
